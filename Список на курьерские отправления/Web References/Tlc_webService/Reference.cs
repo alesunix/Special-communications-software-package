@@ -13,7 +13,7 @@
 // 
 #pragma warning disable 1591
 
-namespace Список_на_курьерские_отправления.Tlc_webService {
+namespace ProgramCCS.Tlc_webService {
     using System;
     using System.Web.Services;
     using System.Diagnostics;
@@ -24,7 +24,7 @@ namespace Список_на_курьерские_отправления.Tlc_webS
     
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Web.Services.WebServiceBindingAttribute(Name="ServiceSoap", Namespace="http://tempuri.org/")]
@@ -42,7 +42,7 @@ namespace Список_на_курьерские_отправления.Tlc_webS
         
         /// <remarks/>
         public Service() {
-            this.Url = global::Список_на_курьерские_отправления.Properties.Settings.Default.TLC_Express_Tlc_webService_Service;
+            this.Url = global::ProgramCCS.Properties.Settings.Default.TLC_Express_Tlc_webService_Service;
             if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
@@ -224,11 +224,11 @@ namespace Список_на_курьерские_отправления.Tlc_webS
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     public delegate void SearchCompletedEventHandler(object sender, SearchCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class SearchCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -250,11 +250,11 @@ namespace Список_на_курьерские_отправления.Tlc_webS
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     public delegate void UpdateCompletedEventHandler(object sender, UpdateCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class UpdateCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -276,11 +276,11 @@ namespace Список_на_курьерские_отправления.Tlc_webS
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     public delegate void BETWEENCompletedEventHandler(object sender, BETWEENCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class BETWEENCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
@@ -302,11 +302,11 @@ namespace Список_на_курьерские_отправления.Tlc_webS
     }
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     public delegate void GetDateTimesCompletedEventHandler(object sender, GetDateTimesCompletedEventArgs e);
     
     /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.7.2053.0")]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.3752.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class GetDateTimesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {

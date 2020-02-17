@@ -153,7 +153,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(240)))), ((int)(((byte)(224)))));
-            this.BackgroundImage = global::Список_на_курьерские_отправления.Properties.Resources.Logo_mini;
+            this.BackgroundImage = global::ProgramCCS.Properties.Resources.Logo_mini;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(685, 195);
             this.Controls.Add(this.DGVF2);

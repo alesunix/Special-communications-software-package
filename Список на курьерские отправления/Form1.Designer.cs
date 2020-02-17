@@ -815,7 +815,7 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Image = global::Список_на_курьерские_отправления.Properties.Resources.tlc_express;
+            this.pictureBox1.Image = global::ProgramCCS.Properties.Resources.tlc_express;
             this.pictureBox1.Location = new System.Drawing.Point(1032, 2);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(232, 73);

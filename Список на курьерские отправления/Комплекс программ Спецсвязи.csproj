@@ -7,7 +7,7 @@
     <ProjectGuid>{067D0E68-B403-47D2-B939-D26B16725E94}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Список_на_курьерские_отправления</RootNamespace>
+    <RootNamespace>ProgramCCS</RootNamespace>
     <AssemblyName>Комплекс программ Спецсвязи</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
