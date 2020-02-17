@@ -3,27 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Комплекс программ Спецсвязи", "Список на курьерские отправления\Комплекс программ Спецсвязи.csproj", "{067D0E68-B403-47D2-B939-D26B16725E94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Комплекс программ Спецсвязи", "ProgrammCCS\Комплекс программ Спецсвязи.csproj", "{067D0E68-B403-47D2-B939-D26B16725E94}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Web сервис", "..\..\WebSites\Web сервис\", "{C77598A6-F13B-4CD5-838E-FE76ADEF4E33}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Web сервис", "..\..\Projects\Комплекс программ Спецсвязи\Web сервис\", "{C77598A6-F13B-4CD5-838E-FE76ADEF4E33}"
+
+
+
+# Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Web сервис", "..\..\WebSites\Web сервис\", "{C77598A6-F13B-4CD5-838E-FE76ADEF4E33}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv3.5"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_56203"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\WebSites\Web сервис\"
+		Debug.AspNetCompiler.PhysicalPath = "..\..\Projects\Комплекс программ Спецсвязи\Web сервис\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_56203\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/localhost_56203"
-		Release.AspNetCompiler.PhysicalPath = "..\..\WebSites\Web сервис\"
+		Release.AspNetCompiler.PhysicalPath = "..\..\Projects\Комплекс программ Спецсвязи\Web сервис\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_56203\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "56203"
-		SlnRelativePath = "..\..\WebSites\Web сервис\"
+		SlnRelativePath = "..\..\Projects\Комплекс программ Спецсвязи\Web сервис\"
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject

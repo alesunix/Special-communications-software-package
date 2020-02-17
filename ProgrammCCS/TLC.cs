@@ -18,9 +18,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Список_на_курьерские_отправления
+namespace ProgramCCS
 {
-    public partial class Form1 : Form
+    public partial class TLC : Form
     {
         int[] massiv1 = { 723504, 724508, 720114, 725000, 721100, 723500, 720306, 723500, 723100 };
         int[] massiv2 = { 724002, 723509, 725000, 722200, 723330, 723307, 723500, 723503, 723507, 721100 };
@@ -42,10 +42,10 @@ namespace Список_на_курьерские_отправления
 
         public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
         MySqlConnection mycon = new MySqlConnection("SERVER= хостинг_сервер;" + "DATABASE= имя_базы;" + "UID= логин;" + "PASSWORD=пароль;" + "connection timeout = 180");
-        Form2 form2 = new Form2();
+        Login form2 = new Login();
         public object loker = new object();
 
-        public Form1()
+        public TLC()
         {
             InitializeComponent();
             Text += "  Версия - " + CurrentVersion; //Добавляем в название программы, версию.

@@ -1,4 +1,4 @@
-﻿namespace Список_на_курьерские_отправления
+﻿namespace ProgramCCS
 {
     partial class Form_manual_input
     {

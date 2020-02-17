@@ -13,12 +13,12 @@ using System.Reflection;
 using System.Threading;
 using System.Media;
 
-namespace Список_на_курьерские_отправления
+namespace ProgramCCS
 {
-    public partial class Form3_avto : Form
+    public partial class Transport : Form
     {
         SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
-        public Form3_avto()
+        public Transport()
         {  
             InitializeComponent();
             comboBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры

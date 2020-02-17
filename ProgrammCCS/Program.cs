@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Список_на_курьерские_отправления
+namespace ProgramCCS
 {
     static class Program
     {
@@ -13,7 +13,7 @@ namespace Список_на_курьерские_отправления
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form2());
+            Application.Run(new Login());
         }
     }
     static class Dostup

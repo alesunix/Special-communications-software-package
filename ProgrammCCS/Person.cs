@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Список_на_курьерские_отправления
+namespace ProgramCCS
 {
     public class Person
     {

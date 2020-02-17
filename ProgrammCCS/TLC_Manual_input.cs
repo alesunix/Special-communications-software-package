@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Список_на_курьерские_отправления
+namespace ProgramCCS
 {
     public partial class Form_manual_input : Form
     {
@@ -17,11 +17,11 @@ namespace Список_на_курьерские_отправления
         {
             InitializeComponent();
         }
-        public Form_manual_input(Form1 f1)
+        public Form_manual_input(TLC f1)
         {
             InitializeComponent();
         }
-        Form1 F1 = new Form1();
+        TLC F1 = new TLC();
         private void button13_Click(object sender, EventArgs e)
         {
             if (textBox7.Text != "" & textBox9.Text != "" & textBox10.Text != "" & textBox11.Text != "" & textBox12.Text != "" & comboBox6.Text != "" & comboBox7.Text != "")

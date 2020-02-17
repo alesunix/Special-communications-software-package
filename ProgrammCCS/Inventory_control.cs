@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
 
-namespace Список_на_курьерские_отправления
+namespace ProgramCCS
 {
-    public partial class Sklad : Form
+    public partial class Inventory_control : Form
     {
         SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
-        public Sklad()
+        public Inventory_control()
         {
             InitializeComponent();
             comboBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "Добавить" с клавиатуры

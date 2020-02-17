@@ -6,9 +6,9 @@ using System.Deployment.Application;
 using System.Reflection;
 using System.Data.SqlClient;
 
-namespace Список_на_курьерские_отправления
+namespace ProgramCCS
 {
-    public partial class Form2 : Form
+    public partial class Login : Form
     {
         public string Data
         { get { return comboBoxF2.Text; } }
@@ -18,7 +18,7 @@ namespace Список_на_курьерские_отправления
         public string avto = "Транспортный";
         public string sklad = "Склад";
         
-        public Form2()
+        public Login()
         {
             InitializeComponent();
             this.Text += "  Версия - " + CurrentVersion; //Добавляем в название программы, версию.
@@ -36,7 +36,7 @@ namespace Список_на_курьерские_отправления
         }
         private void button1_Click(object sender, EventArgs e)//Войти
         {
-            Form1 form1 = new Form1();          
+            TLC form1 = new TLC();          
             form1.con.Open();//Открываем соединение
             SqlCommand cmd = new SqlCommand("SELECT * FROM [Table_Login] WHERE login = @login", form1.con);
             cmd.Parameters.AddWithValue("@login", comboBoxF2.Text);
@@ -61,7 +61,7 @@ namespace Список_на_курьерские_отправления
             else if (comboBoxF2.Text == sklad & textBox1.Text == "159753")
             {
                 //Clipboard.SetText(comboBoxF2.Text);//Скопировать текст в буфер обмена
-                Sklad sklad = new Sklad();
+                Inventory_control sklad = new Inventory_control();
                 //P.label1.Text = "Добро пожаловать! " + comboBoxF2.Text;
                 sklad.Show();
                 this.Hide();
@@ -69,7 +69,7 @@ namespace Список_на_курьерские_отправления
             else if (comboBoxF2.Text == avto & textBox1.Text == "123654")
             {
                 //Clipboard.SetText(comboBoxF2.Text);//Скопировать текст в буфер обмена
-                Form3_avto avto = new Form3_avto();
+                Transport avto = new Transport();
                 //P.label1.Text = "Добро пожаловать! " + comboBoxF2.Text;
                 avto.Show();
                 this.Hide();
@@ -85,7 +85,7 @@ namespace Список_на_курьерские_отправления
         }
         public void Logins_select()//Вывод пользователей в Combobox
         {
-            Form1 form1 = new Form1();
+            TLC form1 = new TLC();
             form1.con.Open();//Открываем соединение
             SqlCommand cmd = new SqlCommand("SELECT login FROM [Table_Login] WHERE login NOT IN ('root') ORDER BY login", form1.con);
             cmd.ExecuteNonQuery();
