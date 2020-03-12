@@ -29,13 +29,13 @@ namespace ProgramCCS
         private void toolStripButton1_Click(object sender, EventArgs e)//График
         {
             con.Open();
-            SqlCommand cmd = new SqlCommand("SELECT data_zapisi, SUM(plata_za_uslugu) FROM [Table_1] " +
-                "WHERE (data_zapisi BETWEEN @StartDate AND @EndDate) AND status = @status GROUP BY data_zapisi ORDER BY data_zapisi", con);
+            SqlCommand cmd = new SqlCommand("SELECT data_obrabotki, SUM(plata_za_uslugu) FROM [Table_1] " +
+                "WHERE (data_obrabotki BETWEEN @StartDate AND @EndDate) AND status = @status GROUP BY data_obrabotki ORDER BY data_obrabotki", con);
             cmd.Parameters.AddWithValue("@status", "возврат");
             cmd.Parameters.AddWithValue("@StartDate", dateTimePicker1.Value);
             cmd.Parameters.AddWithValue("@EndDate", dateTimePicker2.Value);
             cmd.ExecuteNonQuery();
-
+            TLC F1 = new TLC();
             DataTable dataTable = new DataTable();//создаем экземпляр класса DataTable
             SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             dataTable.Clear();//чистим DataTable, если он был не пуст
@@ -43,8 +43,8 @@ namespace ProgramCCS
             con.Close();
 
             con.Open();
-            SqlCommand cmd1 = new SqlCommand("SELECT data_zapisi, SUM(plata_za_uslugu) FROM [Table_1] " +
-                "WHERE (data_zapisi BETWEEN @StartDate AND @EndDate) AND status = @status GROUP BY data_zapisi ORDER BY data_zapisi", con);
+            SqlCommand cmd1 = new SqlCommand("SELECT data_obrabotki, SUM(plata_za_uslugu) FROM [Table_1] " +
+                "WHERE (data_obrabotki BETWEEN @StartDate AND @EndDate) AND status = @status GROUP BY data_obrabotki ORDER BY data_obrabotki", con);
             cmd1.Parameters.AddWithValue("@status", "выдано");
             cmd1.Parameters.AddWithValue("@StartDate", dateTimePicker1.Value);
             cmd1.Parameters.AddWithValue("@EndDate", dateTimePicker2.Value);
