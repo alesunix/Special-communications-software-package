@@ -17,11 +17,15 @@ using System.ComponentModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using ExcelDataReader;
 
 namespace ProgramCCS
 {
     public partial class TLC : Form
     {
+        private string fileName = string.Empty;
+        private DataTableCollection tableCollection = null;       
+
         int[] massiv1 = { 723504, 724508, 720114, 725000, 721100, 723500, 720306, 723500, 723100 };
         int[] massiv2 = { 724002, 723509, 725000, 722200, 723330, 723307, 723500, 723503, 723507, 721100 };
         int[] massiv3 = { 721901, 723504, 720016, 720300, 722300, 721200, 720800, 720300, 724321, 723510, 724604, 723510, 723503, 722200, 724104, 723800, 724913, 720601, 723509, 720803 };
@@ -248,7 +252,7 @@ namespace ProgramCCS
                 button2.Enabled = false;
                 button14.Enabled = false;
                 button6.Enabled = false;
-                button26.Enabled = false;
+                toolStripButton3.Enabled = false;
             }
             else if (Person.Access == "Medium")
             {
@@ -523,7 +527,7 @@ namespace ProgramCCS
                 cmd.CommandType = CommandType.Text;
                 //cmd.CommandText = "SELECT TOP 1000 * FROM [Table_1] ORDER BY data_zapisi DESC";//последние 1000 записей
                 cmd.CommandText = "SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
-                "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
+                "summ AS 'Стоимость', plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
                 "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
                 "filial AS 'Филиал', client AS 'Контрагент'," +
                 "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
@@ -1149,7 +1153,33 @@ namespace ProgramCCS
                 }
             }
         }
-        private void button1_Click(object sender, EventArgs e)//Открыть Excel и Загрузить в базу
+        //---------------------------------------------------------------------------------------------------------//
+        private void OpenExcelFile(string path)//Считывание Excel таблицы в DataGridView
+        {
+            FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read);
+            IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream);
+            DataSet db = reader.AsDataSet(new ExcelDataSetConfiguration()
+            {
+                ConfigureDataTable = (x) => new ExcelDataTableConfiguration()
+                {
+                    UseHeaderRow = true
+                }
+            });
+            tableCollection = db.Tables;
+
+            comboBox13.Items.Clear();
+            foreach (DataTable table in tableCollection)
+            {
+                comboBox13.Items.Add(table.TableName);
+            }
+            comboBox13.SelectedIndex = 0;
+        }
+        private void ComboBox13_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataTable table = tableCollection[Convert.ToString(comboBox13.SelectedItem)];
+            dataGridView3.DataSource = table;
+        }
+        private void Button1_Click(object sender, EventArgs e)//Открыть Excel и Загрузить в базу
         {
             if (dataGridView3.Rows.Count <= 0)//Если грид пустой
             {
@@ -1159,57 +1189,40 @@ namespace ProgramCCS
                     dataGridView2.Visible = false;
                     dataGridView1.Visible = false;
                     dataGridView3.Visible = true;
-                    //http://exceldatareader.codeplex.com/
-                    OpenFileDialog ofd = new OpenFileDialog();
-                    //Задаем расширение имени файла по умолчанию.
-                    ofd.DefaultExt = "*.xls;*.xlsx";
-                    //Задаем строку фильтра имен файлов, которая определяет варианты, доступные в поле "Файлы типа" диалогового окна.
-                    ofd.Filter = "Excel 2003(*.xls)|*.xls|Excel 2007(*.xlsx)|*.xlsx";
-                    //Задаем заголовок диалогового окна.
-                    ofd.Title = "Выберите документ для загрузки данных";
+                    OpenFileDialog ofd = new OpenFileDialog
+                    {
+                        Filter = "Excel|*.xlsx;*.xls"
+                    };
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
-                        textBox1.Text = ofd.FileName;
-                        System.IO.FileStream stream = System.IO.File.Open(ofd.FileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-                        Excel.IExcelDataReader IEDR;
-                        int fileformat = ofd.SafeFileName.IndexOf(".xlsx");
-                        if (fileformat > -1)
-                        {
-                            //2007 format *.xlsx
-                            IEDR = Excel.ExcelReaderFactory.CreateOpenXmlReader(stream);
-                        }
-                        else
-                        {
-                            //97-2003 format *.xls
-                            IEDR = Excel.ExcelReaderFactory.CreateBinaryReader(stream);
-                        }
-                        //Если данное значение установлено в true то первая строка используется в качестве заголовков для колонок
-                        IEDR.IsFirstRowAsColumnNames = true;
-                        DataSet ds = IEDR.AsDataSet();
-                        //Устанавливаем в качестве источника данных dataset с указанием номера таблицы. Номер таблицы указавает на соответствующий лист в файле нумерация листов начинается с нуля.
-                        dataGridView3.DataSource = ds.Tables[0];
-                        IEDR.Close();
+                        fileName = ofd.FileName;
+                        Text = fileName;
+                        OpenExcelFile(fileName);
                         button1.Text = "Загрузить Excel";
                     }
                     else
                     {
-                        MessageBox.Show("Вы не выбрали файл для открытия", "Загрузка данных...", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        dataGridView5.Visible = false;
-                        dataGridView2.Visible = true;
-                        dataGridView1.Visible = false;
-                        dataGridView3.Visible = false;
+                        throw new Exception("Файл не выбран!");
                     }
                 }
-                catch (Exception exp)
+                catch(Exception ex)
                 {
-                    MessageBox.Show("Ошибка! Excel файл необходимо закрыть! " + Environment.NewLine + exp, "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
+                    comboBox13.SelectedIndex = -1;
+                    comboBox13.Items.Clear();
+                    button1.Text = "Открыть Excel";
+                    dataGridView5.Visible = false;
+                    dataGridView2.Visible = true;
+                    dataGridView1.Visible = false;
+                    dataGridView3.Visible = false;
                 }
             }
             else if (dataGridView3.Rows.Count > 0)//Если грид не пустой
-            {
+            {              
                 try
                 {
-                    if (textBox1.Text != "" & comboBox5.Text != "")
+                    if (comboBox5.Text != "")
                     {
                         if (MessageBox.Show("Вы уверенны что этот Реестр принадлежит " + comboBox5.Text, "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
@@ -1270,7 +1283,7 @@ namespace ProgramCCS
                             }
                             con.Close();//закрыть соединение
                             
-                            textBox1.Text = "";//очистка текстовых полей
+                            //textBox1.Text = "";//очистка текстовых полей
                             MessageBox.Show("Реестр успешно загружен!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             label1.Text = "Реестр успешно загружен!";
                             Disp_data();
@@ -1324,7 +1337,7 @@ namespace ProgramCCS
                 }
                 catch (Exception exp)
                 {
-                    MessageBox.Show("Ошибка! Excel файл содержит ошибку или неправельно сформирован! " + Environment.NewLine + exp, "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Ошибка! Excel файл содержит ошибку или неправельно сформирован! " + Environment.NewLine + exp, "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     con.Close();//закрыть соединение
                 }
                 Disp_data();
@@ -1343,14 +1356,16 @@ namespace ProgramCCS
                 dataGridView2.Visible = true;
                 //dataGridView3.Rows.Clear();
                 //dataGridView3.Columns.Clear();
+                comboBox13.SelectedIndex = -1;
+                comboBox13.Items.Clear();
             }
         }
-        private void button26_Click(object sender, EventArgs e)//Ручной ввод
+        //---------------------------------------------------------------------------------------------------------//
+        private void toolStripButton3_Click(object sender, EventArgs e)//Ручной ввод
         {
             Form_manual_input FMI = new Form_manual_input();
             FMI.Show();
         }
-
         private void button7_Click(object sender, EventArgs e)//Выборка
         {
             //1.Выборка на реестр-1 - 'Статус + Обработка + Филиал + Клиент'.
@@ -1643,7 +1658,7 @@ namespace ProgramCCS
             }
             Podschet();//произвести подсчет из метода
             textBox2.Text = "";//очистка текстовых полей 
-            textBox1.Text = "";
+            //textBox1.Text = "";
             textBox3.Text = "";
             textBox14.Text = "";
             textBox18.Text = "";
@@ -3321,7 +3336,7 @@ namespace ProgramCCS
         }
         private void comboBox2_SelectedValueChanged(object sender, EventArgs e)//Заполнение textbox из combobox
         {
-            textBox1.AppendText(comboBox2.Text);//Заполнение textbox из combobox
+            //textBox1.AppendText(comboBox2.Text);//Заполнение textbox из combobox
         }
         private void button17_Click(object sender, EventArgs e)//Выход
         {
@@ -3574,6 +3589,17 @@ namespace ProgramCCS
                 con.Close();//закрыть соединение
                 MessageBox.Show("Вы успешно добавили нового юзера!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)//График
+        {
+            Graph graph = new Graph();
+            graph.Show();
+        }
+
+        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
 
         
