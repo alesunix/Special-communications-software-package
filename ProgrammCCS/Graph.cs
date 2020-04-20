@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media;
 using LiveCharts;
 using LiveCharts.Wpf;
 
@@ -35,7 +36,6 @@ namespace ProgramCCS
             cmd.Parameters.AddWithValue("@StartDate", dateTimePicker1.Value);
             cmd.Parameters.AddWithValue("@EndDate", dateTimePicker2.Value);
             cmd.ExecuteNonQuery();
-            TLC F1 = new TLC();
             DataTable dataTable = new DataTable();//создаем экземпляр класса DataTable
             SqlDataAdapter dataAdapter = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             dataTable.Clear();//чистим DataTable, если он был не пуст
@@ -49,7 +49,6 @@ namespace ProgramCCS
             cmd1.Parameters.AddWithValue("@StartDate", dateTimePicker1.Value);
             cmd1.Parameters.AddWithValue("@EndDate", dateTimePicker2.Value);
             cmd1.ExecuteNonQuery();
-
             DataTable dataTable1 = new DataTable();//создаем экземпляр класса DataTable
             SqlDataAdapter dataAdapter1 = new SqlDataAdapter(cmd1);//создаем экземпляр класса SqlDataAdapter
             dataTable1.Clear();//чистим DataTable, если он был не пуст
@@ -57,15 +56,13 @@ namespace ProgramCCS
             con.Close();
 
             DataSet dataSet = new DataSet();
-            DataSet dataSet1 = new DataSet();
-
-            cartesianChart1.LegendLocation = LegendLocation.Bottom;
+            DataSet dataSet1 = new DataSet();            
 
             if (dataSet.Tables["Table_1"] != null)
                 dataSet.Tables["Table_1"].Clear();
             if (dataSet1.Tables["Table_1"] != null)
                 dataSet1.Tables["Table_1"].Clear();
-          
+
             dataAdapter.Fill(dataSet, "Table_1");
             dataTable = dataSet.Tables["Table_1"];
             dataAdapter1.Fill(dataSet1, "Table_1");
@@ -77,38 +74,45 @@ namespace ProgramCCS
             foreach (DataRow row in dataTable.Rows)
             {
                 values.Add(Convert.ToInt32(row[1]));
-                dates.Add(Convert.ToDateTime(row[0]).ToShortDateString());
-            }  
+                //dates.Add(Convert.ToDateTime(row[0]).ToShortDateString());
+            }
             foreach (DataRow row in dataTable1.Rows)
             {
                 values1.Add(Convert.ToInt32(row[1]));
+                dates.Add(Convert.ToDateTime(row[0]).ToShortDateString());
             }
-
             cartesianChart1.AxisX.Clear();
             cartesianChart1.AxisX.Add(new Axis()
             {
                 Title = "Даты",
                 Labels = dates
             });
-            ColumnSeries line = new ColumnSeries
+            ColumnSeries column1 = new ColumnSeries
             {
                 Title = "Возврат",
                 Values = values,
                 DataLabels = true,
-                Fill = System.Windows.Media.Brushes.IndianRed,
                 LabelPoint = point => (point.Y).ToString(),
+                //StrokeDashArray = new DoubleCollection { 2 },//пунктиром
+                //Stroke = System.Windows.Media.Brushes.Red,//строка
+                //Fill = System.Windows.Media.Brushes.IndianRed,//заливка
+                //PointForeground = System.Windows.Media.Brushes.Red,//точка
             };
-            ColumnSeries line2 = new ColumnSeries
+            ColumnSeries column2 = new ColumnSeries
             {
                 Title = "Выдано",
                 Values = values1,
                 DataLabels = true,
-                Fill = System.Windows.Media.Brushes.CadetBlue,
                 LabelPoint = point => (point.Y).ToString(),
+                //StrokeDashArray = new DoubleCollection { 2 },//пунктиром
+                //Stroke = System.Windows.Media.Brushes.Green,
+                //Fill = System.Windows.Media.Brushes.CadetBlue,
+                //PointForeground = System.Windows.Media.Brushes.Green,//точка
             };
-            series.Add(line);
-            series.Add(line2);
-            cartesianChart1.Series = series;           
+            series.Add(column2);
+            series.Add(column1);
+            cartesianChart1.Series = series;
+            cartesianChart1.LegendLocation = LegendLocation.Bottom;
         }
     }
 }

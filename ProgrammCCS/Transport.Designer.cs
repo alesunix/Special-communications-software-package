@@ -212,16 +212,16 @@
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(215)))), ((int)(((byte)(169)))));
-            this.button1.FlatAppearance.BorderSize = 0;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(153)))), ((int)(((byte)(112)))));
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button1.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold);
             this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.button1.Location = new System.Drawing.Point(404, 81);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(87, 32);
             this.button1.TabIndex = 1;
-            this.button1.Text = "ДОБАВИТЬ";
+            this.button1.Text = "Добавить";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -339,7 +339,7 @@
             // button7
             // 
             this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(94)))), ((int)(((byte)(122)))));
-            this.button7.FlatAppearance.BorderSize = 0;
+            this.button7.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.button7.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(71)))), ((int)(((byte)(82)))));
             this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button7.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -348,14 +348,14 @@
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(87, 32);
             this.button7.TabIndex = 32;
-            this.button7.Text = "CHANGE";
+            this.button7.Text = "Изменить";
             this.button7.UseVisualStyleBackColor = false;
             this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button6
             // 
             this.button6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(59)))), ((int)(((byte)(69)))));
-            this.button6.FlatAppearance.BorderSize = 0;
+            this.button6.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.button6.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(47)))), ((int)(((byte)(49)))));
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button6.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -364,7 +364,7 @@
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(87, 32);
             this.button6.TabIndex = 31;
-            this.button6.Text = "DELETE";
+            this.button6.Text = "Удалить";
             this.button6.UseVisualStyleBackColor = false;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
@@ -449,7 +449,6 @@
             // button4
             // 
             this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(215)))), ((int)(((byte)(169)))));
-            this.button4.FlatAppearance.BorderSize = 0;
             this.button4.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(153)))), ((int)(((byte)(112)))));
             this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button4.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -458,7 +457,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(87, 32);
             this.button4.TabIndex = 10;
-            this.button4.Text = "ОБНОВИТЬ";
+            this.button4.Text = "Обновить";
             this.button4.UseVisualStyleBackColor = false;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -639,6 +638,7 @@
             // button8
             // 
             this.button8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(94)))), ((int)(((byte)(122)))));
+            this.button8.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.button8.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(71)))), ((int)(((byte)(82)))));
             this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button8.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -695,7 +695,7 @@
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(8, 37);
+            this.label5.Location = new System.Drawing.Point(8, 33);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(51, 12);
             this.label5.TabIndex = 12;
@@ -707,7 +707,7 @@
             this.label6.AutoSize = true;
             this.label6.BackColor = System.Drawing.Color.Transparent;
             this.label6.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label6.Location = new System.Drawing.Point(8, 1);
+            this.label6.Location = new System.Drawing.Point(8, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(64, 12);
             this.label6.TabIndex = 11;
@@ -717,25 +717,25 @@
             // 
             this.comboBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(5, 49);
+            this.comboBox3.Location = new System.Drawing.Point(5, 44);
             this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(252, 21);
+            this.comboBox3.Size = new System.Drawing.Size(233, 21);
             this.comboBox3.TabIndex = 10;
             // 
             // button2
             // 
             this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(215)))), ((int)(((byte)(169)))));
-            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(153)))), ((int)(((byte)(112)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button2.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.button2.Location = new System.Drawing.Point(262, 14);
+            this.button2.ForeColor = System.Drawing.Color.Green;
+            this.button2.Location = new System.Drawing.Point(259, 76);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(80, 93);
+            this.button2.Size = new System.Drawing.Size(80, 32);
             this.button2.TabIndex = 8;
-            this.button2.Text = "ПОИСК";
+            this.button2.Text = "Поиск";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -744,25 +744,25 @@
             this.comboBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(5, 14);
+            this.comboBox4.Location = new System.Drawing.Point(5, 12);
             this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(252, 21);
+            this.comboBox4.Size = new System.Drawing.Size(233, 21);
             this.comboBox4.TabIndex = 9;
             // 
             // button3
             // 
             this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(94)))), ((int)(((byte)(122)))));
-            this.button3.FlatAppearance.BorderSize = 0;
+            this.button3.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(71)))), ((int)(((byte)(82)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button3.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.button3.Location = new System.Drawing.Point(148, 14);
+            this.button3.Location = new System.Drawing.Point(228, 75);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(102, 93);
+            this.button3.Size = new System.Drawing.Size(80, 33);
             this.button3.TabIndex = 13;
-            this.button3.Text = "ПРОИЗВЕСТИ РЕМОНТ";
+            this.button3.Text = "Ремонт";
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -771,7 +771,7 @@
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label7.Location = new System.Drawing.Point(5, 5);
+            this.label7.Location = new System.Drawing.Point(5, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(71, 12);
             this.label7.TabIndex = 9;
@@ -781,9 +781,9 @@
             // 
             this.dateTimePicker2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dateTimePicker2.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dateTimePicker2.Location = new System.Drawing.Point(3, 18);
+            this.dateTimePicker2.Location = new System.Drawing.Point(3, 12);
             this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(140, 20);
+            this.dateTimePicker2.Size = new System.Drawing.Size(200, 20);
             this.dateTimePicker2.TabIndex = 8;
             // 
             // dataGridView2
@@ -873,7 +873,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label9.Location = new System.Drawing.Point(6, 73);
+            this.label9.Location = new System.Drawing.Point(6, 70);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(30, 12);
             this.label9.TabIndex = 14;
@@ -881,25 +881,25 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(3, 86);
+            this.textBox3.Location = new System.Drawing.Point(3, 81);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(140, 20);
+            this.textBox3.Size = new System.Drawing.Size(200, 20);
             this.textBox3.TabIndex = 13;
             // 
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(59)))), ((int)(((byte)(69)))));
-            this.button5.FlatAppearance.BorderSize = 0;
-            this.button5.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(47)))), ((int)(((byte)(49)))));
+            this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(215)))), ((int)(((byte)(169)))));
+            this.button5.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.button5.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(153)))), ((int)(((byte)(112)))));
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button5.Font = new System.Drawing.Font("Arial Black", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.button5.Location = new System.Drawing.Point(323, 65);
+            this.button5.ForeColor = System.Drawing.Color.Maroon;
+            this.button5.Location = new System.Drawing.Point(257, 76);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(72, 45);
+            this.button5.Size = new System.Drawing.Size(80, 32);
             this.button5.TabIndex = 15;
-            this.button5.Text = "ОТЧЕТ";
+            this.button5.Text = "Отчет";
             this.button5.UseVisualStyleBackColor = false;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -907,7 +907,7 @@
             // 
             this.dateTimePicker3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dateTimePicker3.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dateTimePicker3.Location = new System.Drawing.Point(177, 65);
+            this.dateTimePicker3.Location = new System.Drawing.Point(4, 66);
             this.dateTimePicker3.Name = "dateTimePicker3";
             this.dateTimePicker3.Size = new System.Drawing.Size(140, 20);
             this.dateTimePicker3.TabIndex = 16;
@@ -916,7 +916,7 @@
             // 
             this.dateTimePicker4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dateTimePicker4.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.dateTimePicker4.Location = new System.Drawing.Point(177, 89);
+            this.dateTimePicker4.Location = new System.Drawing.Point(4, 90);
             this.dateTimePicker4.Name = "dateTimePicker4";
             this.dateTimePicker4.Size = new System.Drawing.Size(140, 20);
             this.dateTimePicker4.TabIndex = 17;
@@ -928,7 +928,7 @@
             this.label10.BackColor = System.Drawing.Color.Transparent;
             this.label10.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label10.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.label10.Location = new System.Drawing.Point(7, 1);
+            this.label10.Location = new System.Drawing.Point(7, -1);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(64, 12);
             this.label10.TabIndex = 19;
@@ -939,7 +939,7 @@
             this.comboBox5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(4, 15);
+            this.comboBox5.Location = new System.Drawing.Point(4, 11);
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(218, 21);
             this.comboBox5.TabIndex = 18;
@@ -949,24 +949,24 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(240)))), ((int)(((byte)(224)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.label10);
             this.panel1.Controls.Add(this.label22);
             this.panel1.Controls.Add(this.comboBox12);
             this.panel1.Controls.Add(this.button5);
             this.panel1.Controls.Add(this.comboBox5);
             this.panel1.Controls.Add(this.dateTimePicker3);
             this.panel1.Controls.Add(this.dateTimePicker4);
-            this.panel1.Controls.Add(this.label10);
             this.panel1.ForeColor = System.Drawing.SystemColors.InfoText;
-            this.panel1.Location = new System.Drawing.Point(626, 517);
+            this.panel1.Location = new System.Drawing.Point(680, 517);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(401, 116);
+            this.panel1.Size = new System.Drawing.Size(348, 116);
             this.panel1.TabIndex = 20;
             // 
             // label22
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label22.Location = new System.Drawing.Point(231, 2);
+            this.label22.Location = new System.Drawing.Point(7, 32);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(60, 12);
             this.label22.TabIndex = 36;
@@ -975,16 +975,16 @@
             // comboBox12
             // 
             this.comboBox12.FormattingEnabled = true;
-            this.comboBox12.Location = new System.Drawing.Point(228, 15);
+            this.comboBox12.Location = new System.Drawing.Point(4, 42);
             this.comboBox12.Name = "comboBox12";
-            this.comboBox12.Size = new System.Drawing.Size(166, 21);
+            this.comboBox12.Size = new System.Drawing.Size(218, 21);
             this.comboBox12.TabIndex = 37;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label14.Location = new System.Drawing.Point(6, 41);
+            this.label14.Location = new System.Drawing.Point(6, 36);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(60, 12);
             this.label14.TabIndex = 28;
@@ -995,24 +995,24 @@
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(240)))), ((int)(((byte)(224)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2.Controls.Add(this.label9);
+            this.panel2.Controls.Add(this.label14);
             this.panel2.Controls.Add(this.comboBox11);
             this.panel2.Controls.Add(this.button3);
             this.panel2.Controls.Add(this.dateTimePicker2);
             this.panel2.Controls.Add(this.textBox3);
             this.panel2.Controls.Add(this.label7);
-            this.panel2.Controls.Add(this.label14);
-            this.panel2.Controls.Add(this.label9);
             this.panel2.Location = new System.Drawing.Point(355, 517);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(265, 116);
+            this.panel2.Size = new System.Drawing.Size(319, 116);
             this.panel2.TabIndex = 29;
             // 
             // comboBox11
             // 
             this.comboBox11.FormattingEnabled = true;
-            this.comboBox11.Location = new System.Drawing.Point(3, 54);
+            this.comboBox11.Location = new System.Drawing.Point(3, 46);
             this.comboBox11.Name = "comboBox11";
-            this.comboBox11.Size = new System.Drawing.Size(140, 21);
+            this.comboBox11.Size = new System.Drawing.Size(200, 21);
             this.comboBox11.TabIndex = 36;
             // 
             // panel3
@@ -1021,12 +1021,12 @@
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(240)))), ((int)(((byte)(224)))));
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel3.Controls.Add(this.label20);
+            this.panel3.Controls.Add(this.label5);
+            this.panel3.Controls.Add(this.label6);
             this.panel3.Controls.Add(this.comboBox10);
             this.panel3.Controls.Add(this.comboBox4);
             this.panel3.Controls.Add(this.button2);
             this.panel3.Controls.Add(this.comboBox3);
-            this.panel3.Controls.Add(this.label5);
-            this.panel3.Controls.Add(this.label6);
             this.panel3.Location = new System.Drawing.Point(1, 517);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(348, 116);
@@ -1036,7 +1036,7 @@
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label20.Location = new System.Drawing.Point(8, 73);
+            this.label20.Location = new System.Drawing.Point(8, 65);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(60, 12);
             this.label20.TabIndex = 35;
@@ -1045,12 +1045,12 @@
             // comboBox10
             // 
             this.comboBox10.FormattingEnabled = true;
-            this.comboBox10.Location = new System.Drawing.Point(5, 86);
+            this.comboBox10.Location = new System.Drawing.Point(5, 76);
             this.comboBox10.Name = "comboBox10";
-            this.comboBox10.Size = new System.Drawing.Size(251, 21);
+            this.comboBox10.Size = new System.Drawing.Size(233, 21);
             this.comboBox10.TabIndex = 35;
             // 
-            // Form3_avto
+            // Transport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1064,7 +1064,7 @@
             this.Controls.Add(this.dataGridView2);
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form3_avto";
+            this.Name = "Transport";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Транспорт";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form3_avto_FormClosed);

@@ -28,7 +28,7 @@
     <ProductName>Комплекс программ Спецсвязи</ProductName>
     <PublisherName>Alesunix</PublisherName>
     <MinimumRequiredVersion>1.1.5.425</MinimumRequiredVersion>
-    <ApplicationRevision>575</ApplicationRevision>
+    <ApplicationRevision>577</ApplicationRevision>
     <ApplicationVersion>1.1.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -143,6 +143,7 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />

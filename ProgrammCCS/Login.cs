@@ -45,11 +45,11 @@ namespace ProgramCCS
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             dt.Clear();//чистим DataTable, если он был не пуст
             da.Fill(dt);//заполняем данными созданный DataTable
-            DGVF2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            //DGVF2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             form1.con.Close();//Закрываем соединение
             //Access._Access = DGVF2.Rows[0].Cells[3].Value.ToString();//Доступ
             //Access.Name = comboBoxF2.Text;//Login
-            Person Access = new Person(comboBoxF2.Text, DGVF2.Rows[0].Cells[3].Value.ToString());// передать значения Конструктору в классе Person
+            Person Access = new Person(comboBoxF2.Text, dt.Rows[0][3].ToString());// передать значения Конструктору в классе Person
 
             if (comboBoxF2.Text == tlc & textBox1.Text == "147258369" || comboBoxF2.Text == osh & textBox1.Text == "123789" || comboBoxF2.Text == dj & textBox1.Text == "123789" || comboBoxF2.Text == "root" & textBox1.Text == "root")
             {
@@ -103,7 +103,7 @@ namespace ProgramCCS
         private void Form2_Load(object sender, EventArgs e)//Загрузка формы
         {
             textBox1.PasswordChar = '*';//Скрыть пароль
-            DGVF2.Visible = false;
+            //DGVF2.Visible = false;
             Logins_select();
             label26.Text = "Версия - " + CurrentVersion;//Версия
             //Мигание кнопки
