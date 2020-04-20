@@ -10,8 +10,8 @@ namespace ProgramCCS
 {
     public partial class Login : Form
     {
-        public string Data
-        { get { return comboBoxF2.Text; } }
+        public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
+
         public string tlc = "TLC-Express";
         public string osh = "Ошский филиал";
         public string dj = "Джалал-Абад филиал";
@@ -21,7 +21,7 @@ namespace ProgramCCS
         public Login()
         {
             InitializeComponent();
-            this.Text += "  Версия - " + CurrentVersion; //Добавляем в название программы, версию.
+            //this.Text += "  Версия - " + CurrentVersion; //Добавляем в название программы, версию.
             textBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "Войти" с клавиатуры
             comboBoxF2.Text = tlc;//отображение TLC-Express 
         }     
@@ -35,40 +35,39 @@ namespace ProgramCCS
             }
         }
         private void button1_Click(object sender, EventArgs e)//Войти
-        {
-            TLC form1 = new TLC();          
-            form1.con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT * FROM [Table_Login] WHERE login = @login", form1.con);
+        {               
+            con.Open();//Открываем соединение
+            SqlCommand cmd = new SqlCommand("SELECT * FROM [Table_Login] WHERE login = @login", con);
             cmd.Parameters.AddWithValue("@login", comboBoxF2.Text);
             cmd.ExecuteNonQuery();
             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             dt.Clear();//чистим DataTable, если он был не пуст
             da.Fill(dt);//заполняем данными созданный DataTable
-            //DGVF2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            form1.con.Close();//Закрываем соединение
-            //Access._Access = DGVF2.Rows[0].Cells[3].Value.ToString();//Доступ
-            //Access.Name = comboBoxF2.Text;//Login
-            Person Access = new Person(comboBoxF2.Text, dt.Rows[0][3].ToString());// передать значения Конструктору в классе Person
+            con.Close();//Закрываем соединение
+            //Person.Access = dt.Rows[0][3].ToString();//Доступ
+            //Person.Name = dt.Rows[0][1].ToString();//Login
+            Person Access = new Person(comboBoxF2.Text, dt.Rows[0][3].ToString());// передать значения Конструктору в классе Person (имя и доступ)
 
-            if (comboBoxF2.Text == tlc & textBox1.Text == "147258369" || comboBoxF2.Text == osh & textBox1.Text == "123789" || comboBoxF2.Text == dj & textBox1.Text == "123789" || comboBoxF2.Text == "root" & textBox1.Text == "root")
+            if (comboBoxF2.Text == tlc & textBox1.Text == dt.Rows[0][2].ToString() 
+                || comboBoxF2.Text == osh & textBox1.Text == dt.Rows[0][2].ToString() 
+                || comboBoxF2.Text == dj & textBox1.Text == dt.Rows[0][2].ToString() 
+                || comboBoxF2.Text == "root" & textBox1.Text == dt.Rows[0][2].ToString())
             {
-                //Clipboard.SetText(comboBoxF2.Text);//Скопировать текст в буфер обмена
                 //P.label1.Text = "Добро пожаловать! " + comboBoxF2.Text;
+                TLC form1 = new TLC();
                 form1.Show();
                 this.Hide();
             }
-            else if (comboBoxF2.Text == sklad & textBox1.Text == "159753")
+            else if (comboBoxF2.Text == sklad & textBox1.Text == dt.Rows[0][2].ToString())
             {
-                //Clipboard.SetText(comboBoxF2.Text);//Скопировать текст в буфер обмена
                 Inventory_control sklad = new Inventory_control();
                 //P.label1.Text = "Добро пожаловать! " + comboBoxF2.Text;
                 sklad.Show();
                 this.Hide();
             }
-            else if (comboBoxF2.Text == avto & textBox1.Text == "123654")
+            else if (comboBoxF2.Text == avto & textBox1.Text == dt.Rows[0][2].ToString())
             {
-                //Clipboard.SetText(comboBoxF2.Text);//Скопировать текст в буфер обмена
                 Transport avto = new Transport();
                 //P.label1.Text = "Добро пожаловать! " + comboBoxF2.Text;
                 avto.Show();
@@ -79,37 +78,37 @@ namespace ProgramCCS
                 MessageBox.Show("Неверный пароль", "Внимание!");
             }
         }
-        void miganie(object sender, EventArgs e)//Метод мигания
-        {
-            label3.Visible = !label3.Visible;
-        }
+        
         public void Logins_select()//Вывод пользователей в Combobox
         {
             TLC form1 = new TLC();
-            form1.con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT login FROM [Table_Login] WHERE login NOT IN ('root') ORDER BY login", form1.con);
+            con.Open();//Открываем соединение
+            SqlCommand cmd = new SqlCommand("SELECT login FROM [Table_Login] WHERE login NOT IN ('root') ORDER BY login", con);
             cmd.ExecuteNonQuery();
             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             dt.Clear();//чистим DataTable, если он был не пуст
             da.Fill(dt);//заполняем данными созданный DataTable
-            //DGVF1.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             foreach (DataRow row in dt.Rows)
             {
                 comboBoxF2.Items.Add(row[0].ToString());
             }
-            form1.con.Close();//Закрываем соединение          
+            con.Close();//Закрываем соединение          
+        }
+
+        void Miganie(object sender, EventArgs e)//Метод мигания
+        {
+            label26.Visible = !label26.Visible;
         }
         private void Form2_Load(object sender, EventArgs e)//Загрузка формы
         {
             textBox1.PasswordChar = '*';//Скрыть пароль
-            //DGVF2.Visible = false;
             Logins_select();
             label26.Text = "Версия - " + CurrentVersion;//Версия
-            //Мигание кнопки
+            //Мигание кнопки//
             Timer t = new Timer();
             t.Interval = 400;
-            t.Tick += new EventHandler(miganie);
+            t.Tick += new EventHandler(Miganie);
             t.Start();
             comboBoxF2.SelectedIndex = 0;
             textBox1.Select();//Установить курсор
@@ -117,7 +116,7 @@ namespace ProgramCCS
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)// ссылка на страничку
         {
-            System.Diagnostics.Process.Start("https://www.facebook.com/alesunix");
+            System.Diagnostics.Process.Start("https://alesunix.github.io/");
             linkLabel1.BackColor = Color.Transparent;
         }
 

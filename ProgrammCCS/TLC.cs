@@ -23,6 +23,7 @@ namespace ProgramCCS
 {
     public partial class TLC : Form
     {
+        public DataTable dataTable = new DataTable();//создаем экземпляр класса DataTable
         private string fileName = string.Empty;
         private DataTableCollection tableCollection = null;       
 
@@ -46,7 +47,7 @@ namespace ProgramCCS
 
         public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
         MySqlConnection mycon = new MySqlConnection("SERVER= хостинг_сервер;" + "DATABASE= имя_базы;" + "UID= логин;" + "PASSWORD=пароль;" + "connection timeout = 180");
-        Login form2 = new Login();
+        Login formLogin = new Login();
         public object loker = new object();
 
         public TLC()
@@ -122,10 +123,7 @@ namespace ProgramCCS
             //очищаем редактируемое поле
             comboBox8.Text = string.Empty;
         }
-        private void PrintOut(ref object oTrue1, ref object oFalse1, ref object range, ref object missing1, ref object missing2, ref object missing3, ref object items, ref object copies, ref object pages, ref object pageType, ref object oFalse2, ref object oTrue2, ref object missing4, ref object oFalse3, ref object missing5, ref object missing6, ref object missing7, ref object missing8)
-        {
-            throw new NotImplementedException();
-        }
+        
         public string CurrentVersion//Версия программы
         {
             get
@@ -446,15 +444,13 @@ namespace ProgramCCS
         private void LinkLabel2_Click(object sender, EventArgs e)//Отобразить список Ожидание!
         {
             dataGridView2.Visible = true;
-            con.Open();//Открываем соединение
-            SqlCommand cmd = con.CreateCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
+            con.Open();//открыть соединение
+            SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
                 "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
                     "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
                     "filial AS 'Филиал', client AS 'Контрагент'," +
                     "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
-                    " FROM [Table_1] WHERE status = @status ORDER BY data_zapisi DESC";
+                    " FROM [Table_1] WHERE status = @status ORDER BY data_zapisi DESC", con);
             cmd.Parameters.AddWithValue("@status", "Ожидание");
             cmd.ExecuteNonQuery();
             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
@@ -470,15 +466,13 @@ namespace ProgramCCS
         private void LinkLabel3_Click(object sender, EventArgs e)//Отобразить список Розыск!
         {
             dataGridView2.Visible = true;
-            con.Open();//Открываем соединение
-            SqlCommand cmd = con.CreateCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
+            con.Open();//открыть соединение
+            SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
                 "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
                     "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
                     "filial AS 'Филиал', client AS 'Контрагент'," +
                     "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
-                    " FROM [Table_1] WHERE status = @status ORDER BY data_zapisi DESC";
+                    " FROM [Table_1] WHERE status = @status ORDER BY data_zapisi DESC", con);
             cmd.Parameters.AddWithValue("@status", "Розыск");
             cmd.ExecuteNonQuery();
             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
@@ -493,15 +487,13 @@ namespace ProgramCCS
         private void LinkLabel4_Click(object sender, EventArgs e)//Отобразить список Замена!
         {
             dataGridView2.Visible = true;
-            con.Open();//Открываем соединение
-            SqlCommand cmd = con.CreateCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
+            con.Open();//открыть соединение
+            SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
                 "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
                     "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
                     "filial AS 'Филиал', client AS 'Контрагент'," +
                     "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
-                    " FROM [Table_1] WHERE status = @status ORDER BY data_zapisi DESC";
+                    " FROM [Table_1] WHERE status = @status ORDER BY data_zapisi DESC", con);
             cmd.Parameters.AddWithValue("@status", "Замена");
             cmd.ExecuteNonQuery();
             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
@@ -513,6 +505,7 @@ namespace ProgramCCS
             linkLabel4.Visible = false;
             Podschet();
         }
+
         public void Disp_data()//Отображает неделю //Сортировка главного грида по дате записи (сначала новые)
         {
             button8.Text = "Ожидайте!";
@@ -534,14 +527,14 @@ namespace ProgramCCS
                     " FROM [Table_1] WHERE (data_zapisi BETWEEN @StartDate AND @EndDate) AND filial = @filial OR filial IS NULL ORDER BY data_zapisi DESC";
                 cmd.Parameters.AddWithValue("@StartDate", DateTime.Today.AddDays(-7));
                 cmd.Parameters.AddWithValue("@EndDate", DateTime.Today);
-            if (form2.comboBoxF2.Text == form2.tlc || form2.comboBoxF2.Text == "root")
+            if (Person.Name != "root")
+            {
+                cmd.Parameters.AddWithValue("@filial", Person.Name);
+            }
+            else 
             {
                 if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
                 cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
-            }
-            else if (form2.comboBoxF2.Text == form2.osh || form2.comboBoxF2.Text == form2.dj)
-            {
-                cmd.Parameters.AddWithValue("@filial", form2.comboBoxF2.Text);
             }
                 cmd.ExecuteNonQuery();
                 DataTable dt = new DataTable();//создаем экземпляр класса DataTable
@@ -584,14 +577,14 @@ namespace ProgramCCS
                     "filial AS 'Филиал', client AS 'Контрагент'," +
                     "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
                 " FROM [Table_1] WHERE filial = @filial OR filial IS NULL ORDER BY data_zapisi DESC";
-            if (form2.comboBoxF2.Text == form2.tlc || form2.comboBoxF2.Text == "root")
+            if (Person.Name != "root")
+            {
+                cmd.Parameters.AddWithValue("@filial", Person.Name);
+            }
+            else
             {
                 if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
                 cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
-            }
-            else if (form2.comboBoxF2.Text == form2.osh || form2.comboBoxF2.Text == form2.dj)
-            {
-                cmd.Parameters.AddWithValue("@filial", form2.comboBoxF2.Text);
             }
             cmd.ExecuteNonQuery();
             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
@@ -1138,16 +1131,14 @@ namespace ProgramCCS
                 "WHERE name = @name", con);
             cmd.Parameters.AddWithValue("@name", comboBox5.Text.ToString());
             cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            dataGridView4.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            dataTable.Clear();//чистим DataTable, если он был не пуст
+            da.Fill(dataTable);//заполняем данными созданный DataTable
             con.Close();//закрыть соединение
             if (comboBox5.Text == "")//если поле очищено, отобразить базу
             {
-                dt.Clear();//чистим DataTable, если он был не пуст
-                foreach (DataRow column in dt.Rows)
+                dataTable.Clear();//чистим DataTable, если он был не пуст
+                foreach (DataRow column in dataTable.Rows)
                 {
                     comboBox5.Items.Add(column[0].ToString());
                 }
@@ -1273,7 +1264,7 @@ namespace ProgramCCS
                                 cmd.Parameters.AddWithValue("@Nr", 0);
                                 cmd.Parameters.AddWithValue("@Ns", number);
                                 cmd.Parameters.AddWithValue("@Nn", 0);
-                                cmd.Parameters.AddWithValue("@tarifs", Convert.ToString(dataGridView4.Rows[0].Cells[0].Value));//tarif
+                                cmd.Parameters.AddWithValue("@tarifs", dataTable.Rows[0][0].ToString());//tarif
 
                                 if ((dataGridView3.Rows[i].Cells[11].Value) != DBNull.Value)//если в EXCEL столбец доплата не пустой
                                 { cmd.Parameters.AddWithValue("@doplata", Convert.ToString(dataGridView3.Rows[i].Cells[11].Value)); }
@@ -1748,7 +1739,7 @@ namespace ProgramCCS
                 {
                     cmd.Parameters.AddWithValue("@status", comboBox1.Text);
                     cmd.Parameters.AddWithValue("@prichina", comboBox8.Text);
-                    cmd.Parameters.AddWithValue("@filial", form2.comboBoxF2.Text);
+                    cmd.Parameters.AddWithValue("@filial", Person.Name);
                     MessageBox.Show("Статус успешно обновлен", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     label1.Text = "Статус успешно обновлен";
                     cmd.ExecuteNonQuery();
@@ -1896,7 +1887,7 @@ namespace ProgramCCS
         }
         private void button14_Click(object sender, EventArgs e)//Объединить
         {
-            if (form2.comboBoxF2.Text == "root" & textBox14.Text != "")
+            if (Person.Name == "root" & textBox14.Text != "")
             {
                 if (MessageBox.Show("Вы хотите объединить эти записи?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
@@ -1945,13 +1936,14 @@ namespace ProgramCCS
                     "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
                     "FROM [Table_1] WHERE status = @status AND filial = @filial ORDER BY nomer_reestra DESC";
             cmd.Parameters.AddWithValue("@status", "Возврат");
-            if (form2.comboBoxF2.Text == form2.tlc || form2.comboBoxF2.Text == "root")
-            {if(comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
-                cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
-            }
-            else if (form2.comboBoxF2.Text == form2.osh || form2.comboBoxF2.Text == form2.dj)
+            if (Person.Name != "root")
             {
-                cmd.Parameters.AddWithValue("@filial", form2.comboBoxF2.Text);
+                cmd.Parameters.AddWithValue("@filial", Person.Name);
+            }
+            else
+            {
+                if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
+                cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
             }
             cmd.ExecuteNonQuery();
 
@@ -1976,16 +1968,16 @@ namespace ProgramCCS
                         "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
                         "FROM [Table_1] WHERE status = @status AND filial = @filial ORDER BY nomer_reestra DESC";
                 cmd.Parameters.AddWithValue("@status", "Выдано");
-                if (form2.comboBoxF2.Text == form2.tlc || form2.comboBoxF2.Text == "root")
-                {
-                    if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
-                    cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
-                }
-                else if (form2.comboBoxF2.Text == form2.osh || form2.comboBoxF2.Text == form2.dj)
-                {
-                    cmd.Parameters.AddWithValue("@filial", form2.comboBoxF2.Text);
-                }
-                cmd.ExecuteNonQuery();
+            if (Person.Name != "root")
+            {
+                cmd.Parameters.AddWithValue("@filial", Person.Name);
+            }
+            else
+            {
+                if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
+                cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
+            }
+            cmd.ExecuteNonQuery();
 
                 DataTable dt = new DataTable();//создаем экземпляр класса DataTable
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
@@ -2257,7 +2249,7 @@ namespace ProgramCCS
                         cmd.Parameters.AddWithValue("@status", "Отправлено");
                         cmd.Parameters.AddWithValue("@nomer_nakladnoy", prefix_number);
                         cmd.Parameters.AddWithValue("@Nn", number);
-                        cmd.Parameters.AddWithValue("@filial", form2.comboBoxF2.Text);
+                        cmd.Parameters.AddWithValue("@filial", Person.Name);
                         cmd.ExecuteNonQuery();
                     }
                     con.Close();//закрыть соединение 
@@ -3308,41 +3300,11 @@ namespace ProgramCCS
             GC.GetTotalMemory(true);// Вызываем сборщик мусора для немедленной очистки памяти
         }
 
-
-        private void button5_Click(object sender, EventArgs e)//Печать
-        {
-            PrintDocument Document = new PrintDocument();
-            Document.DefaultPageSettings.Landscape = false;//Альбомная ориентация
-            Document.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
-            PrintPreviewDialog dlg = new PrintPreviewDialog();
-            dlg.Document = Document;
-            dlg.ShowDialog();
-        }
-        private void printDocument1_PrintPage(object sender, PrintPageEventArgs e)//Обработчик печати
-        {
-            //Изменить размер DataGridView на полную высоту.
-            int height = dataGridView1.Height;
-            dataGridView1.Height = dataGridView1.RowCount * dataGridView1.RowTemplate.Height;
-
-            //Создание растрового изображения и нарисуйте на ней DataGridView.
-            Bitmap bmp = new Bitmap(this.dataGridView1.Width, this.dataGridView1.Height);
-            dataGridView1.DrawToBitmap(bmp, new Rectangle(0, 0, this.dataGridView1.Width, this.dataGridView1.Height));
-
-            // Печать содержимого.
-            e.Graphics.DrawImage(bmp, 0, 0);
-
-            //Изменить размер DataGridView обратно в исходную высоту.
-            dataGridView1.Height = height;
-        }
-        private void comboBox2_SelectedValueChanged(object sender, EventArgs e)//Заполнение textbox из combobox
-        {
-            //textBox1.AppendText(comboBox2.Text);//Заполнение textbox из combobox
-        }
         private void button17_Click(object sender, EventArgs e)//Выход
         {
             if (MessageBox.Show("Вы действительно хотите выйти?!", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
-                form2.Show();
+                formLogin.Show();
                 this.Hide();
             }            
         }
@@ -3352,7 +3314,7 @@ namespace ProgramCCS
         }
         private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)// ссылка на страничку
         {
-            System.Diagnostics.Process.Start("https://www.facebook.com/alesunix");
+            System.Diagnostics.Process.Start("https://alesunix.github.io/");
             linkLabel1.BackColor = Color.Transparent;
         }
 
@@ -3369,7 +3331,6 @@ namespace ProgramCCS
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             dt.Clear();//чистим DataTable, если он был не пуст
             da.Fill(dt);//заполняем данными созданный DataTable
-            //DGVF1.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             foreach (DataRow row in dt.Rows)
             {
                 comboBox11.Items.Add(row[0].ToString());
@@ -3601,8 +3562,6 @@ namespace ProgramCCS
         {
 
         }
-
-        
     }
 }
 

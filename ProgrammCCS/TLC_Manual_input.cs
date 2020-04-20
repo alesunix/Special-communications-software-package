@@ -22,15 +22,17 @@ namespace ProgramCCS
             InitializeComponent();
         }
         TLC F1 = new TLC();
+        Login formLogin = new Login();
+
         private void button13_Click(object sender, EventArgs e)
         {
             if (textBox7.Text != "" & textBox9.Text != "" & textBox10.Text != "" & textBox11.Text != "" & textBox12.Text != "" & comboBox6.Text != "" & comboBox7.Text != "")
             {
                 var summ = Convert.ToDouble(textBox10.Text.Replace(',', '.'));//запятую превратить в точку
-                F1.con.Open();//открыть соединение
+                formLogin.con.Open();//открыть соединение
                 SqlCommand cmd = new SqlCommand("INSERT INTO [Table_1] (oblast, punkt, familia, summ, N_zakaza, data_zapisi, obrabotka, status, client, tarif, nomer_reestra," +
                     " doplata, nomer_spiska, nomer_nakladnoy, Nr,Nn,Ns,tarifs) VALUES (@oblast, @punkt, @familia, @summ, @N_zakaza, @data_zapisi, @obrabotka, @status, @client," +
-                    " @tarif, @nomer_reestra, @doplata, @nomer_spiska, @nomer_nakladnoy,@Nr,@Nn,@Ns,@tarifs)", F1.con);
+                    " @tarif, @nomer_reestra, @doplata, @nomer_spiska, @nomer_nakladnoy,@Nr,@Nn,@Ns,@tarifs)", formLogin.con);
                 cmd.Parameters.AddWithValue("@oblast", comboBox6.Text);
                 cmd.Parameters.AddWithValue("@punkt", textBox7.Text);
                 cmd.Parameters.AddWithValue("@familia", textBox9.Text);
@@ -45,13 +47,13 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("@nomer_nakladnoy", 0);
                 cmd.Parameters.AddWithValue("@Nr", 0);
                 cmd.Parameters.AddWithValue("@Nn", 0);
-                cmd.Parameters.AddWithValue("@tarifs", Convert.ToString(F1.dataGridView4.Rows[0].Cells[0].Value));//tarif
+                cmd.Parameters.AddWithValue("@tarifs", F1.dataTable.Rows[0][0].ToString());//tarif
                 if (textBox17.Text != "") { cmd.Parameters.AddWithValue("@doplata", textBox17.Text); }
                 else if (textBox17.Text == "") { cmd.Parameters.AddWithValue("@doplata", 0); }
                 if (textBox20.Text != "") { cmd.Parameters.AddWithValue("@nomer_spiska", textBox20.Text); cmd.Parameters.AddWithValue("@Ns", textBox20.Text); }
                 else if (textBox20.Text == "") { cmd.Parameters.AddWithValue("@nomer_spiska", 0); cmd.Parameters.AddWithValue("@Ns", 0); }
                 cmd.ExecuteNonQuery();
-                F1.con.Close();//закрыть соединение
+                formLogin.con.Close();//закрыть соединение
                 textBox9.Text = "";//очистка текстовых полей
                 textBox7.Text = "";
                 textBox10.Text = "";
@@ -74,8 +76,8 @@ namespace ProgramCCS
         }
         public void Partner_select()//Вывод Контрагентов в Combobox
         {
-            F1.con.Open();//Открываем соединение
-            SqlCommand cmd = F1.con.CreateCommand();
+            formLogin.con.Open();//Открываем соединение
+            SqlCommand cmd = formLogin.con.CreateCommand();
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = "SELECT name FROM [Table_Partner] ORDER BY id";
             cmd.ExecuteNonQuery();
@@ -88,7 +90,7 @@ namespace ProgramCCS
             {
                 comboBox7.Items.Add(column[0].ToString());
             }
-            F1.con.Close();//Закрываем соединение          
+            formLogin.con.Close();//Закрываем соединение          
         }
         private void Form_manual_input_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -102,21 +104,19 @@ namespace ProgramCCS
 
         private void comboBox7_TextChanged(object sender, EventArgs e)
         {
-            F1.con.Open();//открыть соединение
+            formLogin.con.Open();//открыть соединение
             SqlCommand cmd = new SqlCommand("SELECT tarif FROM [Table_Partner]" +
-                "WHERE name = @name", F1.con);
+                "WHERE name = @name", formLogin.con);
             cmd.Parameters.AddWithValue("@name", comboBox7.Text.ToString());
             cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            F1.dataGridView4.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            F1.con.Close();//закрыть соединение
+            F1.dataTable.Clear();//чистим DataTable, если он был не пуст
+            da.Fill(F1.dataTable);//заполняем данными созданный DataTable
+            formLogin.con.Close();//закрыть соединение
             if (comboBox7.Text == "")//если поле очищено, отобразить базу
             {
-                dt.Clear();//чистим DataTable, если он был не пуст
-                foreach (DataRow column in dt.Rows)
+                F1.dataTable.Clear();//чистим DataTable, если он был не пуст
+                foreach (DataRow column in F1.dataTable.Rows)
                 {
                     comboBox7.Items.Add(column[0].ToString());
                 }
