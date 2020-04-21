@@ -13,6 +13,8 @@ namespace ProgramCCS
 {
     public partial class Form_manual_input : Form
     {
+        public SqlConnection con = Connection.con;//Получить строку соединения из класса модели
+
         public Form_manual_input()
         {
             InitializeComponent();
@@ -22,17 +24,16 @@ namespace ProgramCCS
             InitializeComponent();
         }
         TLC F1 = new TLC();
-        Login formLogin = new Login();
-
+        
         private void button13_Click(object sender, EventArgs e)
         {
             if (textBox7.Text != "" & textBox9.Text != "" & textBox10.Text != "" & textBox11.Text != "" & textBox12.Text != "" & comboBox6.Text != "" & comboBox7.Text != "")
             {
                 var summ = Convert.ToDouble(textBox10.Text.Replace(',', '.'));//запятую превратить в точку
-                formLogin.con.Open();//открыть соединение
+                con.Open();//открыть соединение
                 SqlCommand cmd = new SqlCommand("INSERT INTO [Table_1] (oblast, punkt, familia, summ, N_zakaza, data_zapisi, obrabotka, status, client, tarif, nomer_reestra," +
                     " doplata, nomer_spiska, nomer_nakladnoy, Nr,Nn,Ns,tarifs) VALUES (@oblast, @punkt, @familia, @summ, @N_zakaza, @data_zapisi, @obrabotka, @status, @client," +
-                    " @tarif, @nomer_reestra, @doplata, @nomer_spiska, @nomer_nakladnoy,@Nr,@Nn,@Ns,@tarifs)", formLogin.con);
+                    " @tarif, @nomer_reestra, @doplata, @nomer_spiska, @nomer_nakladnoy,@Nr,@Nn,@Ns,@tarifs)", con);
                 cmd.Parameters.AddWithValue("@oblast", comboBox6.Text);
                 cmd.Parameters.AddWithValue("@punkt", textBox7.Text);
                 cmd.Parameters.AddWithValue("@familia", textBox9.Text);
@@ -53,7 +54,7 @@ namespace ProgramCCS
                 if (textBox20.Text != "") { cmd.Parameters.AddWithValue("@nomer_spiska", textBox20.Text); cmd.Parameters.AddWithValue("@Ns", textBox20.Text); }
                 else if (textBox20.Text == "") { cmd.Parameters.AddWithValue("@nomer_spiska", 0); cmd.Parameters.AddWithValue("@Ns", 0); }
                 cmd.ExecuteNonQuery();
-                formLogin.con.Close();//закрыть соединение
+                con.Close();//закрыть соединение
                 textBox9.Text = "";//очистка текстовых полей
                 textBox7.Text = "";
                 textBox10.Text = "";
@@ -76,10 +77,8 @@ namespace ProgramCCS
         }
         public void Partner_select()//Вывод Контрагентов в Combobox
         {
-            formLogin.con.Open();//Открываем соединение
-            SqlCommand cmd = formLogin.con.CreateCommand();
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = "SELECT name FROM [Table_Partner] ORDER BY id";
+            con.Open();//Открываем соединение
+            SqlCommand cmd = new SqlCommand("SELECT name FROM [Table_Partner] ORDER BY id", con);
             cmd.ExecuteNonQuery();
             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
@@ -90,7 +89,7 @@ namespace ProgramCCS
             {
                 comboBox7.Items.Add(column[0].ToString());
             }
-            formLogin.con.Close();//Закрываем соединение          
+            con.Close();//Закрываем соединение          
         }
         private void Form_manual_input_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -104,15 +103,15 @@ namespace ProgramCCS
 
         private void comboBox7_TextChanged(object sender, EventArgs e)
         {
-            formLogin.con.Open();//открыть соединение
+            con.Open();//открыть соединение
             SqlCommand cmd = new SqlCommand("SELECT tarif FROM [Table_Partner]" +
-                "WHERE name = @name", formLogin.con);
+                "WHERE name = @name", con);
             cmd.Parameters.AddWithValue("@name", comboBox7.Text.ToString());
             cmd.ExecuteNonQuery();
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             F1.dataTable.Clear();//чистим DataTable, если он был не пуст
             da.Fill(F1.dataTable);//заполняем данными созданный DataTable
-            formLogin.con.Close();//закрыть соединение
+            con.Close();//закрыть соединение
             if (comboBox7.Text == "")//если поле очищено, отобразить базу
             {
                 F1.dataTable.Clear();//чистим DataTable, если он был не пуст

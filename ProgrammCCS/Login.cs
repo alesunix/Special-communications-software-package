@@ -10,7 +10,7 @@ namespace ProgramCCS
 {
     public partial class Login : Form
     {
-        public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
+        public SqlConnection con = Connection.con;//Получить строку соединения из класса модели
 
         public string tlc = "TLC-Express";
         public string osh = "Ошский филиал";
@@ -23,7 +23,7 @@ namespace ProgramCCS
             InitializeComponent();
             //this.Text += "  Версия - " + CurrentVersion; //Добавляем в название программы, версию.
             textBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "Войти" с клавиатуры
-            comboBoxF2.Text = tlc;//отображение TLC-Express 
+            comboBoxF2.Text = tlc;//отображение TLC-Express
         }     
         public string CurrentVersion//Версия программы
         {

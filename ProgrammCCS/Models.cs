@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.SqlClient;
 
 namespace ProgramCCS
 {
@@ -21,7 +22,12 @@ namespace ProgramCCS
         public static int Ns { get; set; }
         public static int Nn { get; set; }
         public static int Nr { get; set; }
-
+        
         public static string Prefix_number { get; set; }
+    }
+
+    public class Connection
+    {
+        public static SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
     }
 }

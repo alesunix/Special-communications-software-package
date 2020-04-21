@@ -16,7 +16,7 @@ namespace ProgramCCS
 {
     public partial class Graph : Form
     {
-        public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
+        public SqlConnection con = Connection.con;//Получить строку соединения из класса модели
         public Graph()
         {
             InitializeComponent();

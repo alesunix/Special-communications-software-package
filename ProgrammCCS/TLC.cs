@@ -23,6 +23,10 @@ namespace ProgramCCS
 {
     public partial class TLC : Form
     {
+        public SqlConnection con = Connection.con;//Получить строку соединения из класса модели
+        //public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
+        MySqlConnection mycon = new MySqlConnection("SERVER= хостинг_сервер;" + "DATABASE= имя_базы;" + "UID= логин;" + "PASSWORD=пароль;" + "connection timeout = 180");
+
         public DataTable dataTable = new DataTable();//создаем экземпляр класса DataTable
         private string fileName = string.Empty;
         private DataTableCollection tableCollection = null;       
@@ -44,10 +48,8 @@ namespace ProgramCCS
             "Сары-Ой", "Кара-Ой", "Чолпон-Ата", "Бакту-Долонотуу", "Бозтери", "Кен-Арал", "Озгорут", "Ак-Добо", "Кызыл-Сай", "Мин-Булак", "Боо-Терек", "Бакыян", "Тамчы-Булак", "Бейшеке", "Кичи-Кировка", "Кировка, Жийде", "Пушкин", "Кок-Токой", "Жон-Арык", "Кок-Ой" };
 
         string[] tarifs = {"Общий", "" };//Контрагенты
-
-        public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
-        MySqlConnection mycon = new MySqlConnection("SERVER= хостинг_сервер;" + "DATABASE= имя_базы;" + "UID= логин;" + "PASSWORD=пароль;" + "connection timeout = 180");
-        Login formLogin = new Login();
+        
+        Login formLogin = new Login();       
         public object loker = new object();
 
         public TLC()
@@ -513,20 +515,17 @@ namespace ProgramCCS
             button2.Enabled = true;
             dataGridView2.Visible = true;
             dataGridView1.Visible = false;
-            dataGridView5.Visible = false;           
+            dataGridView5.Visible = false;
 
             con.Open();//Открываем соединение
-                SqlCommand cmd = con.CreateCommand();
-                cmd.CommandType = CommandType.Text;
-                //cmd.CommandText = "SELECT TOP 1000 * FROM [Table_1] ORDER BY data_zapisi DESC";//последние 1000 записей
-                cmd.CommandText = "SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
+            SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
                 "summ AS 'Стоимость', plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
                 "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
                 "filial AS 'Филиал', client AS 'Контрагент'," +
                 "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
-                    " FROM [Table_1] WHERE (data_zapisi BETWEEN @StartDate AND @EndDate) AND filial = @filial OR filial IS NULL ORDER BY data_zapisi DESC";
-                cmd.Parameters.AddWithValue("@StartDate", DateTime.Today.AddDays(-7));
-                cmd.Parameters.AddWithValue("@EndDate", DateTime.Today);
+                    " FROM [Table_1] WHERE (data_zapisi BETWEEN @StartDate AND @EndDate) AND filial = @filial OR filial IS NULL ORDER BY data_zapisi DESC", con);
+            cmd.Parameters.AddWithValue("@StartDate", DateTime.Today.AddDays(-7));
+            cmd.Parameters.AddWithValue("@EndDate", DateTime.Today);
             if (Person.Name != "root")
             {
                 cmd.Parameters.AddWithValue("@filial", Person.Name);
@@ -950,45 +949,7 @@ namespace ProgramCCS
             }
                 
         }
-        public void Doplata()//Доплата
-        {
-            for (int i = 0; i < dataGridView2.Rows.Count; i++)
-            {
-                string klient = Convert.ToString(dataGridView2.Rows[i].Cells[15].Value);
-                if (klient == "TOO Sapar delivery" & klient == "ОсОО Kyrgyz Express Post")
-                {
-                    con.Open();//открыть соединение
-                               //SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET doplata = @doplata WHERE punkt NOT LIKE '%" + spisok + "%'", con);
-                    SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET doplata = @doplata WHERE punkt NOT IN ('Кок-Ой', 'Байзак', 'Жумгал', 'Кызарт', 'Куйругук', 'Багышан', 'Туголь-Сай', 'Баш - Куванды', 'Баетово', 'Терек', 'Бай-Гончок', 'Улут', 'Ак-Тал', 'Тоголок-Молдо', 'Куртка', 'Ак - Жар', 'Ага Каинды', 'Баш Каинды', 'Бирлик', 'Ак Муз', 'Калинин'," +
-        "'Кара-Суу', 'Байгазак', 'Орто-Саз', 'Чет-Нура', 'Орто-Нура', 'Ийрисуу', 'Алыш', 'Доболуу', 'Каинды', 'Мин-Булак', 'Ички-Башы', 'Оттук', 'Жергетал', 'Эмгекчи', 'Жан-Булак', 'Достук', 'Куланак', 'Учкун', 'Пионер', 'Арсы', 'Кара-Тоо', 'Ак-Жар'," +
-        "'Кум-Добо', 'Семиз-Бель', 'Ормон-Хан', 'Кара-Суу', 'Исакеев', 'Кок-Жар', 'Чекилдек', 'Туз', 'Чолпон', 'Мантыш', 'Дон-Алыш', 'Советский', 'Бешик-Жон', 'Кочкор-Ата', 'Момбеково', 'Кыпчак-Талас', 'Кок-Таш', 'Кызыл-Туу', 'Аксы', 'Шамалды-Сай', 'Кош-Тобо'," +
-        "'Шарк', 'Нариман', 'Кашгар-Кыштак', 'Отуз-Адыр', 'Жаны-Арык', 'Куршаб', 'Шералы', 'Ильичевка', 'Мырза-Аки', 'Жекерчи', 'Ылай-Талаа', 'Кара-Кочкор', '1-Май', 'Тоготой', 'Жар-Кыштак', 'Кыр-Кол', 'Курманжан - Датка', 'Жылуу-Суу', 'Россия', 'Бель-Орук', 'Кок-Жар', 'Кенеш'," +
-        "'Уч-Коргон', 'Марказ', 'Кок-Талаа', 'Халмион', 'Торговый', 'Бурганды','Уч-Коргон','Марказ','Кок-Талаа','Халмион','Торговый','Бурганды','Орозбеково','Кызыл-Булак','Караван', 'Чон-Гара', 'Жаны-Жер', 'Ак-Таш', 'Ак-Татыр', 'Бужум', 'Кызыл-Жол', 'Чек'," +
-        "'Ак-Терек', 'Коргон', 'Тогуз-Булак', 'Кара-Булак', 'Чимген', 'Ново-Павловка', 'Военно-Антоновка', 'Гавриловка', 'Романовка', 'Шопоков', 'Александровка', 'Садовое', 'Петровка', 'Полтавка', 'Ново-Николаевка', 'Петропавловка', 'Калининское', 'Алексеевка', 'Вознесеновка'," +
-        "'Лебединовка', 'Ново-Покровка', 'Киршелк', 'Люксембург', 'Дмитриевка', 'Буденовка', 'Кенеш', 'Красная Речка', 'Ивановка', 'Кенбулун', 'Гидростроитель', 'Арал', 'Искра', 'Чемкургон', 'Бообек', 'Жаналыш', 'Акбекет', 'Каскелен'," +
-        "'Сары-Ой', 'Кара-Ой', 'Чолпон-Ата','Бакту-Долонотуу', 'Бозтери', 'Кен-Арал', 'Озгорут', 'Ак-Добо', 'Кызыл-Сай', 'Мин-Булак', 'Боо-Терек', 'Бакыян', 'Тамчы-Булак', 'Бейшеке', 'Кичи-Кировка', 'Кировка, Жийде', 'Пушкин','Кок-Токой', 'Жон-Арык', 'Кок-Ой')", con);
-                    cmd.Parameters.AddWithValue("@doplata", 90);
-                    cmd.ExecuteNonQuery();
-                    con.Close();//закрыть соединение          
-                }
-            }
-            //---------------ПрогрессБар--------------------//
-            progressBar1.Visible = true;
-            progressBar1.Maximum = 101;
-            progressBar1.Value = 0;
-            Thread t = new Thread(new ThreadStart(delegate
-            {
-                for (int x = 0; x < 101; x++)
-                {
-                    Invoke(new ThreadStart(delegate
-                    {
-                        progressBar1.Value++;
-                    }));
-                }
-            }));
-            t.Start();
-            //---------------ПрогрессБар--------------------//
-        }
+
         public void Select_status_Nr()//(Для выдачи реестров)Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.
         {
             con.Open();//Открываем соединение
