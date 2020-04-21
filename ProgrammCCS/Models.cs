@@ -15,4 +15,13 @@ namespace ProgramCCS
             Access = access;
         }
     }
+
+    public class Number
+    {
+        public static int Ns { get; set; }
+        public static int Nn { get; set; }
+        public static int Nr { get; set; }
+
+        public static string Prefix_number { get; set; }
+    }
 }

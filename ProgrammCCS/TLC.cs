@@ -533,7 +533,7 @@ namespace ProgramCCS
             }
             else 
             {
-                if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
+                if (Person.Name == "root") { comboBox4.SelectedIndex = 0; }
                 cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
             }
                 cmd.ExecuteNonQuery();
@@ -583,7 +583,7 @@ namespace ProgramCCS
             }
             else
             {
-                if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
+                if (Person.Name == "root") { comboBox4.SelectedIndex = 0; }
                 cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
             }
             cmd.ExecuteNonQuery();
@@ -989,7 +989,7 @@ namespace ProgramCCS
             t.Start();
             //---------------ПрогрессБар--------------------//
         }
-        public void Select_status()//(Для выдачи реестров)Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.
+        public void Select_status_Nr()//(Для выдачи реестров)Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
@@ -1023,8 +1023,11 @@ namespace ProgramCCS
             da.Fill(dt);//заполняем данными созданный DataTable
             dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             con.Close();//Закрываем соединение
+
+            Number.Nr = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+            Number.Prefix_number = comboBox10.Text + Number.Nr;
         }
-        public void Select_status_nakladnoi()//(Для выдачи накладных)Выборка по статусу и сортировка по номеру накладеой от больших значений к меньшим.
+        public void Select_status_Nn()//(Для выдачи накладных)Выборка по статусу и сортировка по номеру накладеой от больших значений к меньшим.
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
@@ -1050,8 +1053,11 @@ namespace ProgramCCS
             da.Fill(dt);//заполняем данными созданный DataTable
             dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             con.Close();//Закрываем соединение
+
+            Number.Nn = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
+            Number.Prefix_number = comboBox10.Text + Number.Nn;
         }
-        public void Select_spisok()//(Для выдачи списка принятых)Выборка и сортировка по номеру от больших значений к меньшим.
+        public void Select_Ns()//(Для выдачи списка принятых)Выборка и сортировка по номеру от больших значений к меньшим.
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
@@ -1067,6 +1073,9 @@ namespace ProgramCCS
             da.Fill(dt);//заполняем данными созданный DataTable
             dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             con.Close();//Закрываем соединение
+
+            Number.Ns = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
+            Number.Prefix_number = comboBox10.Text + Number.Ns;
         }
         public void Select_client()//Для сортировки принятых списков по клиенту
         {
@@ -1097,7 +1106,6 @@ namespace ProgramCCS
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             dt.Clear();//чистим DataTable, если он был не пуст
             da.Fill(dt);//заполняем данными созданный DataTable
-            //DGVF1.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             foreach (DataRow row in dt.Rows)
             {
                 comboBox10.Items.Add(row[0].ToString());
@@ -1115,7 +1123,6 @@ namespace ProgramCCS
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
             dt.Clear();//чистим DataTable, если он был не пуст
             da.Fill(dt);//заполняем данными созданный DataTable
-            //DGVF1.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             foreach (DataRow column in dt.Rows)
             {
                 comboBox6.Items.Add(column[0].ToString());
@@ -1223,9 +1230,8 @@ namespace ProgramCCS
                             dataGridView2.Visible = true;
                             dataGridView1.Visible = false;
                             dataGridView5.Visible = false;
-                            Select_spisok();//Выборка и сортировка по номеру от больших значений к меньшим.
-                            int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
-                            string prefix_number = comboBox10.Text + number;
+                            Select_Ns();//Выборка и сортировка по номеру от больших значений к меньшим.
+                            
                             con.Open();//открыть соединение
                             for (int i = 0; i < dataGridView3.Rows.Count; i++)
                             {
@@ -1259,10 +1265,10 @@ namespace ProgramCCS
                                 cmd.Parameters.AddWithValue("@status", "Ожидание");
                                 cmd.Parameters.AddWithValue("@client", comboBox5.Text);
                                 cmd.Parameters.AddWithValue("@nomer_reestra", 0);
-                                cmd.Parameters.AddWithValue("@nomer_spiska", prefix_number);
+                                cmd.Parameters.AddWithValue("@nomer_spiska", Number.Prefix_number);
                                 cmd.Parameters.AddWithValue("@nomer_nakladnoy", 0);
                                 cmd.Parameters.AddWithValue("@Nr", 0);
-                                cmd.Parameters.AddWithValue("@Ns", number);
+                                cmd.Parameters.AddWithValue("@Ns", Number.Ns);
                                 cmd.Parameters.AddWithValue("@Nn", 0);
                                 cmd.Parameters.AddWithValue("@tarifs", dataTable.Rows[0][0].ToString());//tarif
 
@@ -1942,7 +1948,7 @@ namespace ProgramCCS
             }
             else
             {
-                if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
+                if (Person.Name == "root") { comboBox4.SelectedIndex = 0; }
                 cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
             }
             cmd.ExecuteNonQuery();
@@ -1974,7 +1980,7 @@ namespace ProgramCCS
             }
             else
             {
-                if (comboBox4.Text == "") { comboBox4.SelectedIndex = 0; }
+                if (Person.Name == "root") { comboBox4.SelectedIndex = 0; }
                 cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
             }
             cmd.ExecuteNonQuery();
@@ -2101,9 +2107,7 @@ namespace ProgramCCS
                 & Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) != "Розыск" 
                 & Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) != "Замена")
             {
-                Select_status();//Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.                       
-                int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-                string prefix_number = comboBox10.Text + number;
+                Select_status_Nr();//Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.                                      
                 if (MessageBox.Show("Вы хотите обработать эти записи?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     button12.Enabled = false;
@@ -2115,8 +2119,8 @@ namespace ProgramCCS
                         cmd.Parameters.AddWithValue("@obrabotka", "Обработано");
                         cmd.Parameters.AddWithValue("@data_obrabotki", DateTime.Today.AddDays(0));
                         cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dataGridView1.Rows[i].Cells[11].Value));
-                        cmd.Parameters.AddWithValue("@nomer_reestra", prefix_number);
-                        cmd.Parameters.AddWithValue("@Nr", number);
+                        cmd.Parameters.AddWithValue("@nomer_reestra", Number.Prefix_number);
+                        cmd.Parameters.AddWithValue("@Nr", Number.Nr);
                         cmd.ExecuteNonQuery();
                     }
                     con.Close();//закрыть соединение 
@@ -2125,7 +2129,7 @@ namespace ProgramCCS
                     //------Ручная вставка номера реестра и обработки----------//
                     for (int i = 0; i < dataGridView1.Rows.Count; i++)//Цикл
                     {
-                        dataGridView1.Rows[i].Cells[12].Value = prefix_number;
+                        dataGridView1.Rows[i].Cells[12].Value = Number.Prefix_number;
                         dataGridView1.Rows[i].Cells[10].Value = "Обработано";
                     }
                     //------Ручная вставка номера реестра и обработки----------//
@@ -2135,7 +2139,7 @@ namespace ProgramCCS
                 string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент                
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "Word Documents (*.docx)|*.docx";
-                sfd.FileName = $"Реестр № {prefix_number} на {status}.docx";
+                sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     if (status != "Возврат" | kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри")
@@ -2151,7 +2155,7 @@ namespace ProgramCCS
                 if (status != "Возврат" | kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри")
                 {
                     sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                    sfd.FileName = $"Реестр № {prefix_number} на {status}.xlsx";
+                    sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.xlsx";
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         Export_Reestr_To_Excel(dataGridView1, sfd.FileName);
@@ -2160,7 +2164,7 @@ namespace ProgramCCS
                 else if (status == "Возврат" | kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри")
                 {
                     sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                    sfd.FileName = $"Реестр № {prefix_number} на {status}.xlsx";
+                    sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.xlsx";
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         Export_Reestr_To_Excel_vozvrat(dataGridView1, sfd.FileName);
@@ -2234,9 +2238,7 @@ namespace ProgramCCS
             //Выдача накладной
             else if (dataGridView1.Rows.Count > 0 & Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Ожидание")
             {
-                Select_status_nakladnoi();//(Для выдачи накладных)Выборка по статусу и сортировка по номеру накладеой от больших значений к меньшим.
-                int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
-                string prefix_number = comboBox10.Text + number;
+                Select_status_Nn();//(Для выдачи накладных)Выборка по статусу и сортировка по номеру накладеой от больших значений к меньшим.               
                 if (MessageBox.Show("Вы хотите получить 'Накладную'? Нажмите Нет если хотите получить 'Cписок за период'!", "Внимание! Статус изменится на 'Отправлено' и присвоется номер", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
                 {
                     button12.Enabled = false;
@@ -2247,8 +2249,8 @@ namespace ProgramCCS
                         SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET nomer_nakladnoy = @nomer_nakladnoy, status = @status, Nn=@Nn, filial=@filial WHERE id = @id", con);
                         cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dataGridView1.Rows[i].Cells[11].Value));
                         cmd.Parameters.AddWithValue("@status", "Отправлено");
-                        cmd.Parameters.AddWithValue("@nomer_nakladnoy", prefix_number);
-                        cmd.Parameters.AddWithValue("@Nn", number);
+                        cmd.Parameters.AddWithValue("@nomer_nakladnoy", Number.Prefix_number);
+                        cmd.Parameters.AddWithValue("@Nn", Number.Nn);
                         cmd.Parameters.AddWithValue("@filial", Person.Name);
                         cmd.ExecuteNonQuery();
                     }
@@ -2258,7 +2260,7 @@ namespace ProgramCCS
                     string oblast = Convert.ToString(dataGridView1.Rows[0].Cells[9].Value);//Область
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = "Word Documents (*.docx)|*.docx";
-                    sfd.FileName = $"Накладная № {prefix_number} - {oblast}.docx";
+                    sfd.FileName = $"Накладная № {Number.Prefix_number} - {oblast}.docx";
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         Export_Nakladnaya_To_Word(dataGridView1, sfd.FileName);
@@ -2386,16 +2388,14 @@ namespace ProgramCCS
                     Podschet();//произвести подсчет по методу 
                     if (dataGridView5.Rows.Count != 0 && dataGridView5.Rows[0].Cells[12].Value.ToString() == "0")
                     {
-                            Select_spisok();//Выборка и сортировка по номеру от больших значений к меньшим.
-                            int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) +1;
-                            string prefix_number = comboBox10.Text + number;
+                            Select_Ns();//Выборка и сортировка по номеру от больших значений к меньшим.
                             con.Open();//открыть соединение
                             for (int i = 0; i < dataGridView5.Rows.Count; i++)//Цикл
                             {
                                 SqlCommand cmd1 = new SqlCommand("UPDATE [Table_1] SET nomer_spiska = @nomer_spiska, Ns=@Ns WHERE id = @id", con);
                                 cmd1.Parameters.AddWithValue("@id", Convert.ToInt32(dataGridView5.Rows[i].Cells[11].Value));
-                                cmd1.Parameters.AddWithValue("@nomer_spiska", prefix_number);
-                                cmd1.Parameters.AddWithValue("@Ns", number);
+                                cmd1.Parameters.AddWithValue("@nomer_spiska", Number.Prefix_number);
+                                cmd1.Parameters.AddWithValue("@Ns", Number.Ns);
                                 cmd1.ExecuteNonQuery();
                             }
                             con.Close();//закрыть соединение 
@@ -2405,7 +2405,7 @@ namespace ProgramCCS
                             //Выдача в WORD
                             SaveFileDialog sfd = new SaveFileDialog();
                             sfd.Filter = "Word Documents (*.docx)|*.docx";
-                            sfd.FileName = $"Список принятых № {prefix_number}.docx";
+                            sfd.FileName = $"Список принятых № {Number.Prefix_number}.docx";
                             if (sfd.ShowDialog() == DialogResult.OK)
                             {
                                 Export_Spisok_Prinyatyh_To_Word(dataGridView5, sfd.FileName);

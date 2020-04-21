@@ -164,7 +164,7 @@
     <Compile Include="Graph.Designer.cs">
       <DependentUpon>Graph.cs</DependentUpon>
     </Compile>
-    <Compile Include="Person.cs" />
+    <Compile Include="Models.cs" />
     <Compile Include="ClassComboBox.cs" />
     <Compile Include="TLC.cs">
       <SubType>Form</SubType>
