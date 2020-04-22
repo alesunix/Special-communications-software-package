@@ -140,6 +140,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Web.Services" />
@@ -166,6 +167,7 @@
     </Compile>
     <Compile Include="Models.cs" />
     <Compile Include="ClassComboBox.cs" />
+    <Compile Include="Table_1.cs" />
     <Compile Include="TLC.cs">
       <SubType>Form</SubType>
     </Compile>
