@@ -56,11 +56,11 @@
             // 
             this.label37.AutoSize = true;
             this.label37.BackColor = System.Drawing.Color.Transparent;
-            this.label37.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label37.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold);
             this.label37.ForeColor = System.Drawing.Color.Black;
-            this.label37.Location = new System.Drawing.Point(16, 118);
+            this.label37.Location = new System.Drawing.Point(16, 113);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(98, 12);
+            this.label37.Size = new System.Drawing.Size(111, 14);
             this.label37.TabIndex = 141;
             this.label37.Text = "Населенный пункт";
             // 
@@ -75,10 +75,10 @@
             // 
             this.label43.AutoSize = true;
             this.label43.BackColor = System.Drawing.Color.Transparent;
-            this.label43.Font = new System.Drawing.Font("Arial", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label43.Location = new System.Drawing.Point(15, 86);
+            this.label43.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold);
+            this.label43.Location = new System.Drawing.Point(15, 81);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(47, 12);
+            this.label43.Size = new System.Drawing.Size(52, 14);
             this.label43.TabIndex = 139;
             this.label43.Text = "Область";
             // 
@@ -94,7 +94,7 @@
             "Баткенская область",
             "Иссык - Кульская область",
             "Нарынская область"});
-            this.comboBox6.Location = new System.Drawing.Point(12, 96);
+            this.comboBox6.Location = new System.Drawing.Point(12, 93);
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(175, 22);
             this.comboBox6.TabIndex = 138;
@@ -140,7 +140,7 @@
             this.label21.AutoSize = true;
             this.label21.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label21.ForeColor = System.Drawing.Color.Black;
-            this.label21.Location = new System.Drawing.Point(15, 52);
+            this.label21.Location = new System.Drawing.Point(15, 50);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(70, 14);
             this.label21.TabIndex = 133;
@@ -149,7 +149,7 @@
             // comboBox7
             // 
             this.comboBox7.FormattingEnabled = true;
-            this.comboBox7.Location = new System.Drawing.Point(12, 65);
+            this.comboBox7.Location = new System.Drawing.Point(12, 62);
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(175, 21);
             this.comboBox7.TabIndex = 119;
@@ -158,10 +158,10 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label20.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold);
             this.label20.Location = new System.Drawing.Point(15, 241);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(40, 13);
+            this.label20.Size = new System.Drawing.Size(43, 14);
             this.label20.TabIndex = 132;
             this.label20.Text = "Тариф";
             // 
@@ -178,10 +178,10 @@
             this.button13.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(153)))), ((int)(((byte)(112)))));
             this.button13.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button13.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.button13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.button13.ForeColor = System.Drawing.Color.Black;
             this.button13.Location = new System.Drawing.Point(98, 221);
             this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(98, 114);
+            this.button13.Size = new System.Drawing.Size(89, 114);
             this.button13.TabIndex = 127;
             this.button13.Text = "Добавить";
             this.button13.UseVisualStyleBackColor = false;
@@ -190,20 +190,20 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label14.Location = new System.Drawing.Point(14, 9);
+            this.label14.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold);
+            this.label14.Location = new System.Drawing.Point(14, 10);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(74, 13);
+            this.label14.Size = new System.Drawing.Size(77, 14);
             this.label14.TabIndex = 129;
             this.label14.Text = "Дата приема";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label13.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold);
             this.label13.Location = new System.Drawing.Point(17, 210);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(55, 13);
+            this.label13.Size = new System.Drawing.Size(56, 14);
             this.label13.TabIndex = 128;
             this.label13.Text = "№Заказа";
             // 
@@ -217,10 +217,10 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label12.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold);
             this.label12.Location = new System.Drawing.Point(15, 178);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(62, 13);
+            this.label12.Size = new System.Drawing.Size(66, 14);
             this.label12.TabIndex = 124;
             this.label12.Text = "Стоимость";
             // 
@@ -234,10 +234,10 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label11.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Bold);
             this.label11.Location = new System.Drawing.Point(15, 146);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(56, 13);
+            this.label11.Size = new System.Drawing.Size(57, 14);
             this.label11.TabIndex = 122;
             this.label11.Text = "Фамилия";
             // 
@@ -253,7 +253,7 @@
             this.dateTimePicker1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.dateTimePicker1.Location = new System.Drawing.Point(12, 25);
             this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(184, 20);
+            this.dateTimePicker1.Size = new System.Drawing.Size(175, 20);
             this.dateTimePicker1.TabIndex = 142;
             // 
             // Form_manual_input
@@ -261,12 +261,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(240)))), ((int)(((byte)(224)))));
-            this.ClientSize = new System.Drawing.Size(208, 342);
-            this.Controls.Add(this.label21);
+            this.ClientSize = new System.Drawing.Size(197, 342);
             this.Controls.Add(this.dateTimePicker1);
-            this.Controls.Add(this.label37);
             this.Controls.Add(this.textBox7);
-            this.Controls.Add(this.label43);
             this.Controls.Add(this.comboBox6);
             this.Controls.Add(this.label32);
             this.Controls.Add(this.textBox20);
@@ -283,6 +280,9 @@
             this.Controls.Add(this.textBox10);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.textBox9);
+            this.Controls.Add(this.label43);
+            this.Controls.Add(this.label21);
+            this.Controls.Add(this.label37);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

@@ -237,13 +237,7 @@ namespace ProgramCCS
                     }
                 }
             }
-
-            //string[] text = File.ReadAllLines("Prichina_vozvrat.txt");
-            //comboBox8.Items.AddRange(text);
-
-            //form2.ShowDialog();
-            //form2.comboBoxF2.Text = form2.Data;
-            //form2.comboBoxF2.Text = Clipboard.GetText();//Считать текст из буфера обмена   
+  
             comboBox4.Text = Person.Name;
             label_filial.Text = Person.Name;
             //----------------------------------------//***
@@ -318,15 +312,7 @@ namespace ProgramCCS
             dataGridView5.Visible = false;
             button12.Enabled = false;
             button14.Enabled = false;
-            //button2.Enabled = false;
-            Disp_data();
-            Podschet();//произвести подсчет по методу       
-            Disp_data();
-            comboBox4.SelectedIndex = -1;
-            Suffix_select();
-            Partner_select();
-            Logins_select();
-            comboBox10.SelectedIndex = 0;
+            
             label26.Text = "Версия - " + CurrentVersion;
 
             toolTip1.SetToolTip(checkBox1, "Установите галочку если хотите сделать Выборку по дате обработки");
@@ -398,6 +384,16 @@ namespace ProgramCCS
             Environment.NewLine +
             Environment.NewLine +
             Environment.NewLine + "Каждый филиал видит только свои записи в базе!";
+
+            //button2.Enabled = false;
+            Disp_data();
+            Podschet();//произвести подсчет по методу       
+            Disp_data();
+            comboBox4.SelectedIndex = -1;
+            Suffix_select();
+            Partner_select();
+            Logins_select();
+            comboBox10.SelectedIndex = 0;
         }
         //----------------------------------------------------------------------//
         async Task DispdatabaseAsync()//Асинхронность (async, await) 
@@ -477,17 +473,45 @@ namespace ProgramCCS
             dataGridView2.Visible = true;
             dataGridView1.Visible = false;
             dataGridView5.Visible = false;
+            
+            var startDate = DateTime.Now.AddDays(-7);
+            var endDate = DateTime.Now;
+            if (Person.Name == "root")
+            {
+                var command = from table in db.GetTable<Table_1>()
+                              where table.Дата_записи >= startDate && table.Дата_записи <= endDate
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
+            else
+            {
+                var command = from table in db.GetTable<Table_1>()
+                              where table.Дата_записи >= startDate && table.Дата_записи <= endDate
+                              where table.Филиал == Person.Name
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
+            if (dataGridView2.Rows.Count == 0)
+            {
+                //Группировка по Филиалу (находим последнюю запись)
+                var maxDate = from n in db.GetTable<Table_1>()
+                              group n by n.Филиал into g
+                              select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
+                dataGridView2.DataSource = maxDate;
+                //последние записи
+                var command = from table in db.GetTable<Table_1>()
+                              where table.Дата_записи >= Convert.ToDateTime(dataGridView2.Rows[0].Cells[12].Value)
+                              where table.Филиал == Person.Name
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
 
-            if (Person.Name == "root") { Person.Name = "TLC-Express"; }
-
-            var command = from table in db.GetTable<Table_1>()
-                          where table.Филиал == Person.Name
-                          orderby table.Дата_записи descending
-                          select table;
-            dataGridView2.DataSource = command.Take(200);
 
             Rozysk_ojidanie(); //Розыск, Ожидание     
-            label1.Text = ("Отображены последние 200 записей");
+            label1.Text = ("Отображена последняя неделя");
             button12.Enabled = false;
             button8.Text = "Обновить";
             button8.Enabled = true;
@@ -509,13 +533,21 @@ namespace ProgramCCS
             dataGridView5.Visible = false;
             ProgressBar();
 
-            if (Person.Name == "root") { Person.Name = "TLC-Express"; }
-
-            var command = from table in db.GetTable<Table_1>()
-                          where table.Филиал == Person.Name
-                          orderby table.Дата_записи descending
-                          select table;
-            dataGridView2.DataSource = command;
+            if (Person.Name == "root")
+            {
+                var command = from table in db.GetTable<Table_1>()
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
+            else
+            {
+                var command = from table in db.GetTable<Table_1>()
+                              where table.Филиал == Person.Name
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
 
             Rozysk_ojidanie();//Розыск, Ожидание, Замена
 
@@ -866,109 +898,160 @@ namespace ProgramCCS
 
         public void Select_status_Nr()//(Для выдачи реестров)Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.
         {
-            con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
-                "MAX(summ) AS 'Стоимость',MAX(plata_za_uslugu) AS 'Услуга', MAX(tarif) AS 'Тариф', MAX(doplata) AS 'Доплата', MAX(ob_cennost) AS 'Обьяв.ценность', MAX(plata_za_nalog) AS 'Наложеный платеж'," +
-                "MAX(N_zakaza) AS '№Заказа', MAX(status) AS 'Статус', MAX(data_zapisi) AS 'Дата записи', MAX(prichina) AS 'Причина', MAX(obrabotka) AS 'Обработка', MAX(data_obrabotki) AS 'Дата обработки'," +
-                "MAX(filial) AS 'Филиал', MAX(client) AS 'Контрагент'," +
-                "MAX(nomer_spiska) AS 'Список', MAX(nomer_nakladnoy) AS 'Накладная', MAX(nomer_reestra) AS 'Реестр', MAX(Ns) AS 'NS', MAX(Nn) AS 'NN', MAX(Nr) AS 'NR'" +
-                    "FROM [Table_1] WHERE status = @status GROUP BY Nr ORDER BY Nr DESC", con);
+            //con.Open();//Открываем соединение
+            //SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
+            //    "MAX(summ) AS 'Стоимость',MAX(plata_za_uslugu) AS 'Услуга', MAX(tarif) AS 'Тариф', MAX(doplata) AS 'Доплата', MAX(ob_cennost) AS 'Обьяв.ценность', MAX(plata_za_nalog) AS 'Наложенный платеж'," +
+            //    "MAX(N_zakaza) AS '№Заказа', MAX(status) AS 'Статус', MAX(data_zapisi) AS 'Дата записи', MAX(prichina) AS 'Причина', MAX(obrabotka) AS 'Обработка', MAX(data_obrabotki) AS 'Дата обработки'," +
+            //    "MAX(filial) AS 'Филиал', MAX(client) AS 'Контрагент'," +
+            //    "MAX(nomer_spiska) AS 'Список', MAX(nomer_nakladnoy) AS 'Накладная', MAX(nomer_reestra) AS 'Реестр', MAX(Ns) AS 'NS', MAX(Nn) AS 'NN', MAX(Nr) AS 'NR'" +
+            //        "FROM [Table_1] WHERE status = @status GROUP BY Nr ORDER BY Nr DESC", con);
+            //if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Выдано")
+            //{
+            //    cmd.Parameters.AddWithValue("@status", "Выдано");
+            //}
+            //else if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Возврат")
+            //{
+            //    cmd.Parameters.AddWithValue("@status", "Возврат");
+            //}
+            //else if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Розыск")
+            //{
+            //    cmd.Parameters.AddWithValue("@status", "Розыск");
+            //}
+            //else if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Замена")
+            //{
+            //    cmd.Parameters.AddWithValue("@status", "Замена");
+            //}
+            //else MessageBox.Show("select_status", "Ошибка!");
+            //cmd.ExecuteNonQuery();
+
+            //DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+            //SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+            //dt.Clear();//чистим DataTable, если он был не пуст
+            //da.Fill(dt);//заполняем данными созданный DataTable
+            //dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            //con.Close();//Закрываем соединение
+            string status = "";
             if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Выдано")
             {
-                cmd.Parameters.AddWithValue("@status", "Выдано");
+                status = "Выдано";
             }
             else if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Возврат")
             {
-                cmd.Parameters.AddWithValue("@status", "Возврат");
+                status = "Возврат";
             }
             else if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Розыск")
             {
-                cmd.Parameters.AddWithValue("@status", "Розыск");
+                status = "Розыск";
             }
             else if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Замена")
             {
-                cmd.Parameters.AddWithValue("@status", "Замена");
+                status = "Замена";
             }
-            else MessageBox.Show("select_status", "Ошибка!");
-            cmd.ExecuteNonQuery();
+            else MessageBox.Show("Select_status_Nr", "Ошибка!");
 
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            con.Close();//Закрываем соединение
+            var command = from table in db.GetTable<Table_1>()
+                          where table.Статус == status
+                          group table by table.Nr into g
+                          select g.OrderByDescending(t => t.Nr).FirstOrDefault();
+            dataGridView2.DataSource = command;
 
             Number.Nr = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Nr;
         }
         public void Select_status_Nn()//(Для выдачи накладных)Выборка по статусу и сортировка по номеру накладеой от больших значений к меньшим.
         {
-            con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
-                "MAX(summ) AS 'Стоимость',MAX(plata_za_uslugu) AS 'Услуга', MAX(tarif) AS 'Тариф', MAX(doplata) AS 'Доплата', MAX(ob_cennost) AS 'Обьяв.ценность', MAX(plata_za_nalog) AS 'Наложеный платеж'," +
-                "MAX(N_zakaza) AS '№Заказа', MAX(status) AS 'Статус', MAX(data_zapisi) AS 'Дата записи', MAX(prichina) AS 'Причина', MAX(obrabotka) AS 'Обработка', MAX(data_obrabotki) AS 'Дата обработки'," +
-                "MAX(filial) AS 'Филиал', MAX(client) AS 'Контрагент'," +
-                "MAX(nomer_spiska) AS 'Список', MAX(nomer_nakladnoy) AS 'Накладная', MAX(nomer_reestra) AS 'Реестр', MAX(Ns) AS 'NS', MAX(Nn) AS 'NN', MAX(Nr) AS 'NR'" +
-                    "FROM [Table_1] WHERE status = @status GROUP BY Nn ORDER BY Nn DESC", con);
-            if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Ожидание")//Для накладных
+            //con.Open();//Открываем соединение
+            //SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
+            //    "MAX(summ) AS 'Стоимость',MAX(plata_za_uslugu) AS 'Услуга', MAX(tarif) AS 'Тариф', MAX(doplata) AS 'Доплата', MAX(ob_cennost) AS 'Обьяв.ценность', MAX(plata_za_nalog) AS 'Наложеный платеж'," +
+            //    "MAX(N_zakaza) AS '№Заказа', MAX(status) AS 'Статус', MAX(data_zapisi) AS 'Дата записи', MAX(prichina) AS 'Причина', MAX(obrabotka) AS 'Обработка', MAX(data_obrabotki) AS 'Дата обработки'," +
+            //    "MAX(filial) AS 'Филиал', MAX(client) AS 'Контрагент'," +
+            //    "MAX(nomer_spiska) AS 'Список', MAX(nomer_nakladnoy) AS 'Накладная', MAX(nomer_reestra) AS 'Реестр', MAX(Ns) AS 'NS', MAX(Nn) AS 'NN', MAX(Nr) AS 'NR'" +
+            //        "FROM [Table_1] WHERE status = @status GROUP BY Nn ORDER BY Nn DESC", con);
+            //if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Ожидание")//Для накладных
+            //{
+            //    cmd.Parameters.AddWithValue("@status", "Отправлено");//чтобы простовлять порядковый номер /не менять (все верно) могу забыть!
+            //}
+            //else if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Отправлено")
+            //{
+            //    cmd.Parameters.AddWithValue("@status", "Отправлено");
+            //}
+            //else MessageBox.Show("select_status_nakladnoi", "Ошибка!");
+            //cmd.ExecuteNonQuery();
+
+            //DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+            //SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+            //dt.Clear();//чистим DataTable, если он был не пуст
+            //da.Fill(dt);//заполняем данными созданный DataTable
+            //dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            //con.Close();//Закрываем соединение
+            string status = "";
+            if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Ожидание")
             {
-                cmd.Parameters.AddWithValue("@status", "Отправлено");//чтобы простовлять порядковый номер /не менять (все верно) могу забыть!
+                status = "Отправлено";//чтобы простовлять порядковый номер /не менять (все верно) могу забыть!
             }
             else if (Convert.ToString(dataGridView1.Rows[0].Cells[5].Value) == "Отправлено")
             {
-                cmd.Parameters.AddWithValue("@status", "Отправлено");
+                status = "Отправлено";
             }
-            else MessageBox.Show("select_status_nakladnoi", "Ошибка!");
-            cmd.ExecuteNonQuery();
+            else MessageBox.Show("Select_status_Nn", "Ошибка!");
 
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            con.Close();//Закрываем соединение
+            var command = from table in db.GetTable<Table_1>()
+                          where table.Статус == status
+                          group table by table.Nn into g
+                          select g.OrderByDescending(t => t.Nn).FirstOrDefault();
+            dataGridView2.DataSource = command;
 
             Number.Nn = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Nn;
         }
         public void Select_Ns()//(Для выдачи списка принятых)Выборка и сортировка по номеру от больших значений к меньшим.
         {
-            con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
-                "MAX(summ) AS 'Стоимость',MAX(plata_za_uslugu) AS 'Услуга', MAX(tarif) AS 'Тариф', MAX(doplata) AS 'Доплата', MAX(ob_cennost) AS 'Обьяв.ценность', MAX(plata_za_nalog) AS 'Наложеный платеж'," +
-                "MAX(N_zakaza) AS '№Заказа', MAX(status) AS 'Статус', MAX(data_zapisi) AS 'Дата записи', MAX(prichina) AS 'Причина', MAX(obrabotka) AS 'Обработка', MAX(data_obrabotki) AS 'Дата обработки'," +
-                "MAX(filial) AS 'Филиал', MAX(client) AS 'Контрагент'," +
-                "MAX(nomer_spiska) AS 'Список', MAX(nomer_nakladnoy) AS 'Накладная', MAX(nomer_reestra) AS 'Реестр', MAX(Ns) AS 'NS', MAX(Nn) AS 'NN', MAX(Nr) AS 'NR'" +
-                    " FROM [Table_1] GROUP BY Ns ORDER BY Ns DESC", con);
-            cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            con.Close();//Закрываем соединение
+            //con.Open();//Открываем соединение
+            //SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
+            //    "MAX(summ) AS 'Стоимость',MAX(plata_za_uslugu) AS 'Услуга', MAX(tarif) AS 'Тариф', MAX(doplata) AS 'Доплата', MAX(ob_cennost) AS 'Обьяв.ценность', MAX(plata_za_nalog) AS 'Наложеный платеж'," +
+            //    "MAX(N_zakaza) AS '№Заказа', MAX(status) AS 'Статус', MAX(data_zapisi) AS 'Дата записи', MAX(prichina) AS 'Причина', MAX(obrabotka) AS 'Обработка', MAX(data_obrabotki) AS 'Дата обработки'," +
+            //    "MAX(filial) AS 'Филиал', MAX(client) AS 'Контрагент'," +
+            //    "MAX(nomer_spiska) AS 'Список', MAX(nomer_nakladnoy) AS 'Накладная', MAX(nomer_reestra) AS 'Реестр', MAX(Ns) AS 'NS', MAX(Nn) AS 'NN', MAX(Nr) AS 'NR'" +
+            //        " FROM [Table_1] GROUP BY Ns ORDER BY Ns DESC", con);
+            //cmd.ExecuteNonQuery();
+            //DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+            //SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+            //dt.Clear();//чистим DataTable, если он был не пуст
+            //da.Fill(dt);//заполняем данными созданный DataTable
+            //dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            //con.Close();//Закрываем соединение
+
+            var command = from table in db.GetTable<Table_1>()
+                          group table by table.Ns into g
+                          select g.OrderByDescending(t => t.Ns).FirstOrDefault();
+            dataGridView2.DataSource = command;
 
             Number.Ns = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Ns;
         }
         public void Select_client()//Для сортировки принятых списков по клиенту
         {
-            con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
-                "MAX(summ) AS 'Стоимость',MAX(plata_za_uslugu) AS 'Услуга', MAX(tarif) AS 'Тариф', MAX(doplata) AS 'Доплата', MAX(ob_cennost) AS 'Обьяв.ценность', MAX(plata_za_nalog) AS 'Наложеный платеж'," +
-                "MAX(N_zakaza) AS '№Заказа', MAX(status) AS 'Статус', MAX(data_zapisi) AS 'Дата записи', MAX(prichina) AS 'Причина', MAX(obrabotka) AS 'Обработка', MAX(data_obrabotki) AS 'Дата обработки'," +
-                "MAX(filial) AS 'Филиал', MAX(client) AS 'Контрагент'," +
-                "MAX(nomer_spiska) AS 'Список', MAX(nomer_nakladnoy) AS 'Накладная', MAX(nomer_reestra) AS 'Реестр', MAX(Ns) AS 'NS', MAX(Nn) AS 'NN', MAX(Nr) AS 'NR'" +
-                " FROM [Table_1] WHERE client = @client GROUP BY Ns ORDER BY Ns DESC", con);
-            cmd.Parameters.AddWithValue("@client", comboBox5.Text);
-            cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            con.Close();//Закрываем соединение
+            var command = from table in db.GetTable<Table_1>()
+                          where table.Контрагент == comboBox5.Text
+                          group table by table.Ns into g
+                          select g.OrderByDescending(t => t.Ns).FirstOrDefault();
+            dataGridView2.DataSource = command;
+
+            //con.Open();//Открываем соединение
+            //SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
+            //    "MAX(summ) AS 'Стоимость',MAX(plata_za_uslugu) AS 'Услуга', MAX(tarif) AS 'Тариф', MAX(doplata) AS 'Доплата', MAX(ob_cennost) AS 'Обьяв.ценность', MAX(plata_za_nalog) AS 'Наложеный платеж'," +
+            //    "MAX(N_zakaza) AS '№Заказа', MAX(status) AS 'Статус', MAX(data_zapisi) AS 'Дата записи', MAX(prichina) AS 'Причина', MAX(obrabotka) AS 'Обработка', MAX(data_obrabotki) AS 'Дата обработки'," +
+            //    "MAX(filial) AS 'Филиал', MAX(client) AS 'Контрагент'," +
+            //    "MAX(nomer_spiska) AS 'Список', MAX(nomer_nakladnoy) AS 'Накладная', MAX(nomer_reestra) AS 'Реестр', MAX(Ns) AS 'NS', MAX(Nn) AS 'NN', MAX(Nr) AS 'NR'" +
+            //    " FROM [Table_1] WHERE client = @client GROUP BY Ns ORDER BY Ns DESC", con);
+            //cmd.Parameters.AddWithValue("@client", comboBox5.Text);
+            //cmd.ExecuteNonQuery();
+            //DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+            //SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+            //dt.Clear();//чистим DataTable, если он был не пуст
+            //da.Fill(dt);//заполняем данными созданный DataTable
+            //dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            //con.Close();//Закрываем соединение            
         }
         public void Suffix_select()//Вывод Суффикса в Combobox
         {
@@ -1795,25 +1878,43 @@ namespace ProgramCCS
         private void button3_Click(object sender, EventArgs e)//Возврат
         {
             ProgressBar();
-            if (Person.Name == "root") { Person.Name = "TLC-Express"; }
-
-            var command = from table in db.GetTable<Table_1>()
-                          where table.Филиал == Person.Name & table.Статус == "Возврат"
-                          orderby table.Дата_записи descending
-                          select table;
-            dataGridView2.DataSource = command;
+            if (Person.Name == "root")
+            {
+                var command = from table in db.GetTable<Table_1>()
+                              where table.Статус == "Возврат"
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
+            else
+            {
+                var command = from table in db.GetTable<Table_1>()
+                              where table.Филиал == Person.Name & table.Статус == "Возврат"
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
             Podschet();
         }
         private void button18_Click(object sender, EventArgs e)//Выдано
         {
             ProgressBar();
-            if (Person.Name == "root") { Person.Name = "TLC-Express"; }
-
-            var command = from table in db.GetTable<Table_1>()
-                          where table.Филиал == Person.Name & table.Статус == "Выдано"
-                          orderby table.Дата_записи descending
-                          select table;
-            dataGridView2.DataSource = command;
+            if (Person.Name == "root")
+            {
+                var command = from table in db.GetTable<Table_1>()
+                              where table.Статус == "Выдано"
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
+            else
+            {
+                var command = from table in db.GetTable<Table_1>()
+                              where table.Филиал == Person.Name & table.Статус == "Выдано"
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
+            }
             Podschet();
         }
 

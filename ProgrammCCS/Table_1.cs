@@ -25,9 +25,9 @@ namespace ProgramCCS
         [Column(Name = "doplata")]
         public int Доплата { get; set; }
         [Column(Name = "ob_cennost")]
-        public int Обьяв_ценность { get; set; }
+        public int Оц { get; set; }
         [Column(Name = "plata_za_nalog")]
-        public double Наложеный_платеж { get; set; }
+        public double Нп { get; set; }
         [Column(Name = "N_zakaza")]
         public string N_Заказа { get; set; }
         [Column(Name = "status")]
@@ -63,4 +63,6 @@ namespace ProgramCCS
         [Column(Name = "tarifs")]
         public string Тарифы { get; set; }
     }
+
+   
 }
