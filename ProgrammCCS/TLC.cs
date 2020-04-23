@@ -29,7 +29,7 @@ namespace ProgramCCS
         //public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
         MySqlConnection mycon = new MySqlConnection("SERVER= хостинг_сервер;" + "DATABASE= имя_базы;" + "UID= логин;" + "PASSWORD=пароль;" + "connection timeout = 180");
 
-        public DataTable dataTable = new DataTable();//создаем экземпляр класса DataTable
+        public DataTable dtTarif = new DataTable();//создаем экземпляр класса DataTable
         private string fileName = string.Empty;
         private DataTableCollection tableCollection = null;
 
@@ -48,8 +48,6 @@ namespace ProgramCCS
             "Ак-Терек", "Коргон","Тогуз-Булак", "Кара-Булак", "Чимген", "Ново-Павловка", "Военно-Антоновка", "Гавриловка", "Романовка", "Шопоков", "Александровка", "Садовое", "Петровка", "Полтавка", "Ново-Николаевка", "Петропавловка", "Калининское", "Алексеевка", "Вознесеновка",
             "Лебединовка", "Ново-Покровка", "Киршелк", "Люксембург", "Дмитриевка", "Буденовка", "Кенеш", "Красная Речка", "Ивановка", "Кенбулун", "Гидростроитель", "Арал", "Искра", "Чемкургон", "Бообек", "Жаналыш", "Акбекет", "Каскелен",
             "Сары-Ой", "Кара-Ой", "Чолпон-Ата", "Бакту-Долонотуу", "Бозтери", "Кен-Арал", "Озгорут", "Ак-Добо", "Кызыл-Сай", "Мин-Булак", "Боо-Терек", "Бакыян", "Тамчы-Булак", "Бейшеке", "Кичи-Кировка", "Кировка, Жийде", "Пушкин", "Кок-Токой", "Жон-Арык", "Кок-Ой" };
-
-        string[] tarifs = { "Общий", "" };//Контрагенты
 
         Login formLogin = new Login();
         public object loker = new object();
@@ -399,11 +397,17 @@ namespace ProgramCCS
         async Task DispdatabaseAsync()//Асинхронность (async, await) 
         {
             await Task.Run(() => Disp_data_all_base());
-            Rozysk_ojidanie();
+            Rozysk_Ojidanie();
             MessageBox.Show("База данных отображена!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        public void Rozysk_ojidanie()//Розыск, Ожидание, Замена
+        public void Rozysk_Ojidanie()//Розыск, Ожидание, Замена
         {
+            //Группировка Статусов
+            var statusGroup = from table in db.GetTable<Table_1>()
+                              group table by table.Статус into g
+                              select g.OrderByDescending(t => t.Статус).FirstOrDefault();
+            dataGridView2.DataSource = statusGroup;
+            //Отображение найденных
             for (int i = 0; i < dataGridView2.Rows.Count; i++)
             {
                 if (Convert.ToString(dataGridView2.Rows[i].Cells[11].Value) == "Ожидание")
@@ -422,6 +426,7 @@ namespace ProgramCCS
                     linkLabel4.Text = ("На замену!");
                 }
             }
+            SelectData();//Группировка и Сортировка по дате записи (сначала новые)
             button14.Enabled = false;
         }
         private void LinkLabel2_Click(object sender, EventArgs e)//Отобразить список Ожидание!
@@ -465,15 +470,8 @@ namespace ProgramCCS
             Podschet();
         }
 
-        public void Disp_data()//Отображает неделю //Сортировка по дате записи (сначала новые)
+        public void SelectData()//Группировка и Сортировка по дате записи (сначала новые)
         {
-            button8.Text = "Ожидайте!";
-            button8.Enabled = false;
-            button2.Enabled = true;
-            dataGridView2.Visible = true;
-            dataGridView1.Visible = false;
-            dataGridView5.Visible = false;
-            
             if (Person.Name == "root")
             {
                 //Группировка по Филиалу (находим последнюю запись) сортируем по дате
@@ -493,7 +491,7 @@ namespace ProgramCCS
             {
                 var command = from table in db.GetTable<Table_1>()
                               where table.Дата_записи >= DateTime.Now.AddDays(-7)
-                where table.Филиал == Person.Name
+                              where table.Филиал == Person.Name
                               orderby table.Дата_записи descending
                               select table;
                 dataGridView2.DataSource = command;
@@ -505,7 +503,7 @@ namespace ProgramCCS
                 var maxDate = from table in db.GetTable<Table_1>()
                               group table by table.Филиал into g
                               select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
-                dataGridView2.DataSource = maxDate;                
+                dataGridView2.DataSource = maxDate;
                 //последние записи по Дате
                 var command = from table in db.GetTable<Table_1>()
                               where table.Дата_записи >= Convert.ToDateTime(dataGridView2.Rows[0].Cells[12].Value)
@@ -515,8 +513,19 @@ namespace ProgramCCS
                 dataGridView2.DataSource = command;
                 label1.Text = ("Отображены последние записи");
             }
+        }
+        public void Disp_data()//Отображает базу
+        {
+            button8.Text = "Ожидайте!";
+            button8.Enabled = false;
+            button2.Enabled = true;
+            dataGridView2.Visible = true;
+            dataGridView1.Visible = false;
+            dataGridView5.Visible = false;
 
-            Rozysk_ojidanie(); //Розыск, Ожидание                
+            SelectData();//Группировка и Сортировка по дате записи (сначала новые)
+
+            Rozysk_Ojidanie(); //Розыск, Ожидание                
             button12.Enabled = false;
             button8.Text = "Обновить";
             button8.Enabled = true;
@@ -553,8 +562,6 @@ namespace ProgramCCS
                               select table;
                 dataGridView2.DataSource = command;
             }
-
-            Rozysk_ojidanie();//Розыск, Ожидание, Замена
 
             label1.Text = ("База данных отображена");
             button12.Enabled = false;
@@ -735,6 +742,7 @@ namespace ProgramCCS
                 int doplata = Convert.ToInt32(dataGridView2.Rows[i].Cells[7].Value);
                 int stoimost = Convert.ToInt32(dataGridView2.Rows[i].Cells[4].Value);
                 double tarif = Convert.ToInt32(dataGridView2.Rows[i].Cells[6].Value);
+                string[] tarifs = { "Общий" };//Тарифы
                 for (int y = 0; y < tarifs.Length; y++)
                 {
                     if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == tarifs[y])//Т а р и ф для большинства организаций
@@ -1098,13 +1106,13 @@ namespace ProgramCCS
             cmd.Parameters.AddWithValue("@name", comboBox5.Text.ToString());
             cmd.ExecuteNonQuery();
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dataTable.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dataTable);//заполняем данными созданный DataTable
+            dtTarif.Clear();//чистим DataTable, если он был не пуст
+            da.Fill(dtTarif);//заполняем данными созданный DataTable
             con.Close();//закрыть соединение
             if (comboBox5.Text == "")//если поле очищено, отобразить базу
             {
-                dataTable.Clear();//чистим DataTable, если он был не пуст
-                foreach (DataRow column in dataTable.Rows)
+                dtTarif.Clear();//чистим DataTable, если он был не пуст
+                foreach (DataRow column in dtTarif.Rows)
                 {
                     comboBox5.Items.Add(column[0].ToString());
                 }
@@ -1229,7 +1237,7 @@ namespace ProgramCCS
                                 cmd.Parameters.AddWithValue("@Nr", 0);
                                 cmd.Parameters.AddWithValue("@Ns", Number.Ns);
                                 cmd.Parameters.AddWithValue("@Nn", 0);
-                                cmd.Parameters.AddWithValue("@tarifs", dataTable.Rows[0][0].ToString());//tarif
+                                cmd.Parameters.AddWithValue("@tarifs", dtTarif.Rows[0][0].ToString());//tarif
 
                                 if ((dataGridView3.Rows[i].Cells[11].Value) != DBNull.Value)//если в EXCEL столбец доплата не пустой
                                 { cmd.Parameters.AddWithValue("@doplata", Convert.ToString(dataGridView3.Rows[i].Cells[11].Value)); }
@@ -1237,15 +1245,9 @@ namespace ProgramCCS
                                 { cmd.Parameters.AddWithValue("@doplata", 0); }
                                 cmd.ExecuteNonQuery();
                             }
-                            con.Close();//закрыть соединение
-
-                            //textBox1.Text = "";//очистка текстовых полей
+                            con.Close();//закрыть соединение    
                             MessageBox.Show("Реестр успешно загружен!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             label1.Text = "Реестр успешно загружен!";
-                            Disp_data();
-                            Tarifs();//Т а р и ф ы
-                            Disp_data();
-                            Podschet();//произвести подсчет по методу
                         }
                         if (MessageBox.Show("Вы хотите получить список принятых?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                         {
@@ -1297,9 +1299,9 @@ namespace ProgramCCS
                     con.Close();//закрыть соединение
                 }
                 Disp_data();
-                Tarifs();//Т а р и ф ы
-                Podschet();//произвести подсчет по методу
+                Tarifs();//Т а р и ф ы                
                 Disp_data();
+                Podschet();//произвести подсчет по методу
                 button1.Text = "Открыть Excel";
                 button1.Enabled = true;
                 //-------------Очистка грида---------------//
