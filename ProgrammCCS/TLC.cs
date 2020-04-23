@@ -465,7 +465,7 @@ namespace ProgramCCS
             Podschet();
         }
 
-        public void Disp_data()//Отображает неделю //Сортировка главного грида по дате записи (сначала новые)
+        public void Disp_data()//Отображает неделю //Сортировка по дате записи (сначала новые)
         {
             button8.Text = "Ожидайте!";
             button8.Enabled = false;
@@ -474,44 +474,49 @@ namespace ProgramCCS
             dataGridView1.Visible = false;
             dataGridView5.Visible = false;
             
-            var startDate = DateTime.Now.AddDays(-7);
-            var endDate = DateTime.Now;
             if (Person.Name == "root")
             {
+                //Группировка по Филиалу (находим последнюю запись) сортируем по дате
+                var maxDate = from table in db.GetTable<Table_1>()
+                              group table by table.Филиал into g
+                              select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
+                dataGridView2.DataSource = maxDate;
+                //последние записи по Дате
                 var command = from table in db.GetTable<Table_1>()
-                              where table.Дата_записи >= startDate && table.Дата_записи <= endDate
+                              where table.Дата_записи >= Convert.ToDateTime(dataGridView2.Rows[0].Cells[12].Value)
                               orderby table.Дата_записи descending
                               select table;
                 dataGridView2.DataSource = command;
+                label1.Text = ("Отображены последние записи по всем филиалам");
             }
             else
             {
                 var command = from table in db.GetTable<Table_1>()
-                              where table.Дата_записи >= startDate && table.Дата_записи <= endDate
-                              where table.Филиал == Person.Name
+                              where table.Дата_записи >= DateTime.Now.AddDays(-7)
+                where table.Филиал == Person.Name
                               orderby table.Дата_записи descending
                               select table;
                 dataGridView2.DataSource = command;
+                label1.Text = ("Отображена последняя неделя");
             }
             if (dataGridView2.Rows.Count == 0)
             {
-                //Группировка по Филиалу (находим последнюю запись)
-                var maxDate = from n in db.GetTable<Table_1>()
-                              group n by n.Филиал into g
+                //Группировка по Филиалу (находим последнюю запись) сортируем по дате
+                var maxDate = from table in db.GetTable<Table_1>()
+                              group table by table.Филиал into g
                               select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
-                dataGridView2.DataSource = maxDate;
-                //последние записи
+                dataGridView2.DataSource = maxDate;                
+                //последние записи по Дате
                 var command = from table in db.GetTable<Table_1>()
                               where table.Дата_записи >= Convert.ToDateTime(dataGridView2.Rows[0].Cells[12].Value)
                               where table.Филиал == Person.Name
                               orderby table.Дата_записи descending
                               select table;
                 dataGridView2.DataSource = command;
+                label1.Text = ("Отображены последние записи");
             }
 
-
-            Rozysk_ojidanie(); //Розыск, Ожидание     
-            label1.Text = ("Отображена последняя неделя");
+            Rozysk_ojidanie(); //Розыск, Ожидание                
             button12.Enabled = false;
             button8.Text = "Обновить";
             button8.Enabled = true;
