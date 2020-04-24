@@ -21,15 +21,15 @@ namespace ProgramCCS
         public Transport()
         {  
             InitializeComponent();
-            comboBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
-            comboBox2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
-            comboBox9.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
-            textBox8.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
-            textBox9.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
-            textBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
-            textBox2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            comboBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) Button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            comboBox2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) Button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            comboBox9.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) Button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            textBox8.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) Button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            textBox9.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) Button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            textBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) Button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            textBox2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) Button1_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
         }
-        public void select_avto()//Вывод авто в Combobox
+        public void Select_avto()//Вывод авто в Combobox
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = con.CreateCommand();
@@ -49,7 +49,7 @@ namespace ProgramCCS
             }
             con.Close();//Закрываем соединение
         }
-        public void select_zapchast()//Вывод запчастей в Combobox
+        public void Select_zapchast()//Вывод запчастей в Combobox
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = con.CreateCommand();
@@ -68,7 +68,7 @@ namespace ProgramCCS
             }
             con.Close();//Закрываем соединение
         }
-        public void select_postavshik()//Вывод поставщиков в Combobox
+        public void Select_postavshik()//Вывод поставщиков в Combobox
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = con.CreateCommand();
@@ -89,7 +89,7 @@ namespace ProgramCCS
             }
             con.Close();//Закрываем соединение
         }
-        public void disp_data()
+        public void Disp_data()
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = con.CreateCommand();
@@ -105,11 +105,11 @@ namespace ProgramCCS
             da.Fill(dt);//заполняем данными созданный DataTable
             dataGridView1.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             con.Close();//Закрываем соединение
-            signal();
+            Signal();
             dataGridView1.Visible = true;
             dataGridView2.Visible = false;
         }
-        public void signal()//Оповещания
+        public void Signal()//Оповещания
         {
             for (int i = 0; i < dataGridView1.Rows.Count-1; i++)//Цикл
             {
@@ -141,9 +141,9 @@ namespace ProgramCCS
                     con.Close();//закрыть соединение
                 }
             }
-            podschet();
+            Podschet();
         }
-        public void podschet()//Произвести подсчет dataGridView1 и dataGridView5 и dataGridView2
+        public void Podschet()//Произвести подсчет dataGridView1 и dataGridView5 и dataGridView2
         {
             if (dataGridView1.Visible == true)
             {
@@ -202,7 +202,7 @@ namespace ProgramCCS
                 }           
             }
         }
-        private void linkLabel1_Click(object sender, EventArgs e)
+        private void LinkLabel1_Click(object sender, EventArgs e)
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = con.CreateCommand();
@@ -219,9 +219,9 @@ namespace ProgramCCS
             linkLabel1.Visible = false;
             dataGridView1.Visible = false;
             dataGridView2.Visible = true;
-            podschet();
+            Podschet();
         }
-        private void linkLabel2_Click(object sender, EventArgs e)
+        private void LinkLabel2_Click(object sender, EventArgs e)
         {
             con.Open();//Открываем соединение
             SqlCommand cmd = con.CreateCommand();
@@ -238,9 +238,9 @@ namespace ProgramCCS
             linkLabel2.Visible = false;
             dataGridView1.Visible = false;
             dataGridView2.Visible = true;
-            podschet();
+            Podschet();
         }
-        private void button1_Click(object sender, EventArgs e)//Добавить
+        private void Button1_Click(object sender, EventArgs e)//Добавить
         {
             if (textBox1.Text != "" & textBox8.Text != "" & textBox2.Text != "" & comboBox9.Text != "" & comboBox1.Text != "" & comboBox2.Text != "")
             {
@@ -293,11 +293,10 @@ namespace ProgramCCS
             textBox8.Text = "";
             textBox9.Text = "";
             comboBox1.Select();//Установка курсора
-            disp_data();
-            podschet();
-            disp_data();
+            Disp_data();
+            Podschet();
         }
-        private void button7_Click(object sender, EventArgs e)//Изменить
+        private void Button7_Click(object sender, EventArgs e)//Изменить
         {
             if (textBox7.Text == "Admin" & dataGridView2.Rows.Count == 2)
             {
@@ -340,10 +339,7 @@ namespace ProgramCCS
                 con.Close();//закрыть соединение 
                 MessageBox.Show("Вы успешно изменили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else
-            {
-                disp_data();
-            }
+            else MessageBox.Show("У Вас нет доступа к базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             //очистка текстовых полей
             comboBox1.SelectedIndex = -1;
             comboBox2.SelectedIndex = -1;
@@ -360,11 +356,10 @@ namespace ProgramCCS
             textBox8.Text = "";
             textBox9.Text = "";
             comboBox1.Select();//Установка курсора
-            disp_data();
-            podschet();
-            disp_data();
+            Disp_data();
+            Podschet();
         }
-        private void button6_Click(object sender, EventArgs e)//Удалить
+        private void Button6_Click(object sender, EventArgs e)//Удалить
         {
             if (textBox7.Text == "Admin" & dataGridView2.Rows.Count == 2)
             {
@@ -381,19 +376,19 @@ namespace ProgramCCS
                     cmd1.ExecuteNonQuery();
                     con.Close();//закрыть соединение
                     MessageBox.Show("Запись успешно удалена!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    disp_data();
+                    Disp_data();
                 }
                 else
                 {
                     dataGridView1.Visible = true;
                     dataGridView2.Visible = false;
-                    disp_data();
-                    podschet();
-                    disp_data();
+                    Disp_data();
+                    Podschet();
                 }
             }
+            else MessageBox.Show("У Вас нет доступа к базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        private void button4_Click(object sender, EventArgs e)//Обновить
+        private void Button4_Click(object sender, EventArgs e)//Обновить
         {
             dataGridView1.Visible = true;
             dataGridView2.Visible = false;
@@ -412,12 +407,11 @@ namespace ProgramCCS
             textBox2.Text = "";
             textBox8.Text = "";
             textBox9.Text = "";
-            disp_data();
-            podschet();
-            disp_data();
+            Disp_data();
+            Podschet();
         }
 
-        private void button2_Click(object sender, EventArgs e)//Найти
+        private void Button2_Click(object sender, EventArgs e)//Найти
         {
             if (comboBox3.Text != "" || comboBox4.Text != "" || comboBox10.Text != "")
             {
@@ -436,9 +430,9 @@ namespace ProgramCCS
                 con.Close();//закрыть соединение
             }
             else MessageBox.Show("Необходимо выбрать автомобиль или запчасть", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            podschet();
+            Podschet();
         }
-        private void button3_Click(object sender, EventArgs e)//Произвести ремонт
+        private void Button3_Click(object sender, EventArgs e)//Произвести ремонт
         {
             if (textBox3.Text != "" & comboBox11.Text != "" & comboBox3.Text != "" & comboBox4.Text != "" & dataGridView2.Rows.Count == 2)
             {
@@ -468,9 +462,8 @@ namespace ProgramCCS
                 comboBox3.SelectedIndex = -1;
             }  
             else MessageBox.Show("Сначала произведите поиск", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            disp_data();
-            podschet();
-            disp_data();
+            Disp_data();
+            Podschet();
         }
         private void Form3_avto_Load(object sender, EventArgs e)//Загрузка формы
         {
@@ -478,11 +471,14 @@ namespace ProgramCCS
             dataGridView2.Visible = false;          
             //-----------------Окраска Гридов-------------------//
             DataGridViewRow row1 = this.dataGridView1.RowTemplate;
-            row1.DefaultCellStyle.BackColor = Color.AliceBlue;//цвет строк
+            row1.DefaultCellStyle.BackColor = Color.FromArgb(227, 226, 221);//цвет строк
+            row1.DefaultCellStyle.ForeColor = Color.FromArgb(33, 40, 47);//цвет текста
             row1.Height = 5;
             row1.MinimumHeight = 17;
+            //dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;//автоподбор ширины столбца по содержимому
             dataGridView1.EnableHeadersVisualStyles = false;
-            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.SteelBlue;//цвет заголовка
+            dataGridView1.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(60, 69, 84);//цвет заголовка
+            dataGridView1.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromName("ButtonFace");//цвет текста заголовка
             dataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;//Выравнивание текста в заголовке
             DataGridViewRow row2 = this.dataGridView2.RowTemplate;
             row2.DefaultCellStyle.BackColor = Color.AliceBlue;//цвет строк
@@ -502,19 +498,18 @@ namespace ProgramCCS
             //----------------Окраска Гридов--------------------//           
             dateTimePicker1.Value = DateTime.Today.AddDays(0);
             dateTimePicker2.Value = DateTime.Today.AddDays(0);
-                select_avto();//Вывод авто в Combobox
-                select_zapchast();//Вывод запчастей в Combobox
-                select_postavshik();//Вывод поставщиков в Combobox
-            disp_data();
-            podschet();
-            disp_data();
+                Select_avto();//Вывод авто в Combobox
+                Select_zapchast();//Вывод запчастей в Combobox
+                Select_postavshik();//Вывод поставщиков в Combobox
+            Disp_data();
+            Podschet();
         }
         private void Form3_avto_FormClosed(object sender, FormClosedEventArgs e)//Закрытие формы Выход
         {
             Application.Exit();
         }
 
-        private void dataGridView1_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)//окраска
+        private void DataGridView1_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)//окраска
         {
             for (int i = 0; i < dataGridView1.Rows.Count; i++)//Цикл
             {
@@ -531,7 +526,7 @@ namespace ProgramCCS
                 }
             }
         }      
-        private void dataGridView2_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        private void DataGridView2_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             for (int i = 0; i < dataGridView2.Rows.Count; i++)//Цикл
             {
@@ -549,7 +544,7 @@ namespace ProgramCCS
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)//отчет
+        private void Button5_Click(object sender, EventArgs e)//отчет
         {
             button5.Enabled = false;
             button5.Text = "Ожидайте!";
@@ -569,7 +564,7 @@ namespace ProgramCCS
                 da.Fill(dt);//заполняем данными созданный DataTable
                 dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение 
-                podschet();
+                Podschet();
 
             //Выдача рееста в WORD
             SaveFileDialog sfd = new SaveFileDialog();
@@ -735,48 +730,56 @@ namespace ProgramCCS
             }
         }
 
-        private void button8_Click(object sender, EventArgs e)//Добавить авто,поставщик,запчасть
+        private void Button8_Click(object sender, EventArgs e)//Добавить авто,поставщик,запчасть
         {
-            if (textBox6.Text == "Admin" & comboBox7.Text == "" & comboBox8.Text == "" & comboBox6.Text != "" & comboBox6.Text != Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
+            if(textBox6.Text == "Admin")
             {
-                con.Open();//открыть соединение
-                SqlCommand cmd = new SqlCommand("INSERT INTO [avto] (avto) VALUES (@avto)", con);
-                cmd.Parameters.AddWithValue("@avto", comboBox6.Text);
-                cmd.ExecuteNonQuery();
-                con.Close();//закрыть соединение
-                MessageBox.Show("Вы успешно добавили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if(dataGridView3.Rows.Count != 0)
+                {
+                    if (comboBox7.Text == "" & comboBox8.Text == "" & comboBox6.Text != "" & comboBox6.Text != Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
+                    {
+                        con.Open();//открыть соединение
+                        SqlCommand cmd = new SqlCommand("INSERT INTO [avto] (avto) VALUES (@avto)", con);
+                        cmd.Parameters.AddWithValue("@avto", comboBox6.Text);
+                        cmd.ExecuteNonQuery();
+                        con.Close();//закрыть соединение
+                        MessageBox.Show("Вы успешно добавили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (comboBox6.Text == Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
+                    {
+                        MessageBox.Show("Данная запись уже существует в базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    }
+                    else if (textBox6.Text == "Admin" & comboBox7.Text != "" & comboBox8.Text == "" & comboBox6.Text == "" & comboBox7.Text != Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
+                    {
+                        con.Open();//открыть соединение
+                        SqlCommand cmd = new SqlCommand("INSERT INTO [zapchast] (zapchast) VALUES (@zapchast)", con);
+                        cmd.Parameters.AddWithValue("@zapchast", comboBox7.Text);
+                        cmd.ExecuteNonQuery();
+                        con.Close();//закрыть соединение
+                        MessageBox.Show("Вы успешно добавили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (comboBox7.Text == Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
+                    {
+                        MessageBox.Show("Данная запись уже существует в базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    }
+                    else if (textBox6.Text == "Admin" & comboBox7.Text == "" & comboBox8.Text != "" & comboBox6.Text == "" & comboBox8.Text != Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
+                    {
+                        con.Open();//открыть соединение
+                        SqlCommand cmd = new SqlCommand("INSERT INTO [postavshik] (postavshik) VALUES (@postavshik)", con);
+                        cmd.Parameters.AddWithValue("@postavshik", comboBox8.Text);
+                        cmd.ExecuteNonQuery();
+                        con.Close();//закрыть соединение
+                        MessageBox.Show("Вы успешно добавили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else if (comboBox8.Text == Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
+                    {
+                        MessageBox.Show("Данная запись уже существует в базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    }
+                }
+                else MessageBox.Show("Добавлять можно только по одному!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            else if (textBox6.Text == "Admin" & comboBox7.Text != "" & comboBox8.Text == "" & comboBox6.Text == "" & comboBox7.Text != Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
-            {
-                con.Open();//открыть соединение
-                SqlCommand cmd = new SqlCommand("INSERT INTO [zapchast] (zapchast) VALUES (@zapchast)", con);
-                cmd.Parameters.AddWithValue("@zapchast", comboBox7.Text);
-                cmd.ExecuteNonQuery();
-                con.Close();//закрыть соединение
-                MessageBox.Show("Вы успешно добавили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (textBox6.Text == "Admin" & comboBox7.Text == "" & comboBox8.Text != "" & comboBox6.Text == "" & comboBox8.Text != Convert.ToString(dataGridView3.Rows[0].Cells[0].Value))
-            {
-                con.Open();//открыть соединение
-                SqlCommand cmd = new SqlCommand("INSERT INTO [postavshik] (postavshik) VALUES (@postavshik)", con);
-                cmd.Parameters.AddWithValue("@postavshik", comboBox8.Text);
-                cmd.ExecuteNonQuery();
-                con.Close();//закрыть соединение
-                MessageBox.Show("Вы успешно добавили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else if (comboBox6.Text == Convert.ToString(dataGridView3.Rows[0].Cells[0].Value) | dataGridView3.Rows.Count != 0)
-            {
-                MessageBox.Show("Данная запись уже существует в базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
-            else if (comboBox7.Text == Convert.ToString(dataGridView3.Rows[0].Cells[0].Value) | dataGridView3.Rows.Count != 0)
-            {
-                MessageBox.Show("Данная запись уже существует в базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
-            else if (comboBox8.Text == Convert.ToString(dataGridView3.Rows[0].Cells[0].Value) | dataGridView3.Rows.Count != 0)
-            {
-                MessageBox.Show("Данная запись уже существует в базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
-            else MessageBox.Show("Добавлять можно только по одному либо у Вас нет доступа к базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            else MessageBox.Show("У Вас нет доступа к базе!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             //очистка текстовых полей
             comboBox1.SelectedIndex = -1;
             comboBox2.SelectedIndex = -1;
@@ -791,7 +794,7 @@ namespace ProgramCCS
             comboBox11.SelectedIndex = -1;
         }
 
-        private void comboBox6_TextChanged(object sender, EventArgs e)//
+        private void ComboBox6_TextChanged(object sender, EventArgs e)//
         {
             con.Open();//открыть соединение
             SqlCommand cmd = new SqlCommand("SELECT avto FROM [avto]" +
@@ -813,7 +816,7 @@ namespace ProgramCCS
                 }
             }
         }
-        private void comboBox7_TextChanged(object sender, EventArgs e)
+        private void ComboBox7_TextChanged(object sender, EventArgs e)
         {
             con.Open();//открыть соединение
             SqlCommand cmd = new SqlCommand("SELECT zapchast FROM [zapchast]" +
@@ -835,7 +838,7 @@ namespace ProgramCCS
                 }
             }
         }
-        private void comboBox8_TextChanged(object sender, EventArgs e)
+        private void ComboBox8_TextChanged(object sender, EventArgs e)
         {
             con.Open();//открыть соединение
             SqlCommand cmd = new SqlCommand("SELECT postavshik FROM [postavshik]" +
@@ -858,7 +861,7 @@ namespace ProgramCCS
             }
         }
 
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)//сумма выделенных строк и колл-во
+        private void DataGridView1_SelectionChanged(object sender, EventArgs e)//сумма выделенных строк и колл-во
         {
             //Колл-во
             textBox5.Text = Convert.ToString(dataGridView1.SelectedRows.Count) + " Штук";
@@ -874,7 +877,7 @@ namespace ProgramCCS
             textBox4.Text = summa.ToString() + " Сом" ; 
             
         }
-        private void dataGridView2_SelectionChanged(object sender, EventArgs e)
+        private void DataGridView2_SelectionChanged(object sender, EventArgs e)
         {
             //Колл-во
             textBox5.Text = Convert.ToString(dataGridView2.SelectedRows.Count) + " Штук";
@@ -888,6 +891,11 @@ namespace ProgramCCS
             }
             textBox4.Visible = true;
             textBox4.Text = summa.ToString() + " Сом";
+        }
+
+        private void Button9_Click(object sender, EventArgs e)//Закрытие формы Выход
+        {
+            Application.Exit();
         }
     }
 }

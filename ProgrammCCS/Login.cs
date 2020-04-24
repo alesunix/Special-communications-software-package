@@ -107,7 +107,7 @@ namespace ProgramCCS
             label26.Text = "Версия - " + CurrentVersion;//Версия
             //Мигание кнопки//
             Timer t = new Timer();
-            t.Interval = 400;
+            t.Interval = 777;
             t.Tick += new EventHandler(Miganie);
             t.Start();
             comboBoxF2.SelectedIndex = 0;
@@ -126,6 +126,11 @@ namespace ProgramCCS
         }
 
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)//Закрытие формы
+        {
+            Application.Exit();
+        }
+
+        private void Button9_Click(object sender, EventArgs e)//Закрытие формы
         {
             Application.Exit();
         }

@@ -386,7 +386,6 @@ namespace ProgramCCS
             //button2.Enabled = false;
             Disp_data();
             Podschet();//произвести подсчет по методу       
-            Disp_data();
             comboBox4.SelectedIndex = -1;
             Suffix_select();
             Partner_select();
@@ -397,10 +396,11 @@ namespace ProgramCCS
         async Task DispdatabaseAsync()//Асинхронность (async, await) 
         {
             await Task.Run(() => Disp_data_all_base());
-            Rozysk_Ojidanie();
+            Wanted_Pending_Replacement();
             MessageBox.Show("База данных отображена!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-        public void Rozysk_Ojidanie()//Розыск, Ожидание, Замена
+        
+        public void Wanted_Pending_Replacement()//Розыск, Ожидание, Замена (Группировка)
         {
             //Группировка Статусов
             var statusGroup = from table in db.GetTable<Table_1>()
@@ -426,7 +426,6 @@ namespace ProgramCCS
                     linkLabel4.Text = ("На замену!");
                 }
             }
-            SelectData();//Группировка и Сортировка по дате записи (сначала новые)
             button14.Enabled = false;
         }
         private void LinkLabel2_Click(object sender, EventArgs e)//Отобразить список Ожидание!
@@ -472,6 +471,7 @@ namespace ProgramCCS
 
         public void SelectData()//Группировка и Сортировка по дате записи (сначала новые)
         {
+            Wanted_Pending_Replacement();//Розыск, Ожидание, Замена (Группировка)
             if (Person.Name == "root")
             {
                 //Группировка по Филиалу (находим последнюю запись) сортируем по дате
@@ -523,9 +523,7 @@ namespace ProgramCCS
             dataGridView1.Visible = false;
             dataGridView5.Visible = false;
 
-            SelectData();//Группировка и Сортировка по дате записи (сначала новые)
-
-            Rozysk_Ojidanie(); //Розыск, Ожидание                
+            SelectData(); //Группировка и Сортировка по дате записи (сначала новые) //Розыск, Ожидание, Замена (Группировка)
             button12.Enabled = false;
             button8.Text = "Обновить";
             button8.Enabled = true;
@@ -1198,7 +1196,6 @@ namespace ProgramCCS
                             dataGridView1.Visible = false;
                             dataGridView5.Visible = false;
                             Select_Ns();//Выборка и сортировка по номеру от больших значений к меньшим.
-
                             con.Open();//открыть соединение
                             for (int i = 0; i < dataGridView3.Rows.Count; i++)
                             {
@@ -1280,10 +1277,6 @@ namespace ProgramCCS
                                 Export_Spisok_Prinyatyh_To_Word(dataGridView5, sfd.FileName);
                             }
                             button2.Text = "Список принятых";
-                            Disp_data();
-                            dataGridView2.Visible = true;
-                            dataGridView1.Visible = false;
-                            dataGridView5.Visible = false;
                         }
                     }
                     else if (comboBox5.Text == "")
@@ -1298,6 +1291,9 @@ namespace ProgramCCS
                     MessageBox.Show("Ошибка! Excel файл содержит ошибку или неправельно сформирован! " + Environment.NewLine + exp, "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     con.Close();//закрыть соединение
                 }
+                dataGridView2.Visible = true;
+                dataGridView1.Visible = false;
+                dataGridView5.Visible = false;
                 Disp_data();
                 Tarifs();//Т а р и ф ы                
                 Disp_data();
@@ -1311,7 +1307,6 @@ namespace ProgramCCS
                     dataGridView3.Rows.Remove(dataGridView3.Rows[0]);
                 }
                 //-------------Очистка грида---------------//
-                dataGridView2.Visible = true;
                 //dataGridView3.Rows.Clear();
                 //dataGridView3.Columns.Clear();
                 comboBox13.SelectedIndex = -1;
@@ -1874,7 +1869,6 @@ namespace ProgramCCS
             ProgressBar();
             Disp_data();
             Podschet();//произвести подсчет по методу 
-            Disp_data();
         }
         private void button9_Click(object sender, EventArgs e)//Вся база данных
         {
@@ -2293,10 +2287,6 @@ namespace ProgramCCS
                     {
                         MessageBox.Show("За этот период не найдено списков!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    Disp_data();
-                    dataGridView2.Visible = true;
-                    dataGridView1.Visible = false;
-                    dataGridView5.Visible = false;
                 }
                 else if (dateTimePicker2.Value == DateTime.Today.AddDays(0))//За текущий день
                 {
@@ -2362,17 +2352,17 @@ namespace ProgramCCS
                 {
                     MessageBox.Show($"Список по контрагенту {comboBox5.Text} не найден", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
-                Disp_data();
                 dataGridView2.Visible = true;
                 dataGridView1.Visible = false;
                 dataGridView5.Visible = false;
+                Disp_data();
+                textBox14.Text = "";//Очистка поля
+                comboBox5.SelectedIndex = -1;
             }
             else
             {
                 MessageBox.Show("Необходимо выбрать контрагента", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            textBox14.Text = "";//Очистка поля
-            comboBox5.SelectedIndex = -1;
         }
 
         public void Export_Reestr_To_Word(DataGridView dataGridView1, string filename)//Метод экспорта в Word Реестр
