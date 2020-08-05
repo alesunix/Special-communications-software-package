@@ -407,6 +407,7 @@ namespace ProgramCCS
                               group table by table.Статус into g
                               select g.OrderByDescending(t => t.Статус).FirstOrDefault();
             dataGridView2.DataSource = statusGroup;
+            db.Refresh(RefreshMode.OverwriteCurrentValues, statusGroup); //datacontext очистка 
             //Отображение найденных
             for (int i = 0; i < dataGridView2.Rows.Count; i++)
             {
@@ -469,6 +470,18 @@ namespace ProgramCCS
             Podschet();
         }
 
+        public void Wait()
+        {
+            //Отобразить список Ожидание! 
+            var command = from table in db.GetTable<Table_1>()
+                          where table.Статус == "Ожидание"
+                          orderby table.Дата_записи descending
+                          select table;
+            dataGridView2.DataSource = command;
+            Tarifs();//Т а р и ф ы
+            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
+        }
+
         public void SelectData()//Группировка и Сортировка по дате записи (сначала новые)
         {
             Wanted_Pending_Replacement();//Розыск, Ожидание, Замена (Группировка)
@@ -479,22 +492,25 @@ namespace ProgramCCS
                               group table by table.Филиал into g
                               select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
                 dataGridView2.DataSource = maxDate;
+                db.Refresh(RefreshMode.OverwriteCurrentValues, maxDate); //datacontext очистка 
                 //последние записи по Дате
-                var command = from table in db.GetTable<Table_1>()
+                var lastDays = from table in db.GetTable<Table_1>()
                               where table.Дата_записи >= Convert.ToDateTime(dataGridView2.Rows[0].Cells[12].Value)
                               orderby table.Дата_записи descending
                               select table;
-                dataGridView2.DataSource = command;
+                dataGridView2.DataSource = lastDays;
+                db.Refresh(RefreshMode.OverwriteCurrentValues, lastDays); //datacontext очистка 
                 label1.Text = ("Отображены последние записи по всем филиалам");
             }
             else
             {
-                var command = from table in db.GetTable<Table_1>()
+                var sevenDays = from table in db.GetTable<Table_1>()
                               where table.Дата_записи >= DateTime.Now.AddDays(-7)
                               where table.Филиал == Person.Name
                               orderby table.Дата_записи descending
                               select table;
-                dataGridView2.DataSource = command;
+                dataGridView2.DataSource = sevenDays;
+                db.Refresh(RefreshMode.OverwriteCurrentValues, sevenDays); //datacontext очистка 
                 label1.Text = ("Отображена последняя неделя");
             }
             if (dataGridView2.Rows.Count == 0)
@@ -504,13 +520,15 @@ namespace ProgramCCS
                               group table by table.Филиал into g
                               select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
                 dataGridView2.DataSource = maxDate;
+                db.Refresh(RefreshMode.OverwriteCurrentValues, maxDate); //datacontext очистка 
                 //последние записи по Дате
-                var command = from table in db.GetTable<Table_1>()
-                              where table.Дата_записи >= Convert.ToDateTime(dataGridView2.Rows[0].Cells[12].Value)
-                              where table.Филиал == Person.Name
-                              orderby table.Дата_записи descending
-                              select table;
-                dataGridView2.DataSource = command;
+                var lastDays = from table in db.GetTable<Table_1>()
+                               where table.Дата_записи >= DateTime.Now.AddMonths(-8)
+                               where table.Филиал == Person.Name
+                               orderby table.Дата_записи descending
+                               select table;
+                dataGridView2.DataSource = lastDays;
+                db.Refresh(RefreshMode.OverwriteCurrentValues, lastDays); //datacontext очистка command
                 label1.Text = ("Отображены последние записи");
             }
         }
@@ -523,7 +541,7 @@ namespace ProgramCCS
             dataGridView1.Visible = false;
             dataGridView5.Visible = false;
 
-            SelectData(); //Группировка и Сортировка по дате записи (сначала новые) //Розыск, Ожидание, Замена (Группировка)
+            SelectData(); //Группировка и Сортировка по дате записи (сначала новые) //Розыск, Ожидание, Замена (Группировка)            
             button12.Enabled = false;
             button8.Text = "Обновить";
             button8.Enabled = true;
@@ -892,6 +910,7 @@ namespace ProgramCCS
                               where table.N_Заказа == Convert.ToString(textBox3.Text)
                               select table;
                 dataGridView2.DataSource = command;
+                db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
 
                 int doplata = Convert.ToInt32(dataGridView2.Rows[0].Cells[7].Value);
                 int tarif = Convert.ToInt32(dataGridView2.Rows[0].Cells[6].Value);
@@ -1199,9 +1218,9 @@ namespace ProgramCCS
                             con.Open();//открыть соединение
                             for (int i = 0; i < dataGridView3.Rows.Count; i++)
                             {
-                                SqlCommand cmd = new SqlCommand("INSERT INTO [Table_1] (oblast, punkt, familia, summ, N_zakaza, data_zapisi, obrabotka, status, client," +
-                                    " tarif, nomer_reestra, nomer_spiska, doplata, nomer_nakladnoy, Nr, Ns, Nn, tarifs) VALUES (@oblast, @punkt, @familia, @summ, @N_zakaza, @data_zapisi," +
-                                    " @obrabotka, @status, @client, @tarif, @nomer_reestra, @nomer_spiska, @doplata, @nomer_nakladnoy, @Nr, @Ns, @Nn, @tarifs)", con);
+                                SqlCommand cmd = new SqlCommand("INSERT INTO [Table_1] (oblast, filial, punkt, familia, summ, N_zakaza, data_zapisi, obrabotka, status, client," +
+                                    " tarif, plata_za_uslugu, ob_cennost, plata_za_nalog, nomer_reestra, nomer_spiska, doplata, nomer_nakladnoy, Nr, Ns, Nn, tarifs) VALUES (@oblast, @filial, @punkt, @familia, @summ, @N_zakaza, @data_zapisi," +
+                                    " @obrabotka, @status, @client, @tarif, @plata_za_uslugu, @ob_cennost, @plata_za_nalog, @nomer_reestra, @nomer_spiska, @doplata, @nomer_nakladnoy, @Nr, @Ns, @Nn, @tarifs)", con);
 
                                 if (dataGridView3.Rows[i].Cells[1].Value != DBNull.Value)//если в EXCEL столбец область не пустой
                                 { cmd.Parameters.AddWithValue("@oblast", Convert.ToString(dataGridView3.Rows[i].Cells[1].Value)); }
@@ -1219,6 +1238,9 @@ namespace ProgramCCS
                                 { cmd.Parameters.AddWithValue("@tarif", Convert.ToString(dataGridView3.Rows[i].Cells[7].Value)); }
                                 else if ((dataGridView3.Rows[i].Cells[7].Value) == DBNull.Value)//если в EXCEL столбец тариф пустой
                                 { cmd.Parameters.AddWithValue("@tarif", 0); MessageBox.Show("Тариф в одной из записей этого реестра не заполнен!", "Внимание! Заполните тариф и сформируйте новый список!"); }
+                                cmd.Parameters.AddWithValue("@plata_za_uslugu", 0);
+                                cmd.Parameters.AddWithValue("@ob_cennost", 0);
+                                cmd.Parameters.AddWithValue("@plata_za_nalog", 0);
                                 if (dataGridView3.Rows[i].Cells[10].Value != DBNull.Value)//если в EXCEL столбец номер заказа не пустой
                                 { cmd.Parameters.AddWithValue("@N_zakaza", Convert.ToString(dataGridView3.Rows[i].Cells[10].Value)); }
                                 else if ((dataGridView3.Rows[i].Cells[10].Value) == DBNull.Value)//если в EXCEL столбец номер заказа пустой
@@ -1235,6 +1257,7 @@ namespace ProgramCCS
                                 cmd.Parameters.AddWithValue("@Ns", Number.Ns);
                                 cmd.Parameters.AddWithValue("@Nn", 0);
                                 cmd.Parameters.AddWithValue("@tarifs", dtTarif.Rows[0][0].ToString());//tarif
+                                cmd.Parameters.AddWithValue("@filial", Person.Name);
 
                                 if ((dataGridView3.Rows[i].Cells[11].Value) != DBNull.Value)//если в EXCEL столбец доплата не пустой
                                 { cmd.Parameters.AddWithValue("@doplata", Convert.ToString(dataGridView3.Rows[i].Cells[11].Value)); }
@@ -1242,9 +1265,23 @@ namespace ProgramCCS
                                 { cmd.Parameters.AddWithValue("@doplata", 0); }
                                 cmd.ExecuteNonQuery();
                             }
-                            con.Close();//закрыть соединение    
+                            con.Close();//закрыть соединение
                             MessageBox.Show("Реестр успешно загружен!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             label1.Text = "Реестр успешно загружен!";
+                            dataGridView2.Visible = true;
+                            dataGridView1.Visible = false;
+                            dataGridView5.Visible = false;
+
+                            //Отобразить список Ожидание! 
+                            var command = from table in db.GetTable<Table_1>()
+                                          where table.Статус == "Ожидание"
+                                          orderby table.Дата_записи descending
+                                          select table;
+                            dataGridView2.DataSource = command;
+                            Tarifs();//Т а р и ф ы
+                            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
+
+                            Podschet();//произвести подсчет по методу
                         }
                         if (MessageBox.Show("Вы хотите получить список принятых?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                         {
@@ -1294,10 +1331,7 @@ namespace ProgramCCS
                 dataGridView2.Visible = true;
                 dataGridView1.Visible = false;
                 dataGridView5.Visible = false;
-                Disp_data();
-                Tarifs();//Т а р и ф ы                
-                Disp_data();
-                Podschet();//произвести подсчет по методу
+
                 button1.Text = "Открыть Excel";
                 button1.Enabled = true;
                 //-------------Очистка грида---------------//

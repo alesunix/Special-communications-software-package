@@ -28,7 +28,7 @@
     <ProductName>Комплекс программ Спецсвязи</ProductName>
     <PublisherName>Alesunix</PublisherName>
     <MinimumRequiredVersion>1.1.5.425</MinimumRequiredVersion>
-    <ApplicationRevision>587</ApplicationRevision>
+    <ApplicationRevision>597</ApplicationRevision>
     <ApplicationVersion>1.1.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -55,10 +55,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Logo_mini.ico</ApplicationIcon>
+    <ApplicationIcon>logo_gNr_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>524D5D95FB0B38C6640E09F4845CB1AF118F9819</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>9208ADFA02BA5953E8E94A0F7506572E9BA6A00B</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>
@@ -271,9 +271,9 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="logo-small.ico" />
+    <Content Include="logo_gNr_icon.ico" />
     <Content Include="Logo_mini.ico" />
     <Content Include="Resources\Prichina_vozvrat.txt" />
-    <None Include="Resources\Logo_mini.png" />
     <None Include="Web References\Tlc_webService\Service.disco" />
     <None Include="Resources\tlc-express.png" />
   </ItemGroup>

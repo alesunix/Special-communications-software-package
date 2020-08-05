@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProgramCCS
@@ -25,15 +19,15 @@ namespace ProgramCCS
         }
         TLC F1 = new TLC();
         
-        private void button13_Click(object sender, EventArgs e)
+        private void Button13_Click(object sender, EventArgs e)
         {
             if (textBox7.Text != "" & textBox9.Text != "" & textBox10.Text != "" & textBox11.Text != "" & textBox12.Text != "" & comboBox6.Text != "" & comboBox7.Text != "")
             {
                 var summ = Convert.ToDouble(textBox10.Text.Replace(',', '.'));//запятую превратить в точку
                 con.Open();//открыть соединение
-                SqlCommand cmd = new SqlCommand("INSERT INTO [Table_1] (oblast, punkt, familia, summ, N_zakaza, data_zapisi, obrabotka, status, client, tarif, nomer_reestra," +
+                SqlCommand cmd = new SqlCommand("INSERT INTO [Table_1] (oblast, punkt, familia, summ, N_zakaza, data_zapisi, obrabotka, status, client, tarif, plata_za_uslugu, ob_cennost, plata_za_nalog, nomer_reestra," +
                     " doplata, nomer_spiska, nomer_nakladnoy, Nr,Nn,Ns,tarifs) VALUES (@oblast, @punkt, @familia, @summ, @N_zakaza, @data_zapisi, @obrabotka, @status, @client," +
-                    " @tarif, @nomer_reestra, @doplata, @nomer_spiska, @nomer_nakladnoy,@Nr,@Nn,@Ns,@tarifs)", con);
+                    " @tarif, @plata_za_uslugu, @ob_cennost, @plata_za_nalog, @nomer_reestra, @doplata, @nomer_spiska, @nomer_nakladnoy,@Nr,@Nn,@Ns,@tarifs)", con);
                 cmd.Parameters.AddWithValue("@oblast", comboBox6.Text);
                 cmd.Parameters.AddWithValue("@punkt", textBox7.Text);
                 cmd.Parameters.AddWithValue("@familia", textBox9.Text);
@@ -44,6 +38,9 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("@status", "Ожидание");
                 cmd.Parameters.AddWithValue("@client", comboBox7.Text);
                 cmd.Parameters.AddWithValue("@tarif", textBox12.Text);
+                cmd.Parameters.AddWithValue("@plata_za_uslugu", 0);
+                cmd.Parameters.AddWithValue("@ob_cennost", 0);
+                cmd.Parameters.AddWithValue("@plata_za_nalog", 0);
                 cmd.Parameters.AddWithValue("@nomer_reestra", 0);
                 cmd.Parameters.AddWithValue("@nomer_nakladnoy", 0);
                 cmd.Parameters.AddWithValue("@Nr", 0);
@@ -63,17 +60,14 @@ namespace ProgramCCS
                 textBox17.Text = "";
                 textBox20.Text = "";
                 comboBox6.Select();//Установка курсора
-                MessageBox.Show("Вы успешно добавили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                F1.Podschet();//произвести подсчет по методу       
-                F1.Disp_data();
+                MessageBox.Show("Вы успешно добавили запись!", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);               
             }
             else
             {
                 MessageBox.Show("Не все поля заполнены!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                F1.Wait();
             }
-            F1.Disp_data();
-            F1.Tarifs();//Т а р и ф ы   
-            F1.Disp_data();
+            //Отобразить список Ожидание! 
         }
         public void Partner_select()//Вывод Контрагентов в Combobox
         {
