@@ -25,9 +25,10 @@ namespace ProgramCCS
         private void Graph_Load(object sender, EventArgs e)
         {
             dateTimePicker1.Value = DateTime.Today.AddYears(-1);
+            ToolStripButton1_Click(sender, e);
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)//График
+        private void ToolStripButton1_Click(object sender, EventArgs e)//График
         {
             con.Open();
             SqlCommand cmd = new SqlCommand("SELECT data_obrabotki, SUM(plata_za_uslugu) FROM [Table_1] " +

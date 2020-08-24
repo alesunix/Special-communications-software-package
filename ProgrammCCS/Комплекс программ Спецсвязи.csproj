@@ -28,7 +28,7 @@
     <ProductName>Комплекс программ Спецсвязи</ProductName>
     <PublisherName>Alesunix</PublisherName>
     <MinimumRequiredVersion>1.1.5.425</MinimumRequiredVersion>
-    <ApplicationRevision>597</ApplicationRevision>
+    <ApplicationRevision>599</ApplicationRevision>
     <ApplicationVersion>1.1.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -159,14 +159,38 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AboutBox1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutBox1.Designer.cs">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editor.Designer.cs">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graph.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Graph.Designer.cs">
       <DependentUpon>Graph.cs</DependentUpon>
     </Compile>
+    <Compile Include="Invoice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Invoice.Designer.cs">
+      <DependentUpon>Invoice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models.cs" />
     <Compile Include="ClassComboBox.cs" />
+    <Compile Include="Registry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registry.Designer.cs">
+      <DependentUpon>Registry.cs</DependentUpon>
+    </Compile>
     <Compile Include="Table_1.cs" />
     <Compile Include="TLC.cs">
       <SubType>Form</SubType>
@@ -205,8 +229,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AboutBox1.resx">
+      <DependentUpon>AboutBox1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editor.resx">
+      <DependentUpon>Editor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Graph.resx">
       <DependentUpon>Graph.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Invoice.resx">
+      <DependentUpon>Invoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Registry.resx">
+      <DependentUpon>Registry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TLC.resx">
       <DependentUpon>TLC.cs</DependentUpon>

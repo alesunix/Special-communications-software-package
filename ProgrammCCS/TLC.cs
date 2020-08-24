@@ -987,6 +987,8 @@ namespace ProgramCCS
 
             Number.Nr = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Nr;
+
+            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
         }
         public void Select_status_Nn()//(Для выдачи накладных)Выборка по статусу и сортировка по номеру накладеой от больших значений к меньшим.
         {
@@ -1033,6 +1035,8 @@ namespace ProgramCCS
 
             Number.Nn = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Nn;
+
+            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
         }
         public void Select_Ns()//(Для выдачи списка принятых)Выборка и сортировка по номеру от больших значений к меньшим.
         {
@@ -1058,6 +1062,8 @@ namespace ProgramCCS
 
             Number.Ns = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Ns;
+
+            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
         }
         public void Select_client()//Для сортировки принятых списков по клиенту
         {
@@ -1066,6 +1072,8 @@ namespace ProgramCCS
                           group table by table.Ns into g
                           select g.OrderByDescending(t => t.Ns).FirstOrDefault();
             dataGridView2.DataSource = command;
+
+            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
 
             //con.Open();//Открываем соединение
             //SqlCommand cmd = new SqlCommand("SELECT MAX(id) AS ID, MAX(oblast) AS 'Область', MAX(punkt) AS 'Населенный пункт', MAX(familia) AS 'Ф.И.О'," +
@@ -3516,6 +3524,25 @@ namespace ProgramCCS
         private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+        }
+
+
+        private void накладнаяToolStripMenuItem_Click(object sender, EventArgs e)//Накладная
+        {
+            Invoice Invoice = new Invoice(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Invoice
+            Invoice.Show();
+        }
+
+        private void реестрToolStripMenuItem_Click(object sender, EventArgs e)//Реестр
+        {
+            Registry Registry = new Registry(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Registry
+            Registry.Show();
+        }
+
+        private void редактированиеЗаписейToolStripMenuItem_Click(object sender, EventArgs e)//Редактирование записей
+        {
+            Editor Editor = new Editor(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Editor
+            Editor.Show();
         }
     }
 }
