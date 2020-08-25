@@ -81,7 +81,6 @@ namespace ProgramCCS
         
         public void Logins_select()//Вывод пользователей в Combobox
         {
-            TLC form1 = new TLC();
             con.Open();//Открываем соединение
             SqlCommand cmd = new SqlCommand("SELECT login FROM [Table_Login] WHERE login NOT IN ('root') ORDER BY login", con);
             cmd.ExecuteNonQuery();

@@ -23,7 +23,6 @@ namespace ProgramCCS
             dgv2_TLC = dgv2;// теперь dgv1_TLC2 будет ссылкой на грид dataGridView2
             InitializeComponent();
         }
-        TLC F1 = new TLC();
 
         private void button2_Click(object sender, EventArgs e)//Выборка
         {
@@ -72,10 +71,12 @@ namespace ProgramCCS
                 dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение
             }
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             F1.Podschet();//произвести подсчет из метода
         }
         private void button1_Click(object sender, EventArgs e)//Печать
         {
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             //Обработка и Выдача реестра
             if (dgv1_TLC.Rows.Count > 0 & Convert.ToString(dgv1_TLC.Rows[0].Cells[10].Value) != "Обработано"
                 & Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value) != "Отправлено"

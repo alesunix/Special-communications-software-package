@@ -31,7 +31,7 @@ namespace ProgramCCS
 
         public DataTable dtTarif = new DataTable();//создаем экземпляр класса DataTable
         private string fileName = string.Empty;
-        private DataTableCollection tableCollection = null;
+        
 
         int[] massiv1 = { 723504, 724508, 720114, 725000, 721100, 723500, 720306, 723500, 723100 };
         int[] massiv2 = { 724002, 723509, 725000, 722200, 723330, 723307, 723500, 723503, 723507, 721100 };
@@ -51,7 +51,7 @@ namespace ProgramCCS
 
         Login formLogin = new Login();
         public object loker = new object();
-
+      
         public TLC()
         {
             InitializeComponent();
@@ -133,20 +133,6 @@ namespace ProgramCCS
                 return ApplicationDeployment.IsNetworkDeployed
                       ? ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString()
                       : Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            }
-        }
-        class ClassComboBoxOblast //Класс для списка областей
-        {
-            public readonly string Value;
-            public readonly string Text;
-            public ClassComboBoxOblast(string Value, string Text)
-            {
-                this.Value = Value;
-                this.Text = Text;
-            }
-            public override string ToString()
-            {
-                return this.Text;
             }
         }
         void Miganie(object sender, EventArgs e)//Метод мигания
@@ -1144,6 +1130,7 @@ namespace ProgramCCS
             }
         }
         //---------------------------------------------------------------------------------------------------------//
+        private DataTableCollection tableCollection = null;
         private void OpenExcelFile(string path)//Считывание Excel таблицы в DataGridView
         {
             FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read);
@@ -3281,7 +3268,6 @@ namespace ProgramCCS
             linkLabel1.BackColor = Color.Transparent;
         }
 
-
         //---------------------Админпанель------------------------//
         public void Logins_select()//Вывод пользователей в Combobox
         {
@@ -3521,28 +3507,171 @@ namespace ProgramCCS
             graph.Show();
         }
 
-        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void накладнаяToolStripMenuItem_Click(object sender, EventArgs e)//Накладная
         {
             Invoice Invoice = new Invoice(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Invoice
+            Invoice.Owner = this;//Передаём ссылку на первую форму через свойство Owner //Вызов метода формы из другой формы
             Invoice.Show();
         }
 
         private void реестрToolStripMenuItem_Click(object sender, EventArgs e)//Реестр
         {
             Registry Registry = new Registry(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Registry
+            Registry.Owner = this;//Передаём ссылку на первую форму через свойство Owner //Вызов метода формы из другой формы
             Registry.Show();
         }
 
-        private void редактированиеЗаписейToolStripMenuItem_Click(object sender, EventArgs e)//Редактирование записей
+        private void периодToolStripMenuItem_Click(object sender, EventArgs e)//Период
+        {
+            Period Period = new Period(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Period
+            Period.Owner = this;//Передаём ссылку на первую форму через свойство Owner //Вызов метода формы из другой формы
+            Period.Show();
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)//Редактирование записей
         {
             Editor Editor = new Editor(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Editor
+            Editor.Owner = this;//Передаём ссылку на первую форму через свойство Owner //Вызов метода формы из другой формы
             Editor.Show();
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)//Поиск реестра
+        {
+            Search_registry Search_registry = new Search_registry(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Search_registry
+            Search_registry.Owner = this;//Передаём ссылку на первую форму через свойство Owner //Вызов метода формы из другой формы
+            Search_registry.Show();
+        }
+
+        private void списокПринятыхToolStripMenuItem_Click(object sender, EventArgs e)//Список принятых
+        {
+            if (comboBox5.Text != "")//только при выбранном контрагенте
+            {
+                dataGridView5.Visible = true;
+                dataGridView1.Visible = false;
+                dataGridView2.Visible = false;
+                if (dateTimePicker2.Value <= DateTime.Today.AddDays(-1))//За диапазон
+                {
+                    //-------------------------------------Выборка--------------------------------------------------------------------------------//
+                    con.Open();//открыть соединение
+                    SqlCommand cmd = new SqlCommand("SELECT oblast, punkt, familia, N_zakaza, data_zapisi, summ, tarif, doplata, plata_za_uslugu, ob_cennost, plata_za_nalog, id, nomer_spiska " +
+                        "FROM [Table_1] WHERE (data_zapisi BETWEEN @StartDate AND @EndDate AND client = @client)", con);
+                    cmd.Parameters.AddWithValue("StartDate", dateTimePicker2.Value);
+                    cmd.Parameters.AddWithValue("EndDate", dateTimePicker1.Value);
+                    cmd.Parameters.AddWithValue("@client", comboBox5.Text);
+                    cmd.ExecuteNonQuery();
+                    DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+                    dt.Clear();//чистим DataTable, если он был не пуст
+                    da.Fill(dt);//заполняем данными созданный DataTable
+                    dataGridView5.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                    con.Close();//закрыть соединение    
+                    //-------------------------------------Выборка--------------------------------------------------------------------------------//
+                    if (dataGridView5.Rows.Count != 0 && dataGridView5.Rows[0].Cells[12].Value.ToString() != "0")
+                    {
+                        Podschet();//произвести подсчет по методу 
+                        SaveFileDialog sfd = new SaveFileDialog();
+                        sfd.Filter = "Word Documents (*.docx)|*.docx";
+                        sfd.FileName = $"Список принятых с  {Convert.ToString(dateTimePicker2.Value.ToString("dd.MM.yyyy"))}  по  {Convert.ToString(dateTimePicker1.Value.ToString("dd.MM.yyyy"))}.docx";
+                        button2.Text = "Ожидайте!";
+                        //Выдача в WORD 
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            Export_Spisok_Prinyatyh_To_Word(dataGridView5, sfd.FileName);
+                        }
+                        //Выдача рееста в EXCEL
+                        sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
+                        sfd.FileName = $"Список принятых с  {Convert.ToString(dateTimePicker2.Value.ToString("dd.MM.yyyy"))}  по  {Convert.ToString(dateTimePicker1.Value.ToString("dd.MM.yyyy"))}.xlsx";
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            Export_Spisok_Prinyatyh_To_Excel(dataGridView5, sfd.FileName);
+                        }
+                        button2.Text = "Список принятых";
+                    }
+                    else if (dataGridView5.Rows.Count != 0 && dataGridView5.Rows[0].Cells[12].Value.ToString() == "0")
+                    {
+                        MessageBox.Show("Вы не обработали один из списков!", "Внимание! Дальнейшие действия запрещены!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    }
+                    else
+                    {
+                        MessageBox.Show("За этот период не найдено списков!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else if (dateTimePicker2.Value == DateTime.Today.AddDays(0))//За текущий день
+                {
+                    //-------------------------------------Выборка--------------------------------------------------------------------------------//
+                    Select_client();//Для сортировки принятых списков по клиенту
+                    con.Open();//открыть соединение
+                    SqlCommand cmd = new SqlCommand("SELECT oblast, punkt, familia, N_zakaza, data_zapisi, summ, tarif, doplata, plata_za_uslugu, ob_cennost, plata_za_nalog, id, nomer_spiska" +
+                        " FROM [Table_1] WHERE (nomer_spiska = @nomer_spiska AND client = @client)", con);
+                    if (textBox14.Text != "") { cmd.Parameters.AddWithValue("nomer_spiska", textBox14.Text); }//Ввести номер списка
+                    else if (textBox14.Text == "") { cmd.Parameters.AddWithValue("nomer_spiska", dataGridView2.Rows[0].Cells[18].Value.ToString()); }//Если не ввести номер то выдаст последний
+                    cmd.Parameters.AddWithValue("@client", comboBox5.Text);
+                    cmd.ExecuteNonQuery();
+                    DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+                    dt.Clear();//чистим DataTable, если он был не пуст
+                    da.Fill(dt);//заполняем данными созданный DataTable
+                    dataGridView5.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                    con.Close();//закрыть соединение
+                    //-------------------------------------Выборка--------------------------------------------------------------------------------//
+                    Podschet();//произвести подсчет по методу 
+                    if (dataGridView5.Rows.Count != 0 && dataGridView5.Rows[0].Cells[12].Value.ToString() == "0")
+                    {
+                        Select_Ns();//Выборка и сортировка по номеру от больших значений к меньшим.
+                        con.Open();//открыть соединение
+                        for (int i = 0; i < dataGridView5.Rows.Count; i++)//Цикл
+                        {
+                            SqlCommand cmd1 = new SqlCommand("UPDATE [Table_1] SET nomer_spiska = @nomer_spiska, Ns=@Ns WHERE id = @id", con);
+                            cmd1.Parameters.AddWithValue("@id", Convert.ToInt32(dataGridView5.Rows[i].Cells[11].Value));
+                            cmd1.Parameters.AddWithValue("@nomer_spiska", Number.Prefix_number);
+                            cmd1.Parameters.AddWithValue("@Ns", Number.Ns);
+                            cmd1.ExecuteNonQuery();
+                        }
+                        con.Close();//закрыть соединение 
+                        label1.Text = ("Присвоен № Списка!");
+                        //----------------------------------------//
+                        button2.Text = "Ожидайте!";
+                        //Выдача в WORD
+                        SaveFileDialog sfd = new SaveFileDialog();
+                        sfd.Filter = "Word Documents (*.docx)|*.docx";
+                        sfd.FileName = $"Список принятых № {Number.Prefix_number}.docx";
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            Export_Spisok_Prinyatyh_To_Word(dataGridView5, sfd.FileName);
+                        }
+                        button2.Text = "Список принятых";
+                    }
+                    else if (dataGridView5.Rows.Count != 0 && dataGridView5.Rows[0].Cells[12].Value.ToString() != "0")
+                    {
+                        //Выдача в WORD
+                        button2.Text = "Ожидайте!";
+                        SaveFileDialog sfd = new SaveFileDialog();
+                        sfd.Filter = "Word Documents (*.docx)|*.docx";
+                        if (textBox14.Text == "") { string number = dataGridView5.Rows[0].Cells[12].Value.ToString(); sfd.FileName = $"Список принятых № {number}.docx"; }//№}
+                        else if (textBox14.Text != "") { string nomer = textBox14.Text; sfd.FileName = $"Список принятых № {nomer}.docx"; }
+                        if (sfd.ShowDialog() == DialogResult.OK)
+                        {
+                            Export_Spisok_Prinyatyh_To_Word(dataGridView5, sfd.FileName);
+                        }
+                        button2.Text = "Список принятых";
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Список по контрагенту {comboBox5.Text} не найден", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                dataGridView2.Visible = true;
+                dataGridView1.Visible = false;
+                dataGridView5.Visible = false;
+                Disp_data();
+                textBox14.Text = "";//Очистка поля
+                comboBox5.SelectedIndex = -1;
+            }
+            else
+            {
+                MessageBox.Show("Необходимо выбрать контрагента", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }

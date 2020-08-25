@@ -23,9 +23,6 @@ namespace ProgramCCS
             dgv2_TLC = dgv2;// теперь dgv1_TLC2 будет ссылкой на грид dataGridView2
             InitializeComponent();
         }
-       
-
-        TLC F1 = new TLC();
         
         private void Invoice_Load(object sender, EventArgs e)//Загрузка формы
         {
@@ -80,6 +77,7 @@ namespace ProgramCCS
                 dgv1_TLC.DataSource = dt_Invoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение  
             }
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             F1.Podschet();//произвести подсчет из метода
         }
 
@@ -90,6 +88,7 @@ namespace ProgramCCS
 
         private void button1_Click(object sender, EventArgs e)//Печать
         {
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             if (dgv1_TLC.Rows.Count > 0 & Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value) == "Ожидание")
             {
                 F1.Select_status_Nn();//(Для выдачи накладных)Выборка по статусу и сортировка по номеру накладеой от больших значений к меньшим.               

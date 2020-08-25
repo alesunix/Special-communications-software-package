@@ -13,14 +13,10 @@ namespace ProgramCCS
         {
             InitializeComponent();
         }
-        public Form_manual_input(TLC f1)
-        {
-            InitializeComponent();
-        }
-        TLC F1 = new TLC();
         
         private void Button13_Click(object sender, EventArgs e)
         {
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             if (textBox7.Text != "" & textBox9.Text != "" & textBox10.Text != "" & textBox11.Text != "" & textBox12.Text != "" & comboBox6.Text != "" & comboBox7.Text != "")
             {
                 var summ = Convert.ToDouble(textBox10.Text.Replace(',', '.'));//запятую превратить в точку
@@ -64,7 +60,7 @@ namespace ProgramCCS
             }
             else
             {
-                MessageBox.Show("Не все поля заполнены!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Не все поля заполнены!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);               
                 F1.Wait();
             }
             //Отобразить список Ожидание! 
@@ -97,6 +93,7 @@ namespace ProgramCCS
 
         private void comboBox7_TextChanged(object sender, EventArgs e)
         {
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             con.Open();//открыть соединение
             SqlCommand cmd = new SqlCommand("SELECT tarif FROM [Table_Partner]" +
                 "WHERE name = @name", con);

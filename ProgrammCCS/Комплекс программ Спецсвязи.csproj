@@ -185,11 +185,23 @@
     </Compile>
     <Compile Include="Models.cs" />
     <Compile Include="ClassComboBox.cs" />
+    <Compile Include="Period.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Period.Designer.cs">
+      <DependentUpon>Period.cs</DependentUpon>
+    </Compile>
     <Compile Include="Registry.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Registry.Designer.cs">
       <DependentUpon>Registry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Search_registry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Search_registry.Designer.cs">
+      <DependentUpon>Search_registry.cs</DependentUpon>
     </Compile>
     <Compile Include="Table_1.cs" />
     <Compile Include="TLC.cs">
@@ -241,8 +253,14 @@
     <EmbeddedResource Include="Invoice.resx">
       <DependentUpon>Invoice.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Period.resx">
+      <DependentUpon>Period.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Registry.resx">
       <DependentUpon>Registry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Search_registry.resx">
+      <DependentUpon>Search_registry.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TLC.resx">
       <DependentUpon>TLC.cs</DependentUpon>

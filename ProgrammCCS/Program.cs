@@ -14,10 +14,10 @@ namespace ProgramCCS
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Login());
-        }
+    }
     }
     static class Dostup
     {
         public static string Value { get; set; }
-    }
+    }   
 }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Linq;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,13 +20,14 @@ namespace ProgramCCS
 
         private DataGridView dgv1_TLC; // эта переменная будет содержать ссылку на грид dataGridView1 из формы Form1
         private DataGridView dgv2_TLC; // эта переменная будет содержать ссылку на грид dataGridView2 из формы Form1
+
         public Editor(DataGridView dgv1, DataGridView dgv2)
         {
             dgv1_TLC = dgv1;// теперь dgv1_TLC будет ссылкой на грид dataGridView1
             dgv2_TLC = dgv2;// теперь dgv1_TLC2 будет ссылкой на грид dataGridView2
             InitializeComponent();
         }
-        TLC F1 = new TLC();
+       
         private void button10_Click(object sender, EventArgs e)//Change
         {
             if (comboBox1.Text != "" & textBox8.Text == "" & dgv2_TLC.Rows.Count == 1)
@@ -116,7 +118,7 @@ namespace ProgramCCS
             {
                 MessageBox.Show("В базе не найдено отправление", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.None);
             }
-
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             F1.Tarif_Update();//Заново ищет №Заказа и делает пересчет
             textBox3.Text = "";//очистка текстовых полей
             textBox8.Text = "";
@@ -129,6 +131,7 @@ namespace ProgramCCS
 
         private void textBox3_TextChanged(object sender, EventArgs e)//Поиск по №Заказа
         {
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             dgv2_TLC.Visible = true;
             dgv1_TLC.Visible = false;
 
@@ -167,6 +170,9 @@ namespace ProgramCCS
                 da.Fill(dt);//заполняем данными созданный DataTable
                 dgv2_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение
+
+
+                TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
                 F1.Podschet();//произвести подсчет по методу
                 //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду
             }
@@ -174,6 +180,7 @@ namespace ProgramCCS
 
         private void button6_Click(object sender, EventArgs e)//Удалить из базы данных
         {
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             if (textBox3.Text != "" & dgv2_TLC.Rows.Count == 1)
             {
                 if (MessageBox.Show("Вы хотите удалить эту запись?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
@@ -220,6 +227,60 @@ namespace ProgramCCS
             comboBox2.Items.Add(new ClassComboBoxOblast("Батк", "Баткенская область"));
             comboBox2.Items.Add(new ClassComboBoxOblast("Ис", "Иссык - Кульская область"));
             comboBox2.Items.Add(new ClassComboBoxOblast("На", "Нарынская область"));
+
+            //если файл существует
+            if (File.Exists("Prichina_vozvrat.txt"))
+            {//создаем байтовый поток и привязываем его к файлу
+             //в конструкторе указываем: путь кодировка
+                using (var sr = new StreamReader("Prichina_vozvrat.txt"))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        comboBox8.Items.Add(sr.ReadLine());
+                    }
+                }
+            }
+            else//если файл не существует, создаем и заполняем
+            {
+                using (var sw = new StreamWriter("Prichina_vozvrat.txt", true, Encoding.UTF8))
+                {
+                    sw.WriteLine("Не соответствует рекламе");
+                    sw.WriteLine("Не соответствует заказу");
+                    sw.WriteLine("Не соответствует требованию");
+                    sw.WriteLine("Не заказывал(а)");
+                    sw.WriteLine("Не в городе");
+                    sw.WriteLine("Не такой как в рекламе");
+                    sw.WriteLine("Не полный товар");
+                    sw.WriteLine("Не устраивает качество");
+                    sw.WriteLine("Не оригинал");
+                    sw.WriteLine("Товар бракованный");
+                    sw.WriteLine("Плохие отзывы");
+                    sw.WriteLine("Сделал отмену заказа");
+                    sw.WriteLine("Не тот №");
+                    sw.WriteLine("Дорого");
+                    sw.WriteLine("Повторный заказ");
+                    sw.WriteLine("Выехал на заказ");
+                    sw.WriteLine("По истечении срока");
+                    sw.WriteLine("Нет денег");
+                    sw.WriteLine("Передумал");
+                    sw.WriteLine("Недоступен");
+                    sw.WriteLine("Уехал в командировку");
+                    sw.WriteLine("Дорого, цвет и размер не тот");
+                    sw.WriteLine("Размер и цвет не подошел");
+                    sw.WriteLine("Сын без спроса заказал");
+                    sw.WriteLine("Нет футляра");
+                    sw.WriteLine("Нет сертификата");
+                    sw.WriteLine("Поздняя доставка");
+                    sw.WriteLine("Заказ ошибочный");
+                }
+                using (var sr = new StreamReader("Prichina_vozvrat.txt"))
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        comboBox8.Items.Add(sr.ReadLine());
+                    }
+                }
+            }
         }
 
         private void Editor_FormClosed(object sender, FormClosedEventArgs e)
