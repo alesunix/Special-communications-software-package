@@ -30,11 +30,12 @@ namespace ProgramCCS
        
         private void button10_Click(object sender, EventArgs e)//Change
         {
-            if (comboBox1.Text != "" & textBox8.Text == "" & dgv2_TLC.Rows.Count == 1)
+            int currRowIndex = dgv2_TLC.CurrentCell.RowIndex;//  Запоминаем строку, которую выбрал пользователь.
+            if (comboBox1.Text != "" & textBox8.Text == "" )
             {
                 con.Open();//открыть соединение
                 SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET status = @status, prichina = @prichina, filial = @filial WHERE id = @id", con);
-                cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dgv2_TLC.Rows[0].Cells[0].Value));//первая строка в гриде
+                cmd.Parameters.AddWithValue("@id", dgv2_TLC.CurrentRow.Cells[0].Value);//выбранная строка в гриде
                 if (Convert.ToString(dgv2_TLC.Rows[0].Cells[11].Value) == "Ожидание" ||
                     Convert.ToString(dgv2_TLC.Rows[0].Cells[11].Value) == "Отправлено" ||
                     Convert.ToString(dgv2_TLC.Rows[0].Cells[11].Value) == "Розыск" ||
@@ -51,55 +52,55 @@ namespace ProgramCCS
                 con.Close();//закрыть соединение             
                 textBox3.Select();//Установка курсора
             }
-            else if (textBox8.Text != "" & comboBox1.Text == "" & dgv2_TLC.Rows.Count == 1)
+            else if (textBox8.Text != "" & comboBox1.Text == "")
             {
                 con.Open();//открыть соединение
                 SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET tarif = @tarif WHERE id = @id", con);
-                cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dgv2_TLC.Rows[0].Cells[0].Value));//первая строка в гриде
+                cmd.Parameters.AddWithValue("@id", dgv2_TLC.CurrentRow.Cells[0].Value);//выбранная строка в гриде
                 cmd.Parameters.AddWithValue("@tarif", textBox8.Text);
                 cmd.ExecuteNonQuery();
                 con.Close();//закрыть соединение
                 MessageBox.Show("Тариф успешно обновлен!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 textBox3.Select();//Установка курсора
             }
-            else if (textBox16.Text != "" & textBox8.Text == "" & comboBox1.Text == "" & dgv2_TLC.Rows.Count == 1)
+            else if (textBox16.Text != "" & textBox8.Text == "" & comboBox1.Text == "")
             {
                 con.Open();//открыть соединение
                 SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET doplata = @doplata WHERE id = @id", con);
-                cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dgv2_TLC.Rows[0].Cells[0].Value));//первая строка в гриде
+                cmd.Parameters.AddWithValue("@id", dgv2_TLC.CurrentRow.Cells[0].Value);//выбранная строка в гриде
                 cmd.Parameters.AddWithValue("@doplata", textBox16.Text);
                 cmd.ExecuteNonQuery();
                 con.Close();//закрыть соединение
                 MessageBox.Show("Доплата успешно обновлена!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 textBox3.Select();//Установка курсора
             }
-            else if (comboBox2.Text != "" & dgv2_TLC.Rows.Count == 1)
+            else if (comboBox2.Text != "")
             {
                 con.Open();//открыть соединение
                 SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET oblast = @oblast WHERE id = @id", con);
-                cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dgv2_TLC.Rows[0].Cells[0].Value));//первая строка в гриде
+                cmd.Parameters.AddWithValue("@id", dgv2_TLC.CurrentRow.Cells[0].Value);//выбранная строка в гриде
                 cmd.Parameters.AddWithValue("@oblast", comboBox2.Text);
                 cmd.ExecuteNonQuery();
                 con.Close();//закрыть соединение
                 MessageBox.Show("Область успешно изменена!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 textBox3.Select();//Установка курсора
             }
-            else if (textBox18.Text != "" & dgv2_TLC.Rows.Count == 1)
+            else if (textBox18.Text != "")
             {
                 con.Open();//открыть соединение
                 SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET punkt = @punkt WHERE id = @id", con);
-                cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dgv2_TLC.Rows[0].Cells[0].Value));//первая строка в гриде
+                cmd.Parameters.AddWithValue("@id", dgv2_TLC.CurrentRow.Cells[0].Value);//выбранная строка в гриде
                 cmd.Parameters.AddWithValue("@punkt", textBox18.Text);
                 cmd.ExecuteNonQuery();
                 con.Close();//закрыть соединение
                 MessageBox.Show("Населенный пункт успешно изменен!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 textBox3.Select();//Установка курсора
             }
-            else if (textBox19.Text != "" & dgv2_TLC.Rows.Count == 1)
+            else if (textBox19.Text != "")
             {
                 con.Open();//открыть соединение
                 SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET summ = @summ WHERE id = @id", con);
-                cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dgv2_TLC.Rows[0].Cells[0].Value));//первая строка в гриде
+                cmd.Parameters.AddWithValue("@id", dgv2_TLC.CurrentRow.Cells[0].Value);//выбранная строка в гриде
                 cmd.Parameters.AddWithValue("@summ", textBox19.Text);
                 cmd.ExecuteNonQuery();
                 con.Close();//закрыть соединение
@@ -127,6 +128,7 @@ namespace ProgramCCS
             textBox16.Text = "";
             textBox19.Text = "";
             F1.Disp_data();
+            dgv2_TLC.CurrentCell = dgv2_TLC[0, currRowIndex];//  Выбираем нашу строку (именно выбираем, не выделяем).
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)//Поиск по №Заказа

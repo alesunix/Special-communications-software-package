@@ -32,6 +32,7 @@ namespace ProgramCCS
         public DataTable dtTarif = new DataTable();//создаем экземпляр класса DataTable
         private string fileName = string.Empty;
         
+        
 
         int[] massiv1 = { 723504, 724508, 720114, 725000, 721100, 723500, 720306, 723500, 723100 };
         int[] massiv2 = { 724002, 723509, 725000, 722200, 723330, 723307, 723500, 723503, 723507, 721100 };
@@ -3529,13 +3530,6 @@ namespace ProgramCCS
             Period.Show();
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)//Редактирование записей
-        {
-            Editor Editor = new Editor(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Editor
-            Editor.Owner = this;//Передаём ссылку на первую форму через свойство Owner //Вызов метода формы из другой формы
-            Editor.Show();
-        }
-
         private void toolStripButton4_Click(object sender, EventArgs e)//Поиск реестра
         {
             Search_registry Search_registry = new Search_registry(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Search_registry
@@ -3672,6 +3666,46 @@ namespace ProgramCCS
             {
                 MessageBox.Show("Необходимо выбрать контрагента", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void dataGridView2_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+
+        }
+
+        private void dataGridView2_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)//Контекстное меню в гриде по нажатию мыши
+        {
+            ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
+            // Игнорировать нажатие на заголовок столбца или строки
+            if (e.RowIndex != -1 && e.ColumnIndex != -1)
+            {
+                if (e.Button == MouseButtons.Right)
+                {
+                    DataGridViewCell clickedCell = (sender as DataGridView).Rows[e.RowIndex].Cells[e.ColumnIndex];
+
+                    // Здесь вы можете делать с ячейкой все, что хотите
+                    this.dataGridView2.CurrentCell = clickedCell;  // Выберите, например, ячейку, по которой щелкнули
+
+                    // Получить положение мыши относительно сетки транспортных средств
+                    var relativeMousePosition = dataGridView2.PointToClient(Cursor.Position);
+
+                    // Показать контекстное меню
+                    contextMenuStrip.Items.Add("Редактирование").Click += new EventHandler(Edit_Click);
+                    contextMenuStrip.Items.Add("Статус").Click += new EventHandler(Status_Click);
+                    contextMenuStrip.Show(dataGridView2, relativeMousePosition);
+                }
+            }
+        }
+
+        private void Edit_Click(object sender, EventArgs e)//Редактирование записей
+        {
+            Editor Editor = new Editor(this.dataGridView1, this.dataGridView2);// передаем ссылку на грид в форму Editor
+            Editor.Owner = this;//Передаём ссылку на первую форму через свойство Owner //Вызов метода формы из другой формы
+            Editor.Show();
+        }
+        private void Status_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

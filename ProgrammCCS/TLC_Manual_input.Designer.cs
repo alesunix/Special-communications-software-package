@@ -287,6 +287,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form_manual_input";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Ручной ввод";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form_manual_input_FormClosed);
