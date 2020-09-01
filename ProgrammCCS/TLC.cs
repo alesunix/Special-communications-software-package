@@ -59,6 +59,12 @@ namespace ProgramCCS
             Text += "  Версия - " + CurrentVersion; //Добавляем в название программы, версию.
             //comboBox8.Text = Properties.Settings.Default.Prichina_vozvrat; // Загружаем ранее сохраненный текст
             //Properties.Settings.Default.Save();  // Сохраняем переменные.
+            dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.F5) Status_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.F4) Edit_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            dataGridView1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Delete) Delete_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Delete) Delete_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            dataGridView3.KeyDown += (s, e) => { if (e.KeyCode == Keys.Delete) Delete_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            dataGridView5.KeyDown += (s, e) => { if (e.KeyCode == Keys.Delete) Delete_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
         }
 
 
@@ -3293,9 +3299,9 @@ namespace ProgramCCS
                     var relativeMousePosition = dataGridView2.PointToClient(Cursor.Position);
 
                     // Показать контекстное меню
-                    contextMenuStrip.Items.Add("Редактирование").Click += new EventHandler(Edit_Click);
-                    contextMenuStrip.Items.Add("Статус").Click += new EventHandler(Status_Click);
-                    contextMenuStrip.Items.Add("Удалить строку").Click += new EventHandler(Delete_Click);
+                    contextMenuStrip.Items.Add("Статус - F5").Click += new EventHandler(Status_Click);
+                    contextMenuStrip.Items.Add("Редактирование - F4").Click += new EventHandler(Edit_Click);
+                    contextMenuStrip.Items.Add("Удалить строку - Delete").Click += new EventHandler(Delete_Click);
                     contextMenuStrip.Show(dataGridView2, relativeMousePosition);
                 }
             }
@@ -3315,7 +3321,6 @@ namespace ProgramCCS
         }
         private void Delete_Click(object sender, EventArgs e)//удаление строк из dataGridView1 и dataGridView3 и dataGridView2
         {
-            int currRowIndex = dataGridView1.CurrentCell.RowIndex;//  Запоминаем строку, которую выбрал пользователь.
             // удаляем выделенные строки из dataGridView1
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
             {
@@ -3344,7 +3349,6 @@ namespace ProgramCCS
                 label1.Text = ("Удалена строка");
                 Podschet();//произвести подсчет по методу       
             }
-            dataGridView1.CurrentCell = dataGridView1[0, currRowIndex];//  Выбираем нашу строку (именно выбираем, не выделяем).
         }
 
     }
