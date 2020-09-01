@@ -28,7 +28,7 @@
     <ProductName>Комплекс программ Спецсвязи</ProductName>
     <PublisherName>Alesunix</PublisherName>
     <MinimumRequiredVersion>1.1.5.425</MinimumRequiredVersion>
-    <ApplicationRevision>600</ApplicationRevision>
+    <ApplicationRevision>603</ApplicationRevision>
     <ApplicationVersion>1.1.5.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -183,8 +183,13 @@
     <Compile Include="Invoice.Designer.cs">
       <DependentUpon>Invoice.cs</DependentUpon>
     </Compile>
+    <Compile Include="List of accepted.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="List of accepted.Designer.cs">
+      <DependentUpon>List of accepted.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models.cs" />
-    <Compile Include="ClassComboBox.cs" />
     <Compile Include="Period.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -197,11 +202,23 @@
     <Compile Include="Registry.Designer.cs">
       <DependentUpon>Registry.cs</DependentUpon>
     </Compile>
+    <Compile Include="Search.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Search.Designer.cs">
+      <DependentUpon>Search.cs</DependentUpon>
+    </Compile>
     <Compile Include="Search_registry.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Search_registry.Designer.cs">
       <DependentUpon>Search_registry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Status_Change.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Status_Change.Designer.cs">
+      <DependentUpon>Status_Change.cs</DependentUpon>
     </Compile>
     <Compile Include="Table_1.cs" />
     <Compile Include="TLC.cs">
@@ -253,14 +270,23 @@
     <EmbeddedResource Include="Invoice.resx">
       <DependentUpon>Invoice.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="List of accepted.resx">
+      <DependentUpon>List of accepted.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Period.resx">
       <DependentUpon>Period.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Registry.resx">
       <DependentUpon>Registry.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Search.resx">
+      <DependentUpon>Search.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Search_registry.resx">
       <DependentUpon>Search_registry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Status_Change.resx">
+      <DependentUpon>Status_Change.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TLC.resx">
       <DependentUpon>TLC.cs</DependentUpon>

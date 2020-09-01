@@ -3,6 +3,11 @@ using System.Data.SqlClient;
 
 namespace ProgramCCS
 {
+    public class Connection
+    {
+        public static SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
+    }
+
     public class Person
     {
         public static string Name { get; set; }
@@ -26,8 +31,39 @@ namespace ProgramCCS
         public static string Prefix_number { get; set; }
     }
 
-    public class Connection
+    public class ClassComboBoxOblast //Класс для списка областей
     {
-        public static SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
+        public readonly string Value;
+        public readonly string Text;
+
+        //Конструктор с двумя аргументами
+        public ClassComboBoxOblast(string Value, string Text)
+        {
+            this.Value = Value;
+            this.Text = Text;
+        }
+        public override string ToString()
+        {
+            return this.Text;
+        }
     }
+
+    public class Partner
+    {
+        public static string Name { get; set; }
+    }
+
+    public class Dates
+    {
+        public static DateTime StartDate { get; set; }
+        public static DateTime EndDate { get; set; }
+
+        //Конструктор с двумя аргументами
+        public Dates (DateTime startDate, DateTime endDate)
+        {
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+    }
+
 }
