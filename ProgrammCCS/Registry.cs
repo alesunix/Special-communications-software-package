@@ -17,6 +17,7 @@ namespace ProgramCCS
 
         private DataGridView dgv1_TLC; // эта переменная будет содержать ссылку на грид dataGridView1 из формы Form1
         private DataGridView dgv2_TLC; // эта переменная будет содержать ссылку на грид dataGridView2 из формы Form1
+        
         public Registry(DataGridView dgv1, DataGridView dgv2)
         {
             dgv1_TLC = dgv1;// теперь dgv1_TLC будет ссылкой на грид dataGridView1
@@ -26,6 +27,7 @@ namespace ProgramCCS
 
         private void button2_Click(object sender, EventArgs e)//Выборка
         {
+            Table.DtRegistry = new DataTable();//инициализируем DataTable
             //1.Выборка на реестр-1 - 'Статус + Обработка + Филиал + Клиент'.
             if (comboBox1.Text != "" & comboBox5.Text != "" & comboBox4.Text != "")
             {
@@ -42,11 +44,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("@filial", comboBox4.Text);
                 cmd.Parameters.AddWithValue("@client", comboBox5.Text);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+                
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtRegistry.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtRegistry);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtRegistry;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение
             }
             //2.Выборка на реестр-2 - 'Статус + Обработка + Клиент'.
@@ -64,11 +66,11 @@ namespace ProgramCCS
                 else if (checkBox3.Checked == false) cmd.Parameters.AddWithValue("@obrabotka", "Не обработано");
                 cmd.Parameters.AddWithValue("@client", comboBox5.Text);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtRegistry.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtRegistry);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtRegistry;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение
             }
             TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
@@ -77,159 +79,17 @@ namespace ProgramCCS
         private void button1_Click(object sender, EventArgs e)//Печать
         {
             TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
-            //Обработка и Выдача реестра
-            if (dgv1_TLC.Rows.Count > 0 & Convert.ToString(dgv1_TLC.Rows[0].Cells[10].Value) != "Обработано"
-                & Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value) != "Отправлено"
-                & Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value) != "Ожидание"
-                & Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value) != "Розыск"
-                & Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value) != "Замена")
-            {
-                F1.Select_status_Nr();//Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.                                      
-                if (MessageBox.Show("Вы хотите обработать эти записи?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                {
-                    con.Open();//открыть соединение
-                    for (int i = 0; i < dgv1_TLC.Rows.Count; i++)//Цикл
-                    {
-                        SqlCommand cmd = new SqlCommand("UPDATE [Table_1] SET obrabotka = @obrabotka, data_obrabotki = @data_obrabotki, nomer_reestra = @nomer_reestra, Nr=@Nr WHERE id = @id", con);
-                        cmd.Parameters.AddWithValue("@obrabotka", "Обработано");
-                        cmd.Parameters.AddWithValue("@data_obrabotki", DateTime.Today.AddDays(0));
-                        cmd.Parameters.AddWithValue("@id", Convert.ToInt32(dgv1_TLC.Rows[i].Cells[11].Value));
-                        cmd.Parameters.AddWithValue("@nomer_reestra", Number.Prefix_number);
-                        cmd.Parameters.AddWithValue("@Nr", Number.Nr);
-                        cmd.ExecuteNonQuery();
-                    }
-                    con.Close();//закрыть соединение 
-                    MessageBox.Show("Обработка выполнена / Присвоен № Реестра!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    //------Ручная вставка номера реестра и обработки----------//
-                    for (int i = 0; i < dgv1_TLC.Rows.Count; i++)//Цикл
-                    {
-                        dgv1_TLC.Rows[i].Cells[12].Value = Number.Prefix_number;
-                        dgv1_TLC.Rows[i].Cells[10].Value = "Обработано";
-                    }
-                    //------Ручная вставка номера реестра и обработки----------//
-                }
-                //Выдача рееста в WORD
-                string status = Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value);//Статус
-                string kontragent = Convert.ToString(dgv1_TLC.Rows[0].Cells[8].Value);//Контрагент                
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "Word Documents (*.docx)|*.docx";
-                sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    if (status != "Возврат" | kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри")
-                    {
-                        F1.Export_Reestr_To_Word(dgv1_TLC, sfd.FileName);
-                    }
-                    else if (status == "Возврат" | kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри")
-                    {
-                        F1.Export_Reestr_To_Word_vozvrat(dgv1_TLC, sfd.FileName);
-                    }
-                }
-                //Выдача рееста в EXCEL
-                if (status != "Возврат" | kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри")
-                {
-                    sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                    sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.xlsx";
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        F1.Export_Reestr_To_Excel(dgv1_TLC, sfd.FileName);
-                    }
-                }
-                else if (status == "Возврат" | kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри")
-                {
-                    sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                    sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.xlsx";
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        F1.Export_Reestr_To_Excel_vozvrat(dgv1_TLC, sfd.FileName);
-                    }
-                }
-            }
-            else if (dgv1_TLC.Rows.Count > 0 & Convert.ToString(dgv1_TLC.Rows[0].Cells[10].Value) == "Обработано")
-            {
-                if (MessageBox.Show("Вы хотите открыть этот Реестр?", "Внимание! Эти данные уже обработаны!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                {
-                    //Выдача рееста в WORD
-                    string nomer = dgv1_TLC.Rows[0].Cells[12].Value.ToString();//№
-                    string status = Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value);//Статус
-                    string kontragent = Convert.ToString(dgv1_TLC.Rows[0].Cells[8].Value);//Контрагент
-                    SaveFileDialog sfd = new SaveFileDialog();
-                    sfd.Filter = "Word Documents (*.docx)|*.docx";
-                    sfd.FileName = $"Реестр № {nomer} на {status}.docx";
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        if (status != "Возврат" | kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри")
-                        {
-                            F1.Export_Reestr_To_Word(dgv1_TLC, sfd.FileName);
-                        }
-                        else if (status == "Возврат" | kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри")
-                        {
-                            F1.Export_Reestr_To_Word_vozvrat(dgv1_TLC, sfd.FileName);
-                        }
-                    }
-                    //Выдача рееста в EXCEL
-                    if (status != "Возврат" | kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри")
-                    {
-                        sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                        sfd.FileName = $"Реестр № {nomer} на {status}.xlsx";
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            F1.Export_Reestr_To_Excel(dgv1_TLC, sfd.FileName);
-                        }
-                    }
-                    else if (status == "Возврат" | kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри")
-                    {
-                        sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                        sfd.FileName = $"Реестр № {nomer} на {status}.xlsx";
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            F1.Export_Reestr_To_Excel_vozvrat(dgv1_TLC, sfd.FileName);
-                        }
-                    }
-                }
-            }
-            else if (dgv1_TLC.Rows.Count > 0 & Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value) == "Розыск" || Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value) == "Замена")
-            {
-                if (MessageBox.Show("Вы хотите открыть этот Реестр?", "Внимание!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
-                {
-                    //Выдача рееста в WORD
-                    string nomer = dgv1_TLC.Rows[0].Cells[12].Value.ToString();//№
-                    string status = Convert.ToString(dgv1_TLC.Rows[0].Cells[5].Value);//Статус
-                    string kontragent = Convert.ToString(dgv1_TLC.Rows[0].Cells[8].Value);//Контрагент
-                    SaveFileDialog sfd = new SaveFileDialog();
-                    sfd.Filter = "Word Documents (*.docx)|*.docx";
-                    sfd.FileName = $"Реестр № {nomer} на {status}.docx";
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        F1.Export_Reestr_To_Word(dgv1_TLC, sfd.FileName);
-                    }
-                }
-            }
-            else if (dgv1_TLC.Rows.Count <= 0)
-            {
-                MessageBox.Show("Выборка не дала результатов, невозможно сгенерировать реестр!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                MessageBox.Show("Эти данные нельзя обработать", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
+            F1.Print_Registy();
+            F1.Disp_data();
             Close();
         }
 
         public void Partner_select()//Вывод Контрагентов в Combobox
         {
-            con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT name FROM [Table_Partner] ORDER BY id", con);
-            cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            foreach (DataRow column in dt.Rows)
+            foreach (DataRow column in Table.DtPartner.Rows)
             {
                 comboBox5.Items.Add(column[0].ToString());
             }
-            con.Close();//Закрываем соединение          
         }
 
         private void Registry_Load(object sender, EventArgs e)//Загрузка формы

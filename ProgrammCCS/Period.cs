@@ -26,8 +26,11 @@ namespace ProgramCCS
 
         private void button2_Click(object sender, EventArgs e)//Выборка
         {
+            Table.DtInvoice = new DataTable();//инициализируем DataTable
             dgv1_TLC.Visible = true;
             dgv2_TLC.Visible = false;
+            Dates.StartDate = dateTimePicker2.Value;
+            Dates.EndDate = dateTimePicker1.Value;
             //3. Выборка за период-1 (Дата обработки) - 'Статус + Период + Область + Клиент'.
             if (comboBox1.Text != "" & comboBox2.Text != "" & comboBox5.Text != "" & comboBox4.Text == "" & checkBox1.Checked)
             {
@@ -42,11 +45,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("StartDate", dateTimePicker2.Value);
                 cmd.Parameters.AddWithValue("EndDate", dateTimePicker1.Value);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtInvoice.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtInvoice);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение   
             }
             //4. Выборка за период-2 (Дата записи) - 'Статус + Период + Область + Филиал + Клиент'.
@@ -65,11 +68,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("StartDate", dateTimePicker2.Value);
                 cmd.Parameters.AddWithValue("EndDate", dateTimePicker1.Value);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtInvoice.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtInvoice);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение   
             }
             //5. Выборка за период-3 (Дата записи) - 'Статус + Период + Область + Клиент +- Пункт'.
@@ -87,11 +90,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("StartDate", dateTimePicker2.Value);
                 cmd.Parameters.AddWithValue("EndDate", dateTimePicker1.Value);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtInvoice.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtInvoice);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение      
             }
             //6. Выборка за период-4 (Дата Обработки) - 'Статус + Период + Клиент'.
@@ -107,11 +110,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("StartDate", dateTimePicker2.Value);
                 cmd.Parameters.AddWithValue("EndDate", dateTimePicker1.Value);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtInvoice.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtInvoice);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение     
             }
             //7. Выборка за период-5 (Дата записи) - 'Статус + Период + Клиент'.
@@ -127,11 +130,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("StartDate", dateTimePicker2.Value);
                 cmd.Parameters.AddWithValue("EndDate", dateTimePicker1.Value);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtInvoice.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtInvoice);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение     
             }
             //10. Выборка за период-5 (Дата Обработки) - 'Период + Клиент'.
@@ -149,11 +152,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("EndDate", date);
                 cmd.Parameters.AddWithValue("@client", comboBox5.Text);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtInvoice.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtInvoice);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение    
             }
             //11. Выборка за период-6 (Дата записи) - 'Период + Клиент'.
@@ -171,11 +174,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("EndDate", date);
                 cmd.Parameters.AddWithValue("@client", comboBox5.Text);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtInvoice.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtInvoice);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение    
             }
             TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
@@ -184,18 +187,10 @@ namespace ProgramCCS
 
         public void Partner_select()//Вывод Контрагентов в Combobox
         {
-            con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT name FROM [Table_Partner] ORDER BY id", con);
-            cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            foreach (DataRow column in dt.Rows)
+            foreach (DataRow column in Table.DtPartner.Rows)
             {
                 comboBox5.Items.Add(column[0].ToString());
-            }
-            con.Close();//Закрываем соединение          
+            }   
         }
         private void Period_Load(object sender, EventArgs e)//Загрузка формы
         {
@@ -221,7 +216,10 @@ namespace ProgramCCS
 
         private void button1_Click(object sender, EventArgs e)//Печать
         {
-
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
+            F1.Print_Invoice();//Печать Накладной и за период
+            F1.Disp_data();
+            Close();
         }
     }
 }

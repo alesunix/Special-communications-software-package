@@ -25,18 +25,10 @@ namespace ProgramCCS
         }
         public void Partner_select()//Вывод Контрагентов в Combobox
         {
-            con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT name FROM [Table_Partner] ORDER BY id", con);
-            cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            foreach (DataRow column in dt.Rows)
+            foreach (DataRow column in Table.DtPartner.Rows)
             {
                 comboBox5.Items.Add(column[0].ToString());
-            }
-            con.Close();//Закрываем соединение          
+            }        
         }
         private void button7_Click(object sender, EventArgs e)//Выборка
         {
@@ -54,11 +46,11 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("@client", comboBox5.Text);
                 cmd.Parameters.AddWithValue("@status", comboBox1.Text);
                 cmd.ExecuteNonQuery();
-                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+                Table.DtRegistry = new DataTable();//инициализируем DataTable
                 SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                dt.Clear();//чистим DataTable, если он был не пуст
-                da.Fill(dt);//заполняем данными созданный DataTable
-                dgv1_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                Table.DtRegistry.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(Table.DtRegistry);//заполняем данными созданный DataTable
+                dgv1_TLC.DataSource = Table.DtRegistry;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение    
             }
         }
@@ -71,6 +63,14 @@ namespace ProgramCCS
         private void Search_registry_FormClosed(object sender, FormClosedEventArgs e)
         {
             Hide();
+        }
+
+        private void button1_Click(object sender, EventArgs e)//Печать
+        {
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
+            F1.Print_Registy();
+            F1.Disp_data();
+            Close();
         }
     }
 }

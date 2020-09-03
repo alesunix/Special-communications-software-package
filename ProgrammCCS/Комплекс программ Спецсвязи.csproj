@@ -28,7 +28,7 @@
     <ProductName>Комплекс программ Спецсвязи</ProductName>
     <PublisherName>Alesunix</PublisherName>
     <MinimumRequiredVersion>1.1.5.425</MinimumRequiredVersion>
-    <ApplicationRevision>607</ApplicationRevision>
+    <ApplicationRevision>609</ApplicationRevision>
     <ApplicationVersion>2.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

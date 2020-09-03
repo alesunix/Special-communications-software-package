@@ -143,6 +143,7 @@ namespace ProgramCCS
                 F1.Disp_data();
                 textBox14.Text = "";//Очистка поля
                 comboBox5.SelectedIndex = -1;
+                Close();
             }
             else
             {
@@ -152,18 +153,10 @@ namespace ProgramCCS
 
         public void Partner_select()//Вывод Контрагентов в Combobox
         {
-            con.Open();//Открываем соединение
-            SqlCommand cmd = new SqlCommand("SELECT name FROM [Table_Partner] ORDER BY id", con);
-            cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            foreach (DataRow column in dt.Rows)
+            foreach (DataRow column in Table.DtPartner.Rows)
             {
                 comboBox5.Items.Add(column[0].ToString());
-            }
-            con.Close();//Закрываем соединение          
+            }      
         }
         private void List_of_accepted_Load(object sender, EventArgs e)
         {

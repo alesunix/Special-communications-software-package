@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace ProgramCCS
@@ -50,7 +51,7 @@ namespace ProgramCCS
 
     public class Partner
     {
-        public static string Name { get; set; }
+        public static string Name { get; set; }       
     }
 
     public class Dates
@@ -64,6 +65,13 @@ namespace ProgramCCS
             StartDate = startDate;
             EndDate = endDate;
         }
+    }
+    public class Table
+    {
+        //создаем экземпляр класса DataTable
+        public static DataTable DtRegistry { get; set; }
+        public static DataTable DtInvoice { get; set; }
+        public static DataTable DtPartner { get; set; }       
     }
 
 }
