@@ -137,9 +137,10 @@ namespace ProgramCCS
                 dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение     
             }
-            //10. Выборка за период-5 (Дата Обработки) - 'Период + Клиент'.
+            //10. Выборка за период-5 (Дата Обработки) - 'Период + Клиент' (а так же можно выбрать область).
             else if (comboBox5.Text != "" & checkBox1.Checked)
             {
+                string comboitem = ((ClassComboBoxOblast)comboBox2.SelectedItem).Value;
                 DateTime date = new DateTime();
                 date = dateTimePicker1.Value;
                 DateTime date2 = dateTimePicker2.Value;
@@ -147,7 +148,7 @@ namespace ProgramCCS
                 SqlCommand cmd = new SqlCommand("SELECT familia AS 'Ф.И.О', punkt AS 'Населенный пункт', N_zakaza AS '№Заказа', summ AS 'Стоимость', data_zapisi AS 'Дата записи', status AS 'Статус'," +
                     " prichina AS 'Причина', plata_za_uslugu AS 'Плата за услугу', client AS 'Контрагент', oblast AS 'Область', obrabotka AS 'Обработка', id AS ID, nomer_reestra AS 'Реестр'," +
                     " plata_za_nalog AS 'Наложеный платеж', (plata_za_uslugu - plata_za_nalog) AS 'Плата за возврат' FROM [Table_1]" +
-                    " WHERE (data_obrabotki BETWEEN @StartDate AND @EndDate AND client = @client)", con);
+                    " WHERE (data_obrabotki BETWEEN @StartDate AND @EndDate AND client = @client AND oblast LIKE '%" + comboitem.ToString() + "%')", con);
                 cmd.Parameters.AddWithValue("StartDate", date2);
                 cmd.Parameters.AddWithValue("EndDate", date);
                 cmd.Parameters.AddWithValue("@client", comboBox5.Text);
@@ -159,9 +160,10 @@ namespace ProgramCCS
                 dgv1_TLC.DataSource = Table.DtInvoice;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение    
             }
-            //11. Выборка за период-6 (Дата записи) - 'Период + Клиент'.
+            //11. Выборка за период-6 (Дата записи) - 'Период + Клиент' (а так же можно выбрать область).
             else if (comboBox5.Text != "")
             {
+                string comboitem = ((ClassComboBoxOblast)comboBox2.SelectedItem).Value;
                 DateTime date = new DateTime();
                 date = dateTimePicker1.Value;
                 DateTime date2 = dateTimePicker2.Value;
@@ -169,7 +171,7 @@ namespace ProgramCCS
                 SqlCommand cmd = new SqlCommand("SELECT familia AS 'Ф.И.О', punkt AS 'Населенный пункт', N_zakaza AS '№Заказа', summ AS 'Стоимость', data_zapisi AS 'Дата записи', status AS 'Статус'," +
                     " prichina AS 'Причина', plata_za_uslugu AS 'Плата за услугу', client AS 'Контрагент', oblast AS 'Область', obrabotka AS 'Обработка', id AS ID, nomer_reestra AS 'Реестр'," +
                     " plata_za_nalog AS 'Наложеный платеж', (plata_za_uslugu - plata_za_nalog) AS 'Плата за возврат' FROM [Table_1]" +
-                    " WHERE (data_zapisi BETWEEN @StartDate AND @EndDate AND client = @client)", con);
+                    " WHERE (data_zapisi BETWEEN @StartDate AND @EndDate AND client = @client AND oblast LIKE '%" + comboitem.ToString() + "%')", con);
                 cmd.Parameters.AddWithValue("StartDate", date2);
                 cmd.Parameters.AddWithValue("EndDate", date);
                 cmd.Parameters.AddWithValue("@client", comboBox5.Text);

@@ -32,6 +32,7 @@ namespace ProgramCCS
         }
         private void button7_Click(object sender, EventArgs e)//Выборка
         {
+            TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
             //9. Выборка поиск Реестра
             if (textBox14.Text != "" & comboBox5.Text != "" & comboBox1.Text != "")
             {
@@ -53,6 +54,7 @@ namespace ProgramCCS
                 dgv1_TLC.DataSource = Table.DtRegistry;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение    
             }
+            F1.Podschet();//произвести подсчет из метода
         }
 
         private void Search_registry_Load(object sender, EventArgs e)//Загрузка формы

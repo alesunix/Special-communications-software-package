@@ -20,6 +20,8 @@ namespace ProgramCCS
         {
             dgv2_TLC = dgv2;// теперь dgv1_TLC2 будет ссылкой на грид dataGridView2
             InitializeComponent();
+            comboBox1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button10_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            comboBox8.KeyDown += (s, e) => { if (e.KeyCode == Keys.Enter) button10_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
         }
 
         private void button10_Click(object sender, EventArgs e)
