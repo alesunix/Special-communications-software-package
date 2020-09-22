@@ -73,5 +73,11 @@ namespace ProgramCCS
         public static DataTable DtInvoice { get; set; }
         public static DataTable DtPartner { get; set; }       
     }
-
+    public class Summ
+    {
+        public static string Quantity { get; set; }
+        public static string Sum { get; set; }
+        public static string SumReturn { get; set; }
+        public static string SumService { get; set; }
+    }
 }
