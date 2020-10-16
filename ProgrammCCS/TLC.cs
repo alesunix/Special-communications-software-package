@@ -32,8 +32,7 @@ namespace ProgramCCS
         DataContext db = new DataContext(Connection.con);//Для работы LINQ to SQL
         //public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
         MySqlConnection mycon = new MySqlConnection("SERVER= хостинг_сервер;" + "DATABASE= имя_базы;" + "UID= логин;" + "PASSWORD=пароль;" + "connection timeout = 180");
-
-        public DataTable dtTarif = new DataTable();//создаем экземпляр класса DataTable
+       
         private string fileName = string.Empty;
 
         Login formLogin = new Login();
@@ -233,7 +232,7 @@ namespace ProgramCCS
         public void Wanted_Pending_Replacement()//Розыск, Ожидание, Замена (Группировка)
         {
             //Группировка Статусов
-            var statusGroup = from table in db.GetTable<Table_1>()
+            var statusGroup = from table in db.GetTable<Table_1_incomplete>()
                               group table by table.Статус into g
                               select g.OrderByDescending(t => t.Статус).FirstOrDefault();
             dataGridView2.DataSource = statusGroup;
@@ -262,7 +261,7 @@ namespace ProgramCCS
         {
             dataGridView2.Visible = true;
 
-            var command = from table in db.GetTable<Table_1>()
+            var command = from table in db.GetTable<Table_1_incomplete>()
                           where table.Статус == "Ожидание"
                           orderby table.Дата_записи descending
                           select table;
@@ -275,7 +274,7 @@ namespace ProgramCCS
         {
             dataGridView2.Visible = true;
 
-            var command = from table in db.GetTable<Table_1>()
+            var command = from table in db.GetTable<Table_1_incomplete>()
                           where table.Статус == "Розыск"
                           orderby table.Дата_записи descending
                           select table;
@@ -288,7 +287,7 @@ namespace ProgramCCS
         {
             dataGridView2.Visible = true;
 
-            var command = from table in db.GetTable<Table_1>()
+            var command = from table in db.GetTable<Table_1_incomplete>()
                           where table.Статус == "Замена"
                           orderby table.Дата_записи descending
                           select table;
@@ -301,7 +300,7 @@ namespace ProgramCCS
         public void Wait()
         {
             //Отобразить список Ожидание! 
-            var command = from table in db.GetTable<Table_1>()
+            var command = from table in db.GetTable<Table_1_incomplete>()
                           where table.Статус == "Ожидание"
                           orderby table.Дата_записи descending
                           select table;
@@ -357,8 +356,9 @@ namespace ProgramCCS
                                select table;
                 dataGridView2.DataSource = lastDays;
                 db.Refresh(RefreshMode.OverwriteCurrentValues, lastDays); //datacontext очистка command
-                label1.Text = ("Отображены последние записи");
+                label1.Text = ("Отображены последние записи");               
             }
+            dataGridView2.Columns[0].Visible = false;//Скрыть столбец ID
         }
         public void Disp_data()//Отображает базу
         {
@@ -371,6 +371,7 @@ namespace ProgramCCS
             SelectData(); //Группировка и Сортировка по дате записи (сначала новые) //Розыск, Ожидание, Замена (Группировка)            
             button8.Text = "Обновить";
             button8.Enabled = true;
+            Podschet();
         }
         public void Disp_data_all_base()//Отображает всю базу и сортирует по дате записи
         {
@@ -383,14 +384,14 @@ namespace ProgramCCS
 
             if (Person.Name == "root")
             {
-                var command = from table in db.GetTable<Table_1>()
+                var command = from table in db.GetTable<Table_1_incomplete>()
                               orderby table.Дата_записи descending
                               select table;
                 dataGridView2.DataSource = command;
             }
             else
             {
-                var command = from table in db.GetTable<Table_1>()
+                var command = from table in db.GetTable<Table_1_incomplete>()
                               where table.Филиал == Person.Name
                               orderby table.Дата_записи descending
                               select table;
@@ -589,7 +590,7 @@ namespace ProgramCCS
                 string[] tarifs = { "Общий" };//Тарифы
                 for (int y = 0; y < tarifs.Length; y++)
                 {
-                    if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == tarifs[y])//Т а р и ф для большинства организаций
+                    if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == tarifs[y])//Т а р и ф для большинства организаций
                     {
                         double ob_cennost = (stoimost * 1.0 / 100);
                         double plata_za_nalog = (stoimost * 2.0 / 100);
@@ -603,7 +604,7 @@ namespace ProgramCCS
                         con.Close();//закрыть соединение
                     }
                 }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == "по 1 проценту")//Т а р и ф для ИП 'JUMPER'
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == "по 1 проценту")//Т а р и ф для ИП 'JUMPER'
                 {
                     double ob_cennost = (stoimost * 1.0 / 100);
                     double plata_za_nalog = (stoimost * 1.0 / 100);
@@ -616,7 +617,7 @@ namespace ProgramCCS
                     cmd.ExecuteNonQuery();
                     con.Close();//закрыть соединение
                 }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == "по 2 процента")//Т а р и ф для "ОсОО 'Экспресс-Тайм'"
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == "по 2 процента")//Т а р и ф для "ОсОО 'Экспресс-Тайм'"
                 {
                     double ob_cennost = (stoimost * 2.0 / 100);
                     double plata_za_nalog = (stoimost * 2.0 / 100);
@@ -629,7 +630,7 @@ namespace ProgramCCS
                     cmd.ExecuteNonQuery();
                     con.Close();//закрыть соединение  
                 }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == "по 0 процентов")//Т а р и ф для "ОсОО 'Альфа Вита'"
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == "по 0 процентов")//Т а р и ф для "ОсОО 'Альфа Вита'"
                 {
                     double ob_cennost = 0;
                     double plata_za_nalog = 0;
@@ -642,7 +643,7 @@ namespace ProgramCCS
                     cmd.ExecuteNonQuery();
                     con.Close();//закрыть соединение
                 }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == "1,5 процента")//Т а р и ф для ОсОО Kyrgyz Express Post
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == "1,5 процента")//Т а р и ф для ОсОО Kyrgyz Express Post
                 {
                     double plata_za_nalog = (stoimost * 1.5 / 100);
                     con.Open();//открыть соединение
@@ -657,7 +658,7 @@ namespace ProgramCCS
 
             for (int i = 0; i < dataGridView2.Rows.Count; i++)//Т а р и ф для Sapardelivery и ОсОО Тенгри
             {
-                if (dataGridView2.Rows[i].Cells[24].Value.ToString() == "Сложный")
+                if (dataGridView2.Rows[i].Cells[21].Value.ToString() == "Сложный")
                 {
                     int doplata = Convert.ToInt32(dataGridView2.Rows[i].Cells[7].Value);
                     int stoimost = Convert.ToInt32(dataGridView2.Rows[i].Cells[4].Value);
@@ -913,7 +914,7 @@ namespace ProgramCCS
             //dataGridView2.DataSource = command;
             DataTable tableNs = ToDataTable(command); //передать результат LINQ таблице DataTable
 
-            Number.Nn = Convert.ToInt32(tableNs.Rows[0][21].ToString()) + 1;
+            Number.Ns = Convert.ToInt32(tableNs.Rows[0][21].ToString()) + 1;
             //Number.Ns = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Ns;
 
@@ -925,7 +926,9 @@ namespace ProgramCCS
                           where table.Контрагент == Partner.Name
                           group table by table.Ns into g
                           select g.OrderByDescending(t => t.Ns).FirstOrDefault();
-            dataGridView2.DataSource = command;
+            //dataGridView2.DataSource = command;
+            DataTable tableNs = ToDataTable(command); //передать результат LINQ таблице DataTable
+            Number.Prefix_number = tableNs.Rows[0][18].ToString();
 
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
 
@@ -985,13 +988,13 @@ namespace ProgramCCS
             cmd.Parameters.AddWithValue("@name", comboBox5.Text.ToString());
             cmd.ExecuteNonQuery();
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dtTarif.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dtTarif);//заполняем данными созданный DataTable
+            Table.Tarifs.Clear();//чистим DataTable, если он был не пуст
+            da.Fill(Table.Tarifs);//заполняем данными созданный DataTable
             con.Close();//закрыть соединение
             if (comboBox5.Text == "")//если поле очищено, отобразить базу
             {
-                dtTarif.Clear();//чистим DataTable, если он был не пуст
-                foreach (DataRow column in dtTarif.Rows)
+                Table.Tarifs.Clear();//чистим DataTable, если он был не пуст
+                foreach (DataRow column in Table.Tarifs.Rows)
                 {
                     comboBox5.Items.Add(column[0].ToString());
                 }
@@ -1120,7 +1123,7 @@ namespace ProgramCCS
                                 cmd.Parameters.AddWithValue("@Nr", 0);
                                 cmd.Parameters.AddWithValue("@Ns", Number.Ns);
                                 cmd.Parameters.AddWithValue("@Nn", 0);
-                                cmd.Parameters.AddWithValue("@tarifs", dtTarif.Rows[0][0].ToString());//tarif
+                                cmd.Parameters.AddWithValue("@tarifs", Table.Tarifs.Rows[0][0].ToString());//tarif
                                 cmd.Parameters.AddWithValue("@filial", Person.Name);
 
                                 if ((dataGridView3.Rows[i].Cells[11].Value) != DBNull.Value)//если в EXCEL столбец доплата не пустой
@@ -1137,7 +1140,7 @@ namespace ProgramCCS
                             dataGridView5.Visible = false;
 
                             //Отобразить список Ожидание! 
-                            var command = from table in db.GetTable<Table_1>()
+                            var command = from table in db.GetTable<Table_1_incomplete>()
                                           where table.Статус == "Ожидание"
                                           orderby table.Дата_записи descending
                                           select table;
@@ -1157,7 +1160,7 @@ namespace ProgramCCS
                             con.Open();//открыть соединение
                             SqlCommand cmd = new SqlCommand("SELECT oblast, punkt, familia, N_zakaza, data_zapisi, summ, tarif, doplata, plata_za_uslugu, ob_cennost, plata_za_nalog, id, nomer_spiska" +
                                 " FROM [Table_1] WHERE (nomer_spiska = @nomer_spiska AND client = @client)", con);
-                            cmd.Parameters.AddWithValue("nomer_spiska", dataGridView2.Rows[0].Cells[18].Value.ToString());
+                            cmd.Parameters.AddWithValue("nomer_spiska", Number.Prefix_number);
                             cmd.Parameters.AddWithValue("@client", Partner.Name);
                             cmd.ExecuteNonQuery();
                             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
@@ -1171,7 +1174,7 @@ namespace ProgramCCS
                                        //Выдача в WORD
                             SaveFileDialog sfd = new SaveFileDialog();
                             sfd.Filter = "Word Documents (*.docx)|*.docx";
-                            sfd.FileName = $"Список принятых № {dataGridView2.Rows[0].Cells[18].Value.ToString()}.docx";
+                            sfd.FileName = $"Список принятых № {Number.Prefix_number}.docx";
                             if (sfd.ShowDialog() == DialogResult.OK)
                             {
                                 Export_Spisok_Prinyatyh_To_Word(dataGridView5, sfd.FileName);
@@ -1235,7 +1238,7 @@ namespace ProgramCCS
             "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
                 "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
                 "filial AS 'Филиал', client AS 'Контрагент'," +
-                "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
+                "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', tarifs AS 'Тарифы'" +
                     "FROM [Table_1] WHERE familia LIKE N'%" + textBox3.Text.ToString() + "%'", con);
             //cmd.Parameters.AddWithValue("@punkt", textBox2.Text);
             //cmd.Parameters.AddWithValue("@familia", textBox2.Text);
@@ -1252,7 +1255,7 @@ namespace ProgramCCS
         }
         private void textBox3_TextChanged(object sender, EventArgs e)//Поиск по №Заказа
         {
-            var command = from table in db.GetTable<Table_1>()
+            var command = from table in db.GetTable<Table_1_incomplete>()
                           where table.N_Заказа == textBox3.Text.ToString()
                           orderby table.Дата_записи descending
                           select table;
@@ -1281,7 +1284,7 @@ namespace ProgramCCS
             ProgressBar();
             if (Person.Name == "root")
             {
-                var command = from table in db.GetTable<Table_1>()
+                var command = from table in db.GetTable<Table_1_incomplete>()
                               where table.Статус == "Возврат"
                               orderby table.Дата_записи descending
                               select table;
@@ -1289,7 +1292,7 @@ namespace ProgramCCS
             }
             else
             {
-                var command = from table in db.GetTable<Table_1>()
+                var command = from table in db.GetTable<Table_1_incomplete>()
                               where table.Филиал == Person.Name & table.Статус == "Возврат"
                               orderby table.Дата_записи descending
                               select table;
@@ -1302,7 +1305,7 @@ namespace ProgramCCS
             ProgressBar();
             if (Person.Name == "root")
             {
-                var command = from table in db.GetTable<Table_1>()
+                var command = from table in db.GetTable<Table_1_incomplete>()
                               where table.Статус == "Выдано"
                               orderby table.Дата_записи descending
                               select table;
@@ -1310,7 +1313,7 @@ namespace ProgramCCS
             }
             else
             {
-                var command = from table in db.GetTable<Table_1>()
+                var command = from table in db.GetTable<Table_1_incomplete>()
                               where table.Филиал == Person.Name & table.Статус == "Выдано"
                               orderby table.Дата_записи descending
                               select table;
@@ -1722,8 +1725,8 @@ namespace ProgramCCS
                 oDoc.Application.Selection.Tables[1].Columns[4].Width = 60;
                 oDoc.Application.Selection.Tables[1].Columns[5].Width = 55;
                 //текст заголовка
-                int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-                string prefix_number = comboBox10.Text + number;
+                //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+                //string prefix_number = comboBox10.Text + number;
                 foreach (Word.Section section in oDoc.Application.ActiveDocument.Sections)
                 {//Верхний колонтитул
                     DateTime Now = DateTime.Now;
@@ -1732,7 +1735,7 @@ namespace ProgramCCS
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
                     if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
                     {
-                        string Reestr = prefix_number;
+                        string Reestr = Number.Prefix_number;
                         headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
                         Environment.NewLine + $"от  {kontragent}" +
                         Environment.NewLine;
@@ -1870,8 +1873,8 @@ namespace ProgramCCS
                 oDoc.Application.Selection.Tables[1].Columns[7].Width = 40;
                 oDoc.Application.Selection.Tables[1].Columns[8].Width = 40;
                 //текст заголовка
-                int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-                string prefix_number = comboBox10.Text + number;
+                //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+                //string prefix_number = comboBox10.Text + number;
                 foreach (Word.Section section in oDoc.Application.ActiveDocument.Sections)
                 {//Верхний колонтитул
                     DateTime Now = DateTime.Now;
@@ -1880,7 +1883,7 @@ namespace ProgramCCS
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
                     if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
                     {
-                        string Reestr = prefix_number;
+                        string Reestr = Number.Prefix_number;
                         headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
                         Environment.NewLine + $"от  {kontragent}" +
                         Environment.NewLine;
@@ -1908,8 +1911,8 @@ namespace ProgramCCS
         }
         public void Export_Reestr_To_Excel(DataGridView dataGridView1, string filename)//Метод экспорта в Excel Реестр
         {
-            int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-            string prefix_number = comboBox10.Text + number;
+            //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+            //string prefix_number = comboBox10.Text + number;
             Excell._Application app = new Excell.Application();// Создание Excel Application
             Excell._Workbook workbook = app.Workbooks.Add(Type.Missing);// создание новой книги внутри приложения Excel
             Excell._Worksheet worksheet = null;// создание нового листа Excel в книге
@@ -1936,7 +1939,7 @@ namespace ProgramCCS
             worksheet.Cells[3, "I"] = "Кол-во " + Summ.Quantity;
             if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
             {
-                string Reestr = prefix_number;
+                string Reestr = Number.Prefix_number;
                 worksheet.Cells[4, "I"] = "Реестр№ " + Reestr + " от " + Now;
                 worksheet.Name = "Реестр№ " + Reestr + " TLC -Express";// Изменение названия активного листа
             }
@@ -1958,8 +1961,8 @@ namespace ProgramCCS
         }
         public void Export_Reestr_To_Excel_vozvrat(DataGridView dataGridView1, string filename)//Метод экспорта в Excel Реестр на возврат для TOO Sapar delivery
         {
-            int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-            string prefix_number = comboBox10.Text + number;
+            //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+            //string prefix_number = comboBox10.Text + number;
             Excell._Application app = new Excell.Application();// Создание Excel Application
             Excell._Workbook workbook = app.Workbooks.Add(Type.Missing);// создание новой книги внутри приложения Excel
             Excell._Worksheet worksheet = null;// создание нового листа Excel в книге
@@ -1986,7 +1989,7 @@ namespace ProgramCCS
             worksheet.Cells[3, "I"] = "Кол-во " + Summ.Quantity;
             if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
             {
-                string Reestr = prefix_number;
+                string Reestr = Number.Prefix_number;
                 worksheet.Cells[4, "I"] = "Реестр№ " + Reestr + " от " + Now;
                 worksheet.Name = "Реестр№ " + Reestr + " TLC -Express";// Изменение названия активного листа
             }

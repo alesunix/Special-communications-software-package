@@ -72,7 +72,7 @@ namespace ProgramCCS
                 "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
                     "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
                     "filial AS 'Филиал', client AS 'Контрагент'," +
-                    "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
+                    "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', tarifs AS 'Тарифы'" +
                         "FROM [Table_1] WHERE familia LIKE N'%" + textBox2.Text.ToString() + "%'", con);
                 //cmd.Parameters.AddWithValue("@punkt", textBox2.Text);
                 //cmd.Parameters.AddWithValue("@familia", textBox2.Text);
@@ -97,7 +97,7 @@ namespace ProgramCCS
             dgv2_TLC.Visible = true;
             dgv1_TLC.Visible = false;
 
-            var command = from table in db.GetTable<Table_1>()
+            var command = from table in db.GetTable<Table_1_incomplete>()
                           where table.N_Заказа == textBox3.Text.ToString()
                           orderby table.Дата_записи descending
                           select table;

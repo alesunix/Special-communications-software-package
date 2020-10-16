@@ -86,7 +86,7 @@ namespace ProgramCCS
                     SqlCommand cmd = new SqlCommand("SELECT oblast, punkt, familia, N_zakaza, data_zapisi, summ, tarif, doplata, plata_za_uslugu, ob_cennost, plata_za_nalog, id, nomer_spiska" +
                         " FROM [Table_1] WHERE (nomer_spiska = @nomer_spiska AND client = @client)", con);
                     if (textBox14.Text != "") { cmd.Parameters.AddWithValue("nomer_spiska", textBox14.Text); }//Ввести номер списка
-                    else if (textBox14.Text == "") { cmd.Parameters.AddWithValue("nomer_spiska", F1.dataGridView2.Rows[0].Cells[18].Value.ToString()); }//Если не ввести номер то выдаст последний
+                    else if (textBox14.Text == "") { cmd.Parameters.AddWithValue("nomer_spiska", Number.Prefix_number); }//Если не ввести номер то выдаст последний
                     cmd.Parameters.AddWithValue("@client", Partner.Name);
                     cmd.ExecuteNonQuery();
                     DataTable dt = new DataTable();//создаем экземпляр класса DataTable

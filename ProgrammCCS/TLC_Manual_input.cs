@@ -41,7 +41,7 @@ namespace ProgramCCS
                 cmd.Parameters.AddWithValue("@nomer_nakladnoy", 0);
                 cmd.Parameters.AddWithValue("@Nr", 0);
                 cmd.Parameters.AddWithValue("@Nn", 0);
-                cmd.Parameters.AddWithValue("@tarifs", F1.dtTarif.Rows[0][0].ToString());//tarif
+                cmd.Parameters.AddWithValue("@tarifs", Table.Tarifs.Rows[0][0].ToString());//tarif
                 if (textBox17.Text != "") { cmd.Parameters.AddWithValue("@doplata", textBox17.Text); }
                 else if (textBox17.Text == "") { cmd.Parameters.AddWithValue("@doplata", 0); }
                 if (textBox20.Text != "") { cmd.Parameters.AddWithValue("@nomer_spiska", textBox20.Text); cmd.Parameters.AddWithValue("@Ns", textBox20.Text); }
@@ -100,13 +100,13 @@ namespace ProgramCCS
             cmd.Parameters.AddWithValue("@name", comboBox7.Text.ToString());
             cmd.ExecuteNonQuery();
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            F1.dtTarif.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(F1.dtTarif);//заполняем данными созданный DataTable
+            Table.Tarifs.Clear();//чистим DataTable, если он был не пуст
+            da.Fill(Table.Tarifs);//заполняем данными созданный DataTable
             con.Close();//закрыть соединение
             if (comboBox7.Text == "")//если поле очищено, отобразить базу
             {
-                F1.dtTarif.Clear();//чистим DataTable, если он был не пуст
-                foreach (DataRow column in F1.dtTarif.Rows)
+                Table.Tarifs.Clear();//чистим DataTable, если он был не пуст
+                foreach (DataRow column in Table.Tarifs.Rows)
                 {
                     comboBox7.Items.Add(column[0].ToString());
                 }

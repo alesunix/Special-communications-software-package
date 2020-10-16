@@ -71,7 +71,8 @@ namespace ProgramCCS
         //создаем экземпляр класса DataTable
         public static DataTable DtRegistry { get; set; }
         public static DataTable DtInvoice { get; set; }
-        public static DataTable DtPartner { get; set; }       
+        public static DataTable DtPartner { get; set; }
+        public static DataTable Tarifs { get; set; }
     }
     public class Summ
     {
