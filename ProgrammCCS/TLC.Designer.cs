@@ -768,9 +768,9 @@
             this.label34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label34.Location = new System.Drawing.Point(268, 81);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(46, 12);
+            this.label34.Size = new System.Drawing.Size(56, 12);
             this.label34.TabIndex = 118;
-            this.label34.Text = "Возврат";
+            this.label34.Text = "Возврат - ";
             // 
             // label24
             // 
@@ -780,9 +780,9 @@
             this.label24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label24.Location = new System.Drawing.Point(407, 81);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(41, 12);
+            this.label24.Size = new System.Drawing.Size(51, 12);
             this.label24.TabIndex = 98;
-            this.label24.Text = "Услуга";
+            this.label24.Text = "Услуга - ";
             // 
             // label5
             // 
@@ -792,9 +792,9 @@
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label5.Location = new System.Drawing.Point(4, 81);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(41, 12);
+            this.label5.Size = new System.Drawing.Size(51, 12);
             this.label5.TabIndex = 71;
-            this.label5.Text = "Кол-во";
+            this.label5.Text = "Кол-во - ";
             // 
             // label6
             // 
@@ -804,9 +804,9 @@
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label6.Location = new System.Drawing.Point(139, 81);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(40, 12);
+            this.label6.Size = new System.Drawing.Size(50, 12);
             this.label6.TabIndex = 68;
-            this.label6.Text = "Сумма";
+            this.label6.Text = "Сумма - ";
             // 
             // tabPage3
             // 

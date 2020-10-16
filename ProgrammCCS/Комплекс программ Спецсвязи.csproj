@@ -224,6 +224,7 @@
     <Compile Include="Status_Change.Designer.cs">
       <DependentUpon>Status_Change.cs</DependentUpon>
     </Compile>
+    <Compile Include="Table_1_incomplete.cs" />
     <Compile Include="Table_1.cs" />
     <Compile Include="TLC.cs">
       <SubType>Form</SubType>
