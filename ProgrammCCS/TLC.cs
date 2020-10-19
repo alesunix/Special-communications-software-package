@@ -245,6 +245,11 @@ namespace ProgramCCS
                     linkLabel2.Visible = true;
                     linkLabel2.Text = ("В ожидании!");
                 }
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[11].Value) == "Отправлено")
+                {
+                    linkLabel5.Visible = true;
+                    linkLabel5.Text = ("Отправлено!");
+                }
                 if (Convert.ToString(dataGridView2.Rows[i].Cells[11].Value) == "Розыск")
                 {
                     linkLabel3.Visible = true;
@@ -296,7 +301,19 @@ namespace ProgramCCS
             linkLabel4.Visible = false;
             Podschet();
         }
+        private void LinkLabel5_Click(object sender, EventArgs e)//Отобразить список Отправленно!
+        {
+            dataGridView2.Visible = true;
 
+            var command = from table in db.GetTable<Table_1_incomplete>()
+                          where table.Статус == "Отправлено"
+                          orderby table.Дата_записи descending
+                          select table;
+            dataGridView2.DataSource = command;
+
+            linkLabel5.Visible = false;
+            Podschet();
+        }
         public void Wait()//Отобразить список Ожидание! 
         {
             //Отобразить список Ожидание! 
@@ -507,7 +524,7 @@ namespace ProgramCCS
                         if (dataGridView5[i, j].Value != null)
                         {
                             textBox4.Text = Convert.ToString(dataGridView5.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
-                            Summ.Quantity = Convert.ToString(dataGridView1.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
+                            Summ.Quantity = Convert.ToString(dataGridView5.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
                             count++;
                             break;
                         }
@@ -536,7 +553,7 @@ namespace ProgramCCS
                         if (dataGridView2[i, j].Value != null)
                         {
                             textBox4.Text = Convert.ToString(dataGridView2.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
-                            Summ.Quantity = Convert.ToString(dataGridView1.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
+                            Summ.Quantity = Convert.ToString(dataGridView2.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
                             count++;
                             break;
                         }
@@ -574,7 +591,7 @@ namespace ProgramCCS
                         if (dataGridView6[i, j].Value != null)
                         {
                             textBox24.Text = Convert.ToString(dataGridView6.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
-                            Summ.Quantity = Convert.ToString(dataGridView1.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
+                            Summ.Quantity = Convert.ToString(dataGridView6.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
                             count++;
                             break;
                         }
@@ -982,6 +999,7 @@ namespace ProgramCCS
         }
         public void ComboBox5_TextChanged(object sender, EventArgs e)//поиск тарифа по контрагенту
         {
+            Table.Tarifs = new DataTable();//инициализируем DataTable
             con.Open();//открыть соединение
             SqlCommand cmd = new SqlCommand("SELECT tarif FROM [Table_Partner]" +
                 "WHERE name = @name", con);
@@ -1374,7 +1392,7 @@ namespace ProgramCCS
                 //Выдача рееста в WORD
                 ExportReestr_ToPDF();
                 string status = Convert.ToString(dataGridView1.Rows[0].Cells[5].Value);//Статус
-                string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент                
+                //string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент                
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "Word Documents (*.docx)|*.docx";
                 sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
@@ -1415,12 +1433,12 @@ namespace ProgramCCS
                 {
                     ExportReestr_ToPDF();
                     //Выдача рееста в WORD
-                    string nomer = dataGridView1.Rows[0].Cells[12].Value.ToString();//№
+                    //string nomer = dataGridView1.Rows[0].Cells[12].Value.ToString();//№
                     string status = Convert.ToString(dataGridView1.Rows[0].Cells[5].Value);//Статус
-                    string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент
+                    //string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = "Word Documents (*.docx)|*.docx";
-                    sfd.FileName = $"Реестр № {nomer} на {status}.docx";
+                    sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
@@ -1436,7 +1454,7 @@ namespace ProgramCCS
                     if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
                     {
                         sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                        sfd.FileName = $"Реестр № {nomer} на {status}.xlsx";
+                        sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.xlsx";
                         if (sfd.ShowDialog() == DialogResult.OK)
                         {
                             Export_Reestr_To_Excel(dataGridView1, sfd.FileName);
@@ -1445,7 +1463,7 @@ namespace ProgramCCS
                     else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
                     {
                         sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                        sfd.FileName = $"Реестр № {nomer} на {status}.xlsx";
+                        sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.xlsx";
                         if (sfd.ShowDialog() == DialogResult.OK)
                         {
                             Export_Reestr_To_Excel_vozvrat(dataGridView1, sfd.FileName);
@@ -1510,10 +1528,10 @@ namespace ProgramCCS
 
                     //Выдача накладной
                     ExportInvoice_ToPDF();
-                    string oblast = Convert.ToString(dataGridView1.Rows[0].Cells[9].Value);//Область
+                    string region = Convert.ToString(dataGridView1.Rows[0].Cells[9].Value);//Область
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = "Word Documents (*.docx)|*.docx";
-                    sfd.FileName = $"Накладная № {Number.Prefix_number} - {oblast}.docx";
+                    sfd.FileName = $"Накладная № {Number.Prefix_number} - {region}.docx";
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         Export_Nakladnaya_To_Word(dataGridView1, sfd.FileName);
@@ -1649,7 +1667,6 @@ namespace ProgramCCS
                 } //конец петли колонки
                   //Добавление текста в документ
                 string status = Convert.ToString(dataGridView1.Rows[0].Cells[4].Value);//Статус
-                string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
                 oDoc.Content.SetRange(0, 0);// для текстовых строк
                 oDoc.Content.Text = $"Итого:    {Summ.Quantity}                    {Summ.Sum}" +
                 //Environment.NewLine + " Сумма за услугу " + Summ.SumService +
@@ -1743,16 +1760,15 @@ namespace ProgramCCS
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
                     if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
                     {
-                        string Reestr = Number.Prefix_number;
-                        headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
-                        Environment.NewLine + $"от  {kontragent}" +
+                        headerRange.Text = $"Реестр №  {Number.Prefix_number}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
+                        Environment.NewLine + $"от  {Partner.Name}" +
                         Environment.NewLine;
                     }
                     else if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) == "Обработано")
                     {
                         string Reestr = dataGridView1.Rows[0].Cells[11].Value.ToString();
                         headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
-                        Environment.NewLine + $"от  {kontragent}" +
+                        Environment.NewLine + $"от  {Partner.Name}" +
                         Environment.NewLine;
                     }
                     headerRange.Font.Size = 12;
@@ -1794,10 +1810,8 @@ namespace ProgramCCS
             {
                 //удаление столбца
                 this.dataGridView1.Columns.RemoveAt(4);//дата записи
-
                 string status = Convert.ToString(dataGridView1.Rows[0].Cells[4].Value);//Статус
-                string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
-
+                //string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
                 int RowCount = dataGridView1.Rows.Count;
                 int ColumnCount = dataGridView1.Columns.Count - 0;// столбцы в гриде (-3 последних)id и обработанные и клиент не нужны              
                 Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
@@ -1891,16 +1905,15 @@ namespace ProgramCCS
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
                     if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
                     {
-                        string Reestr = Number.Prefix_number;
-                        headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
-                        Environment.NewLine + $"от  {kontragent}" +
+                        headerRange.Text = $"Реестр №  {Number.Prefix_number}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
+                        Environment.NewLine + $"от  {Partner.Name}" +
                         Environment.NewLine;
                     }
                     else if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) == "Обработано")
                     {
                         string Reestr = dataGridView1.Rows[0].Cells[11].Value.ToString();
                         headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
-                        Environment.NewLine + $"от  {kontragent}" +
+                        Environment.NewLine + $"от  {Partner.Name}" +
                         Environment.NewLine;
                     }
                     headerRange.Font.Size = 12;
@@ -2057,8 +2070,8 @@ namespace ProgramCCS
                 } //конец петли колонки
                   //Добавление текста в документ
 
-                string oblast = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Область
-                string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
+                string region = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Область
+                //string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
                 oDoc.Content.SetRange(0, 0);
                 oDoc.Content.Text = $"                             Итого:    {Summ.Quantity}                    {Summ.Sum}" +
                 Environment.NewLine +
@@ -2111,15 +2124,15 @@ namespace ProgramCCS
                 oDoc.Application.Selection.Tables[1].RightPadding = 1;//отступ с права полей ячеек
                 oDoc.Application.Selection.Tables[1].Rows.LeftIndent = -35;//Установка отступа слева
                 //текст заголовка
-                int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
-                string prefix_number = comboBox10.Text + number;
+                //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
+                //string prefix_number = comboBox10.Text + number;
                 foreach (Word.Section section in oDoc.Application.ActiveDocument.Sections)
                 {//Верхний колонтитул
                     DateTime Now = DateTime.Now;
                     Word.Range headerRange = section.Headers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range;
                     headerRange.Fields.Add(headerRange, Word.WdFieldType.wdFieldPage);
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
-                    headerRange.Text = kontragent + Environment.NewLine + "Накладная № " + prefix_number + " от " + Convert.ToString(Now.ToString("dd.MM.yyyy")) + " куда " + oblast +
+                    headerRange.Text = Partner.Name + Environment.NewLine + "Накладная № " + Number.Prefix_number + " от " + Convert.ToString(Now.ToString("dd.MM.yyyy")) + " куда " + region +
                     Environment.NewLine;
                     headerRange.Font.Size = 16;
                     headerRange.Font.Name = "Times New Roman";
@@ -2172,8 +2185,7 @@ namespace ProgramCCS
                     } //Конец цикла строки
                 } //конец петли колонки
                   //Добавление текста в документ
-                string oblast = Convert.ToString(dataGridView1.Rows[0].Cells[9].Value);//Область
-                string client = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Клиент
+                //string client = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Клиент
                 //DateTime DatePriem = Convert.ToDateTime(dataGridView2.Rows[0].Cells[8].Value);
                 oDoc.Content.SetRange(0, 0);
                 oDoc.Content.Text = $"                             Итого:     {Summ.Quantity}                    {Summ.Sum}" +
@@ -2245,7 +2257,7 @@ namespace ProgramCCS
                     headerRange.Text = "Список за период " +
                     Environment.NewLine + $"c  {Convert.ToString(Dates.StartDate.ToString("dd.MM.yyyy "))}  по  {Convert.ToString(Dates.EndDate.ToString(" dd.MM.yyyy"))}" +
                     Environment.NewLine +
-                    Environment.NewLine + $"Отправитель  {client}" +
+                    Environment.NewLine + $"Отправитель  {Partner.Name}" +
                     Environment.NewLine;
 
                     headerRange.Font.Size = 16;
@@ -2301,7 +2313,6 @@ namespace ProgramCCS
                     } //Конец цикла строки
                 } //конец петли колонки
                   //Добавление текста в документ
-                string client = comboBox5.Text;//Клиент
                 oDoc.Content.SetRange(0, 0);// для текстовых строк
                 oDoc.Content.Text = $"Итого: {Summ.Quantity}" +
                 Environment.NewLine + $"Сумма объявленной ценности  {Summ.Sum}" +
@@ -2373,14 +2384,14 @@ namespace ProgramCCS
                     Word.Range headerRange = section.Headers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range;
                     headerRange.Fields.Add(headerRange, Word.WdFieldType.wdFieldPage);
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
-                    int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
-                    string prefix_number = comboBox10.Text + number;
+                    //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
+                    //string prefix_number = comboBox10.Text + number;
                     if (dataGridView5.Rows[0].Cells[11].Value.ToString() == "0")
                     {
-                        headerRange.Text = $"СПИСОК № {prefix_number}" +
+                        headerRange.Text = $"СПИСОК № {Number.Prefix_number}" +
                         Environment.NewLine + $"от {Convert.ToString(DatePriem.ToString("dd.MM.yyyy"))} принятых в ТЛЦ ГП 'Спецсвязь' " +
                         Environment.NewLine +
-                        Environment.NewLine + $"Отправитель {client}" +
+                        Environment.NewLine + $"Отправитель {Partner.Name}" +
                         Environment.NewLine;
                     }
                     else if (dataGridView5.Rows[0].Cells[11].Value.ToString() != "0")
@@ -2389,7 +2400,7 @@ namespace ProgramCCS
                         headerRange.Text = $"СПИСОК № {nomer}" +
                         Environment.NewLine + $"от {Convert.ToString(DatePriem.ToString("dd.MM.yyyy"))} принятых в ТЛЦ ГП 'Спецсвязь' " +
                         Environment.NewLine +
-                        Environment.NewLine + $"Отправитель {client}" +
+                        Environment.NewLine + $"Отправитель {Partner.Name}" +
                         Environment.NewLine;
                     }
                     headerRange.Font.Size = 12;
@@ -2446,7 +2457,7 @@ namespace ProgramCCS
         private void ExportReestr_ToPDF()//Метод экспорта Реестра в PDF 
         {
             string status = Table.DtRegistry.Rows[0][5].ToString();//Статус
-            string kontragent = Table.DtRegistry.Rows[0][8].ToString();//Контрагент
+            //string kontragent = Table.DtRegistry.Rows[0][8].ToString();//Контрагент
             DateTime Now = DateTime.Now;
             //int number = Number.Nr;
             //string prefix_number = comboBox10.Text + number;
@@ -2491,7 +2502,7 @@ namespace ProgramCCS
                     Reestr = Table.DtRegistry.Rows[0][12].ToString();
                 }
                     Heading = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. " +
-                    Environment.NewLine + $"отправлений с наложенным платежом от {kontragent}" +
+                    Environment.NewLine + $"отправлений с наложенным платежом от {Partner.Name}" +
                     Environment.NewLine + Environment.NewLine;
 
                 PdfPCell cell = new PdfPCell(new Phrase(Heading, fontBold));
@@ -2569,7 +2580,7 @@ namespace ProgramCCS
         private void ExportInvoice_ToPDF()//Метод экспорта Накладной в PDF 
         {
             string status = Table.DtInvoice.Rows[0][5].ToString();//Статус
-            string kontragent = Table.DtInvoice.Rows[0][8].ToString();//Контрагент
+            //string kontragent = Table.DtInvoice.Rows[0][8].ToString();//Контрагент
             string region = Table.DtInvoice.Rows[0][9].ToString();//Область
             DateTime Now = DateTime.Now;
             //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
@@ -2595,7 +2606,7 @@ namespace ProgramCCS
                 table.HorizontalAlignment = Element.ALIGN_LEFT;
                 table.DefaultCell.BorderWidth = 1;
                 //Добавим в таблицу общий заголовок                
-                Heading = kontragent + Environment.NewLine + "Накладная № " + Number.Prefix_number + " от " + Convert.ToString(Now.ToString("dd.MM.yyyy")) + " куда " + region +
+                Heading = Partner.Name + Environment.NewLine + "Накладная № " + Number.Prefix_number + " от " + Convert.ToString(Now.ToString("dd.MM.yyyy")) + " куда " + region +
                 Environment.NewLine;
 
                 PdfPCell cell = new PdfPCell(new Phrase(Heading, fontBold));
@@ -3023,7 +3034,7 @@ namespace ProgramCCS
             }
         }
 
-
+        
     }
 }
 

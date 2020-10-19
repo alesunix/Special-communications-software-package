@@ -219,6 +219,7 @@ namespace ProgramCCS
         private void button1_Click(object sender, EventArgs e)//Печать
         {
             TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
+            Partner.Name = comboBox5.Text;
             F1.Print_Invoice();//Печать Накладной и за период
             F1.Disp_data();
             Close();

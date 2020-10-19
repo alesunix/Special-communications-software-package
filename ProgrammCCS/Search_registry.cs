@@ -28,7 +28,7 @@ namespace ProgramCCS
             foreach (DataRow column in Table.DtPartner.Rows)
             {
                 comboBox5.Items.Add(column[0].ToString());
-            }        
+            }           
         }
         private void button7_Click(object sender, EventArgs e)//Выборка
         {
@@ -54,7 +54,7 @@ namespace ProgramCCS
                 dgv1_TLC.DataSource = Table.DtRegistry;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 con.Close();//закрыть соединение    
             }
-            F1.Podschet();//произвести подсчет из метода
+            F1.Podschet();//произвести подсчет из метода            
         }
 
         private void Search_registry_Load(object sender, EventArgs e)//Загрузка формы
@@ -70,6 +70,7 @@ namespace ProgramCCS
         private void button1_Click(object sender, EventArgs e)//Печать
         {
             TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
+            Partner.Name = comboBox5.Text;
             F1.Print_Registy();
             F1.Disp_data();
             Close();
