@@ -297,7 +297,7 @@ namespace ProgramCCS
             Podschet();
         }
 
-        public void Wait()
+        public void Wait()//Отобразить список Ожидание! 
         {
             //Отобразить список Ожидание! 
             var command = from table in db.GetTable<Table_1_incomplete>()
@@ -359,6 +359,8 @@ namespace ProgramCCS
                 label1.Text = ("Отображены последние записи");               
             }
             dataGridView2.Columns[0].Visible = false;//Скрыть столбец ID
+            dataGridView2.Columns[16].Visible = false;//Скрыть столбец Филиал
+            dataGridView2.Columns[21].Visible = false;//Скрыть столбец Тарифы
         }
         public void Disp_data()//Отображает базу
         {
@@ -753,7 +755,6 @@ namespace ProgramCCS
         public static DataTable ToDataTable<T>(IEnumerable<T> values)//Функция (передать результат LINQ таблице DataTable)
         {
             DataTable table = new DataTable();
-
             foreach (T value in values)
             {
                 if (table.Columns.Count == 0)
@@ -772,7 +773,6 @@ namespace ProgramCCS
                 }
                 table.Rows.Add(dr);
             }
-
             return table;
         }
         public void Select_status_Nr()//(Для выдачи реестров)Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.
@@ -1233,22 +1233,28 @@ namespace ProgramCCS
         private void button28_Click(object sender, EventArgs e)//Поиск по ФИО
         {
 
-            con.Open();//открыть соединение
-            SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
-            "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
-                "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
-                "filial AS 'Филиал', client AS 'Контрагент'," +
-                "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', tarifs AS 'Тарифы'" +
-                    "FROM [Table_1] WHERE familia LIKE N'%" + textBox3.Text.ToString() + "%'", con);
-            //cmd.Parameters.AddWithValue("@punkt", textBox2.Text);
-            //cmd.Parameters.AddWithValue("@familia", textBox2.Text);
-            cmd.ExecuteNonQuery();
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            con.Close();//закрыть соединение
+            //con.Open();//открыть соединение
+            //SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
+            //"summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
+            //    "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
+            //    "filial AS 'Филиал', client AS 'Контрагент'," +
+            //    "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', tarifs AS 'Тарифы'" +
+            //        "FROM [Table_1] WHERE familia LIKE N'%" + textBox3.Text.ToString() + "%'", con);
+            ////cmd.Parameters.AddWithValue("@punkt", textBox2.Text);
+            ////cmd.Parameters.AddWithValue("@familia", textBox2.Text);
+            //cmd.ExecuteNonQuery();
+            //DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+            //SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+            //dt.Clear();//чистим DataTable, если он был не пуст
+            //da.Fill(dt);//заполняем данными созданный DataTable
+            //dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            //con.Close();//закрыть соединение
+
+            var command = from table in db.GetTable<Table_1_incomplete>()
+                          where table.Ф_И_О.Contains(textBox3.Text.ToString())//Contains вместо LIKE
+                          orderby table.Дата_записи descending
+                          select table;
+            dataGridView2.DataSource = command;
 
             Podschet();//произвести подсчет по методу
                        //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду                      
@@ -1370,19 +1376,19 @@ namespace ProgramCCS
                 string status = Convert.ToString(dataGridView1.Rows[0].Cells[5].Value);//Статус
                 string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент                
                 SaveFileDialog sfd = new SaveFileDialog();
-                //sfd.Filter = "Word Documents (*.docx)|*.docx";
-                //sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
-                //if (sfd.ShowDialog() == DialogResult.OK)
-                //{
-                //    if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
-                //    {
-                //        Export_Reestr_To_Word(dataGridView1, sfd.FileName);
-                //    }
-                //    else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
-                //    {
-                //        Export_Reestr_To_Word_vozvrat(dataGridView1, sfd.FileName);
-                //    }
-                //}
+                sfd.Filter = "Word Documents (*.docx)|*.docx";
+                sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
+                    {
+                        Export_Reestr_To_Word(dataGridView1, sfd.FileName);
+                    }
+                    else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
+                    {
+                        Export_Reestr_To_Word_vozvrat(dataGridView1, sfd.FileName);
+                    }
+                }
                 //Выдача рееста в EXCEL
                 if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
                 {
@@ -1413,19 +1419,19 @@ namespace ProgramCCS
                     string status = Convert.ToString(dataGridView1.Rows[0].Cells[5].Value);//Статус
                     string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент
                     SaveFileDialog sfd = new SaveFileDialog();
-                    //sfd.Filter = "Word Documents (*.docx)|*.docx";
-                    //sfd.FileName = $"Реестр № {nomer} на {status}.docx";
-                    //if (sfd.ShowDialog() == DialogResult.OK)
-                    //{
-                    //    if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
-                    //    {
-                    //        Export_Reestr_To_Word(dataGridView1, sfd.FileName);                                
-                    //    }
-                    //    else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
-                    //    {
-                    //        Export_Reestr_To_Word_vozvrat(dataGridView1, sfd.FileName);
-                    //    }
-                    //}
+                    sfd.Filter = "Word Documents (*.docx)|*.docx";
+                    sfd.FileName = $"Реестр № {nomer} на {status}.docx";
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
+                        {
+                            Export_Reestr_To_Word(dataGridView1, sfd.FileName);
+                        }
+                        else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
+                        {
+                            Export_Reestr_To_Word_vozvrat(dataGridView1, sfd.FileName);
+                        }
+                    }
                     //Выдача рееста в EXCEL
                     if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
                     {
@@ -1502,6 +1508,8 @@ namespace ProgramCCS
                     }
                     con.Close();//закрыть соединение
 
+                    //Выдача накладной
+                    ExportInvoice_ToPDF();
                     string oblast = Convert.ToString(dataGridView1.Rows[0].Cells[9].Value);//Область
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = "Word Documents (*.docx)|*.docx";

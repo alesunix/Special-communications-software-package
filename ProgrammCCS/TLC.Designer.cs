@@ -364,7 +364,7 @@
             this.textBox21.Name = "textBox21";
             this.textBox21.ReadOnly = true;
             this.textBox21.Size = new System.Drawing.Size(85, 13);
-            this.textBox21.TabIndex = 117;
+            this.textBox21.TabIndex = 0;
             // 
             // button11
             // 
@@ -448,7 +448,7 @@
             this.textBox15.Name = "textBox15";
             this.textBox15.ReadOnly = true;
             this.textBox15.Size = new System.Drawing.Size(85, 13);
-            this.textBox15.TabIndex = 97;
+            this.textBox15.TabIndex = 0;
             // 
             // comboBox5
             // 
@@ -510,7 +510,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(85, 13);
-            this.textBox4.TabIndex = 70;
+            this.textBox4.TabIndex = 0;
             // 
             // button8
             // 
@@ -538,7 +538,7 @@
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
             this.textBox5.Size = new System.Drawing.Size(85, 13);
-            this.textBox5.TabIndex = 67;
+            this.textBox5.TabIndex = 0;
             // 
             // label1
             // 
