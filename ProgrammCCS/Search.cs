@@ -63,8 +63,6 @@ namespace ProgramCCS
 
         private void button28_Click(object sender, EventArgs e)//Поиск по Ф.И.О
         {
-            if (textBox2.Text != "")
-            {
                 dgv2_TLC.Visible = true;
                 dgv1_TLC.Visible = false;
                 //con.Open();//открыть соединение
@@ -83,17 +81,20 @@ namespace ProgramCCS
                 //da.Fill(dt);//заполняем данными созданный DataTable
                 //dgv2_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
                 //con.Close();//закрыть соединение
-                var command = from table in db.GetTable<Table_1_incomplete>()
-                              where table.Ф_И_О.Contains(textBox2.Text.ToString())//Contains вместо LIKE
-                              orderby table.Дата_записи descending
-                              select table;
-                dgv2_TLC.DataSource = command;
+                if(textBox2.Text != "")
+                {
+                    var command = from table in db.GetTable<Table_1_incomplete>()
+                                  where table.Ф_И_О.Contains(textBox2.Text.ToString())//Contains вместо LIKE
+                                  orderby table.Дата_записи descending
+                                  select table;
+                    dgv2_TLC.DataSource = command;
 
 
-                TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
-                F1.Podschet();//произвести подсчет по методу
-                //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду
-            }
+                    TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
+                    F1.Podschet();//произвести подсчет по методу
+                                  //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду
+                }
+                else MessageBox.Show("Введите ФИО в строке поиска!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)//Поиск по №Заказа

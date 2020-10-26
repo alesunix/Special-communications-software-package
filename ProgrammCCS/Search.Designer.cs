@@ -60,11 +60,11 @@
             this.button6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button6.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(37)))), ((int)(((byte)(39)))));
             this.button6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button6.Font = new System.Drawing.Font("Arial Black", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.button6.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.button6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.button6.Location = new System.Drawing.Point(169, 64);
+            this.button6.Location = new System.Drawing.Point(169, 26);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(127, 51);
+            this.button6.Size = new System.Drawing.Size(127, 73);
             this.button6.TabIndex = 155;
             this.button6.Text = "Удалить запись из базы данных";
             this.button6.UseVisualStyleBackColor = false;

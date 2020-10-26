@@ -45,7 +45,7 @@
             this.checkBox3.AutoSize = true;
             this.checkBox3.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.checkBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(94)))), ((int)(((byte)(122)))));
-            this.checkBox3.Location = new System.Drawing.Point(12, 43);
+            this.checkBox3.Location = new System.Drawing.Point(14, 43);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(100, 16);
             this.checkBox3.TabIndex = 115;
@@ -75,7 +75,7 @@
             "Джалал-Абад филиал"});
             this.comboBox4.Location = new System.Drawing.Point(12, 106);
             this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(161, 22);
+            this.comboBox4.Size = new System.Drawing.Size(162, 22);
             this.comboBox4.TabIndex = 111;
             // 
             // comboBox1
@@ -91,7 +91,7 @@
             "Ожидание",
             "Отправлено",
             "Розыск"});
-            this.comboBox1.Location = new System.Drawing.Point(12, 20);
+            this.comboBox1.Location = new System.Drawing.Point(14, 20);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(86, 22);
             this.comboBox1.TabIndex = 109;
@@ -103,7 +103,7 @@
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(94)))), ((int)(((byte)(122)))));
-            this.label4.Location = new System.Drawing.Point(35, 9);
+            this.label4.Location = new System.Drawing.Point(18, 9);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(39, 12);
             this.label4.TabIndex = 110;

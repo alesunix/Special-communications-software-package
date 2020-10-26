@@ -112,7 +112,7 @@
             this.label4.BackColor = System.Drawing.Color.Transparent;
             this.label4.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(1)))), ((int)(((byte)(94)))), ((int)(((byte)(122)))));
-            this.label4.Location = new System.Drawing.Point(33, 9);
+            this.label4.Location = new System.Drawing.Point(14, 9);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(39, 12);
             this.label4.TabIndex = 98;

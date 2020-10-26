@@ -43,7 +43,7 @@
             this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox5.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(9, 17);
+            this.comboBox5.Location = new System.Drawing.Point(4, 17);
             this.comboBox5.Name = "comboBox5";
             this.comboBox5.Size = new System.Drawing.Size(162, 22);
             this.comboBox5.TabIndex = 160;
@@ -76,7 +76,7 @@
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Tahoma", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label18.ForeColor = System.Drawing.Color.Black;
-            this.label18.Location = new System.Drawing.Point(12, 6);
+            this.label18.Location = new System.Drawing.Point(7, 6);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(63, 12);
             this.label18.TabIndex = 161;

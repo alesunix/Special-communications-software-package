@@ -6,16 +6,11 @@ using Excell = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 using System.Runtime.InteropServices;
 using System.Data.SqlClient;
-using System.Drawing.Printing;
-using MySql.Data.MySqlClient;
 using System.Deployment.Application;
 using System.Reflection;
 using System.Threading;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.ComponentModel;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using ExcelDataReader;
 using System.Data.Linq;
@@ -30,9 +25,7 @@ namespace ProgramCCS
     {
         public SqlConnection con = Connection.con;//Получить строку соединения из класса модели
         DataContext db = new DataContext(Connection.con);//Для работы LINQ to SQL
-        //public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
-        MySqlConnection mycon = new MySqlConnection("SERVER= хостинг_сервер;" + "DATABASE= имя_базы;" + "UID= логин;" + "PASSWORD=пароль;" + "connection timeout = 180");
-       
+        
         private string fileName = string.Empty;
 
         Login formLogin = new Login();
@@ -137,7 +130,7 @@ namespace ProgramCCS
             dataGridView2.EnableHeadersVisualStyles = false;
             dataGridView2.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Verdana", 10F, FontStyle.Bold, GraphicsUnit.Pixel);//Шрифт заголовка
             dataGridView2.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 11F, GraphicsUnit.Pixel);//Шрифт строк
-            dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.LightSlateGray;//цвет заголовка
+            dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(83, 134, 166);//цвет заголовка
             dataGridView2.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;//Выравнивание текста в заголовке
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;//автоподбор ширины столбца по содержимому
             DataGridViewRow row5 = this.dataGridView5.RowTemplate;
@@ -422,22 +415,7 @@ namespace ProgramCCS
             button9.Enabled = true;
             Podschet();//произвести подсчет по методу         
         }
-        public void Mydisp_data()
-        {
-            mycon.Open();
-            MySqlCommand mycmd = mycon.CreateCommand();
-            mycmd.CommandType = CommandType.Text;
-            mycmd.CommandText = "SELECT * FROM [Table_1]";
-            mycmd.ExecuteNonQuery();
 
-            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            SqlDataAdapter da = new SqlDataAdapter();//создаем экземпляр класса SqlDataAdapter
-            dt.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(dt);//заполняем данными созданный DataTable
-            dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            con.Close();//Закрываем соединение
-
-        }
         public void Podschet()//Произвести подсчет dataGridView1 и dataGridView5 и dataGridView2
         {
             if (dataGridView1.Visible == true)
@@ -450,7 +428,6 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[3].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa += incom;
                 }
-                textBox5.Visible = true;
                 textBox5.Text = summa.ToString() + " Сом";
                 Summ.Sum = summa.ToString() + " Сом";
                 //Сумма столбца плата за услугу
@@ -461,7 +438,6 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[7].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa_U += incom;
                 }
-                textBox15.Visible = true;
                 textBox15.Text = summa_U.ToString() + " Сом";
                 Summ.SumService = summa_U.ToString() + " Сом";
                 //Сумма столбца плата за возврат
@@ -472,7 +448,6 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[14].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa_V += incom;
                 }
-                textBox21.Visible = true;
                 textBox21.Text = summa_V.ToString() + " Сом";
                 Summ.SumReturn = summa_V.ToString() + " Сом";
                 //Подсчет количества строк (не учитывая пустые строки и колонки)
@@ -501,7 +476,6 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[5].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa += incom;
                 }
-                textBox5.Visible = true;
                 textBox5.Text = summa.ToString() + " Сом";
                 Summ.Sum = summa.ToString() + " Сом";
                 //Сумма столбца плата за услугу
@@ -512,7 +486,6 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[8].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa_U += incom;
                 }
-                textBox15.Visible = true;
                 textBox15.Text = summa_U.ToString() + " Сом";
                 Summ.SumService = summa_U.ToString() + " Сом";
                 //Подсчет количества строк (не учитывая пустые строки и колонки)
@@ -541,7 +514,6 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[4].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa += incom;
                 }
-                textBox5.Visible = true;
                 textBox5.Text = summa.ToString() + " Сом";
                 Summ.Sum = summa.ToString() + " Сом";
                 //Подсчет количества строк (не учитывая пустые строки и колонки)
@@ -1250,7 +1222,6 @@ namespace ProgramCCS
         }
         private void button28_Click(object sender, EventArgs e)//Поиск по ФИО
         {
-
             //con.Open();//открыть соединение
             //SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
             //"summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
@@ -1268,14 +1239,18 @@ namespace ProgramCCS
             //dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             //con.Close();//закрыть соединение
 
-            var command = from table in db.GetTable<Table_1_incomplete>()
-                          where table.Ф_И_О.Contains(textBox3.Text.ToString())//Contains вместо LIKE
-                          orderby table.Дата_записи descending
-                          select table;
-            dataGridView2.DataSource = command;
+            if (textBox3.Text != "")
+            {
+                var command = from table in db.GetTable<Table_1_incomplete>()
+                              where table.Ф_И_О.Contains(textBox3.Text.ToString())//Contains вместо LIKE
+                              orderby table.Дата_записи descending
+                              select table;
+                dataGridView2.DataSource = command;
 
-            Podschet();//произвести подсчет по методу
-                       //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду                      
+                Podschet();//произвести подсчет по методу
+                           //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду   
+            }
+            else MessageBox.Show("Введите ФИО в строке поиска!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
         private void textBox3_TextChanged(object sender, EventArgs e)//Поиск по №Заказа
         {
