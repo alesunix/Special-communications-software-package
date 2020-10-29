@@ -18,6 +18,8 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.Net;
+using System.Text;
 
 namespace ProgramCCS
 {
@@ -319,6 +321,29 @@ namespace ProgramCCS
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
         }
 
+        public void PostJson()//Отправка JSON методом POST
+        {
+            var key = "1111";
+            var request = WebRequest.Create("URL");
+            request.ContentType = "application/json";
+            request.Headers["Authorization"] = "Basic " + key;
+
+            request.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+            {
+                string json = "{\"param1\":\"val\",\"param2\":\"val\"}";
+                streamWriter.Write(json);
+            }
+
+
+            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+            using (Stream responseStream = response.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
+                Console.WriteLine(reader.ReadToEnd());
+            }
+        }
         public void UPOnSubmit()//Изминение строк в новом списке при загрузке через API
         {
             Table.Tarifs = new DataTable();//инициализируем DataTable
