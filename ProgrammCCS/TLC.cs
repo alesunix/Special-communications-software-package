@@ -319,7 +319,7 @@ namespace ProgramCCS
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
         }
 
-        public void IInsertOnSubmit()//Изминение строк в новом списке при загрузке через API
+        public void UPOnSubmit()//Изминение строк в новом списке при загрузке через API
         {
             Table.Tarifs = new DataTable();//инициализируем DataTable
             //Отобразить список API и сделать Update 
@@ -343,7 +343,7 @@ namespace ProgramCCS
         }
         public void SelectData()//Группировка и Сортировка по дате записи (сначала новые)
         {
-            IInsertOnSubmit();//добавление при загрузке через API
+            UPOnSubmit();//Изминение строк в новом списке при загрузке через API
             Wanted_Pending_Replacement();//Розыск, Ожидание, Замена (Группировка)
             if (Person.Name == "root")
             {
