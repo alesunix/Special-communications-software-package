@@ -319,8 +319,31 @@ namespace ProgramCCS
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
         }
 
+        public void IInsertOnSubmit()//Изминение строк в новом списке при загрузке через API
+        {
+            Table.Tarifs = new DataTable();//инициализируем DataTable
+            //Отобразить список API и сделать Update 
+            var command = from table in db.GetTable<Table_1_incomplete>()
+                          where table.Статус == "API"
+                          orderby table.Дата_записи descending
+                          select table;
+            foreach (Table_1_incomplete order in command)
+            {
+                order.Статус = "Ожидание";
+                order.Обработка = "Не обработано";
+                order.Филиал = Person.Name;
+                order.Тарифы = Table.Tarifs.Rows[0][0].ToString();
+            }
+            db.SubmitChanges();
+            dataGridView2.DataSource = command;
+            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
+
+            Wait();//Отобразить список Ожидание и Провести тарификацию!
+            Podschet();//произвести подсчет
+        }
         public void SelectData()//Группировка и Сортировка по дате записи (сначала новые)
         {
+            IInsertOnSubmit();//добавление при загрузке через API
             Wanted_Pending_Replacement();//Розыск, Ожидание, Замена (Группировка)
             if (Person.Name == "root")
             {
