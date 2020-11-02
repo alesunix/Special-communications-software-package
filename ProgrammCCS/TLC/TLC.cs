@@ -344,7 +344,7 @@ namespace ProgramCCS
                 Console.WriteLine(reader.ReadToEnd());
             }
         }
-        public void UPOnSubmit()//Изминение строк в новом списке при загрузке через API.
+        public void UPOnSubmit()//Изменение строк в новом списке при загрузке через API.
         {
             Table.Tarifs = new DataTable();//инициализируем DataTable
             //Отобразить список API и сделать Update 
