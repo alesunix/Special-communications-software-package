@@ -169,67 +169,67 @@
     <Compile Include="AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Editor.cs">
+    <Compile Include="TLC\Editor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Editor.Designer.cs">
+    <Compile Include="TLC\Editor.Designer.cs">
       <DependentUpon>Editor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Graph.cs">
+    <Compile Include="TLC\Graph.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Graph.Designer.cs">
+    <Compile Include="TLC\Graph.Designer.cs">
       <DependentUpon>Graph.cs</DependentUpon>
     </Compile>
-    <Compile Include="Invoice.cs">
+    <Compile Include="TLC\Invoice.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Invoice.Designer.cs">
+    <Compile Include="TLC\Invoice.Designer.cs">
       <DependentUpon>Invoice.cs</DependentUpon>
     </Compile>
-    <Compile Include="List of accepted.cs">
+    <Compile Include="TLC\List of accepted.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="List of accepted.Designer.cs">
+    <Compile Include="TLC\List of accepted.Designer.cs">
       <DependentUpon>List of accepted.cs</DependentUpon>
     </Compile>
     <Compile Include="Models.cs" />
-    <Compile Include="Period.cs">
+    <Compile Include="TLC\Period.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Period.Designer.cs">
+    <Compile Include="TLC\Period.Designer.cs">
       <DependentUpon>Period.cs</DependentUpon>
     </Compile>
-    <Compile Include="Registry.cs">
+    <Compile Include="TLC\Registry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Registry.Designer.cs">
+    <Compile Include="TLC\Registry.Designer.cs">
       <DependentUpon>Registry.cs</DependentUpon>
     </Compile>
-    <Compile Include="Search.cs">
+    <Compile Include="TLC\Search.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Search.Designer.cs">
+    <Compile Include="TLC\Search.Designer.cs">
       <DependentUpon>Search.cs</DependentUpon>
     </Compile>
-    <Compile Include="Search_registry.cs">
+    <Compile Include="TLC\Search_registry.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Search_registry.Designer.cs">
+    <Compile Include="TLC\Search_registry.Designer.cs">
       <DependentUpon>Search_registry.cs</DependentUpon>
     </Compile>
-    <Compile Include="Status_Change.cs">
+    <Compile Include="TLC\Status_Change.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Status_Change.Designer.cs">
+    <Compile Include="TLC\Status_Change.Designer.cs">
       <DependentUpon>Status_Change.cs</DependentUpon>
     </Compile>
     <Compile Include="Table_1_incomplete.cs" />
     <Compile Include="Table_1.cs" />
-    <Compile Include="TLC.cs">
+    <Compile Include="TLC\TLC.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TLC.Designer.cs">
+    <Compile Include="TLC\TLC.Designer.cs">
       <DependentUpon>TLC.cs</DependentUpon>
     </Compile>
     <Compile Include="Login.cs">
@@ -244,10 +244,10 @@
     <Compile Include="Transport.Designer.cs">
       <DependentUpon>Transport.cs</DependentUpon>
     </Compile>
-    <Compile Include="TLC_Manual_input.cs">
+    <Compile Include="TLC\TLC_Manual_input.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TLC_Manual_input.Designer.cs">
+    <Compile Include="TLC\TLC_Manual_input.Designer.cs">
       <DependentUpon>TLC_Manual_input.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -266,34 +266,34 @@
     <EmbeddedResource Include="AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editor.resx">
+    <EmbeddedResource Include="TLC\Editor.resx">
       <DependentUpon>Editor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Graph.resx">
+    <EmbeddedResource Include="TLC\Graph.resx">
       <DependentUpon>Graph.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Invoice.resx">
+    <EmbeddedResource Include="TLC\Invoice.resx">
       <DependentUpon>Invoice.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="List of accepted.resx">
+    <EmbeddedResource Include="TLC\List of accepted.resx">
       <DependentUpon>List of accepted.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Period.resx">
+    <EmbeddedResource Include="TLC\Period.resx">
       <DependentUpon>Period.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Registry.resx">
+    <EmbeddedResource Include="TLC\Registry.resx">
       <DependentUpon>Registry.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Search.resx">
+    <EmbeddedResource Include="TLC\Search.resx">
       <DependentUpon>Search.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Search_registry.resx">
+    <EmbeddedResource Include="TLC\Search_registry.resx">
       <DependentUpon>Search_registry.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Status_Change.resx">
+    <EmbeddedResource Include="TLC\Status_Change.resx">
       <DependentUpon>Status_Change.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TLC.resx">
+    <EmbeddedResource Include="TLC\TLC.resx">
       <DependentUpon>TLC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
@@ -302,7 +302,7 @@
     <EmbeddedResource Include="Transport.resx">
       <DependentUpon>Transport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TLC_Manual_input.resx">
+    <EmbeddedResource Include="TLC\TLC_Manual_input.resx">
       <DependentUpon>TLC_Manual_input.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -386,6 +386,9 @@
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>TLC_Express_Tlc_webService_Service</CachedSettingsPropName>
     </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
