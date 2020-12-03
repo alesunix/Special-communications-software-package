@@ -44,8 +44,8 @@ namespace ProgramCCS
         private void Button7_Click(object sender, EventArgs e)//Выборка
         {
             TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
+            Dates.EndDate = DateTime.Today.AddDays(0);
             Dates.StartDate = dateTimePicker1.Value;
-            Dates.EndDate = DateTime.Today.AddDays(0); 
             //8. Выборка на накладную - 'Дата + Область + Клиент +- Пункт'.
             if (comboBox2.Text != "" & comboBox5.Text != "")
             {
@@ -79,7 +79,6 @@ namespace ProgramCCS
         private void button1_Click(object sender, EventArgs e)//Печать
         {
             TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
-            Partner.Name = comboBox5.Text;
             F1.Print_Invoice();//Печать Накладной и за период
             F1.Disp_data();
             Close();

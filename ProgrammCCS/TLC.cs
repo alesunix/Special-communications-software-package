@@ -6,22 +6,22 @@ using Excell = Microsoft.Office.Interop.Excel;
 using Word = Microsoft.Office.Interop.Word;
 using System.Runtime.InteropServices;
 using System.Data.SqlClient;
+using System.Drawing.Printing;
+using MySql.Data.MySqlClient;
 using System.Deployment.Application;
 using System.Reflection;
 using System.Threading;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using ExcelDataReader;
 using System.Data.Linq;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.Diagnostics;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
-using System.Drawing.Imaging;
-using Image = iTextSharp.text.Image;
 
 namespace ProgramCCS
 {
@@ -29,8 +29,29 @@ namespace ProgramCCS
     {
         public SqlConnection con = Connection.con;//Получить строку соединения из класса модели
         DataContext db = new DataContext(Connection.con);//Для работы LINQ to SQL
-        
+        //public SqlConnection con = new SqlConnection(@"Data Source=192.168.0.3;Initial Catalog=ccsbase;Persist Security Info=True;User ID=Lan;Password=Samsung0");
+        MySqlConnection mycon = new MySqlConnection("SERVER= хостинг_сервер;" + "DATABASE= имя_базы;" + "UID= логин;" + "PASSWORD=пароль;" + "connection timeout = 180");
+
+        public DataTable dtTarif = new DataTable();//создаем экземпляр класса DataTable
         private string fileName = string.Empty;
+
+
+
+        int[] massiv1 = { 723504, 724508, 720114, 725000, 721100, 723500, 720306, 723500, 723100 };
+        int[] massiv2 = { 724002, 723509, 725000, 722200, 723330, 723307, 723500, 723503, 723507, 721100 };
+        int[] massiv3 = { 721901, 723504, 720016, 720300, 722300, 721200, 720800, 720300, 724321, 723510, 724604, 723510, 723503, 722200, 724104, 723800, 724913, 720601, 723509, 720803 };
+        int[] massiv4 = { 724002, 723509, 725000, 722200, 723330, 723307, 723500, 723503, 723507, 721100 };
+        int[] massiv5 = { 724002, 723509, 725000, 722200, 723330, 723307, 723500, 723503, 723507, 721100 };
+        int[] massiv6 = { /*кызылкия*/720300, 720302, 720303, 720304, 720305, };
+        int[] massiv7 = { 724002, 723509, 725000, 722200, 723330, 723307, 723500, 723503, 723507, 721100 };
+        string[] spisok = { "Кок - Ой", "Байзак", "Жумгал", "Кызарт", "Куйругук", "Багышан", "Туголь - Сай", "Баш - Куванды", "Баетово", "Терек", "Бай - Гончок", "Улут", "Ак - Тал", "ТоголокМолдо", "Куртка", "Ак-Жар", "Ага Каинды", "Баш Каинды", "Бирлик", "Ак Муз", "Калинин",
+            "Кара-Суу","Байгазак", "Орто -Саз", "Чет-Нура", "Орто-Нура", "Ийрисуу", "Алыш", "Доболуу", "Каинды", "Мин-Булак", "Ички-Башы", "Оттук", "Жергетал", "Эмгекчи", "Жан-Булак", "Достук", "Куланак", "Учкун", "Пионер", "Арсы", "Кара - Тоо", "Ак - Жар",
+            "Кум - Добо", "Семиз - Бель", "Ормон Хан", "Кара - Суу", "Исакеев", "Кок - Жар", "Чекилдек", "Туз", "Чолпон", "Мантыш", "Дон - Алыш", "Советский", "Бешик-Жон", "Кочкор-Ата", "Момбеково", "Кыпчак-Талас", "Кок-Таш", "Кызыл-Туу", "Аксы", "Шамалды-Сай", "Кош-Тобо",
+            "Шарк", "Нариман", "Кашгар-Кыштак", "Отуз-Адыр", "Жаны-Арык", "Куршаб", "Шералы", "Ильичевка", "Мырза-Аки", "Жекерчи", "Ылай-Талаа", "Кара-Кочкор", "1-Май", "Тоготой", "Жар-Кыштак", "Кыр-Кол", "КурманжанДатка", "Жылуу-Суу", "Россия", "Бель-Орук", "Кок-Жар", "Кенеш",
+            "Уч-Коргон", "Марказ", "Кок-Талаа", "Халмион", "Торговый", "Бурганды", "Уч-Коргон", "Марказ", "Кок-Талаа", "Халмион", "Торговый", "Бурганды", "Орозбеково", "Кызыл-Булак", "Караван", "Чон-Гара", "Жаны-Жер", "Ак-Таш", "Ак-Татыр", "Бужум", "Кызыл-Жол", "Чек",
+            "Ак-Терек", "Коргон","Тогуз-Булак", "Кара-Булак", "Чимген", "Ново-Павловка", "Военно-Антоновка", "Гавриловка", "Романовка", "Шопоков", "Александровка", "Садовое", "Петровка", "Полтавка", "Ново-Николаевка", "Петропавловка", "Калининское", "Алексеевка", "Вознесеновка",
+            "Лебединовка", "Ново-Покровка", "Киршелк", "Люксембург", "Дмитриевка", "Буденовка", "Кенеш", "Красная Речка", "Ивановка", "Кенбулун", "Гидростроитель", "Арал", "Искра", "Чемкургон", "Бообек", "Жаналыш", "Акбекет", "Каскелен",
+            "Сары-Ой", "Кара-Ой", "Чолпон-Ата", "Бакту-Долонотуу", "Бозтери", "Кен-Арал", "Озгорут", "Ак-Добо", "Кызыл-Сай", "Мин-Булак", "Боо-Терек", "Бакыян", "Тамчы-Булак", "Бейшеке", "Кичи-Кировка", "Кировка, Жийде", "Пушкин", "Кок-Токой", "Жон-Арык", "Кок-Ой" };
 
         Login formLogin = new Login();
         public object loker = new object();
@@ -41,14 +62,14 @@ namespace ProgramCCS
             Text += "  Версия - " + CurrentVersion; //Добавляем в название программы, версию.
             //comboBox8.Text = Properties.Settings.Default.Prichina_vozvrat; // Загружаем ранее сохраненный текст
             //Properties.Settings.Default.Save();  // Сохраняем переменные.
-            dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Space) Invoice_Click(new object(), new EventArgs()); };//Нажатие кнопки "Пробел" с клавиатуры
-            dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.F5) Status_Click(new object(), new EventArgs()); };//Нажатие кнопки "F5" с клавиатуры
-            dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.F4) Edit_Click(new object(), new EventArgs()); };//Нажатие кнопки "F4" с клавиатуры
+            dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.F5) Status_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
+            dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.F4) Edit_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
             dataGridView1.KeyDown += (s, e) => { if (e.KeyCode == Keys.Delete) Delete_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
             dataGridView2.KeyDown += (s, e) => { if (e.KeyCode == Keys.Delete) Delete_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
             dataGridView3.KeyDown += (s, e) => { if (e.KeyCode == Keys.Delete) Delete_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
             dataGridView5.KeyDown += (s, e) => { if (e.KeyCode == Keys.Delete) Delete_Click(new object(), new EventArgs()); };//Нажатие кнопки "OK" с клавиатуры
         }
+
 
         public string CurrentVersion//Версия программы
         {
@@ -98,13 +119,11 @@ namespace ProgramCCS
             {
                 tabPage4.Enabled = false;
                 button1.Enabled = false;
-                button9.Enabled = false;
                 toolStripButton3.Enabled = false;
                 toolStripButton1.Enabled = false;
             }
             else if (Person.Access == "Medium")
             {
-                button9.Enabled = false;
                 tabPage4.Enabled = false;
                 toolStripButton1.Enabled = false;
             }
@@ -137,7 +156,7 @@ namespace ProgramCCS
             dataGridView2.EnableHeadersVisualStyles = false;
             dataGridView2.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Verdana", 10F, FontStyle.Bold, GraphicsUnit.Pixel);//Шрифт заголовка
             dataGridView2.DefaultCellStyle.Font = new System.Drawing.Font("Tahoma", 11F, GraphicsUnit.Pixel);//Шрифт строк
-            dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(83, 134, 166);//цвет заголовка
+            dataGridView2.ColumnHeadersDefaultCellStyle.BackColor = Color.LightSlateGray;//цвет заголовка
             dataGridView2.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;//Выравнивание текста в заголовке
             dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;//автоподбор ширины столбца по содержимому
             DataGridViewRow row5 = this.dataGridView5.RowTemplate;
@@ -163,8 +182,6 @@ namespace ProgramCCS
             dataGridView6.Visible = false;
             dataGridView1.Visible = false;
             dataGridView5.Visible = false;
-            dataGridView2.ReadOnly = true;//Запрет редактирования DataGridView
-
 
             label26.Text = "Версия - " + CurrentVersion;
 
@@ -234,7 +251,7 @@ namespace ProgramCCS
         public void Wanted_Pending_Replacement()//Розыск, Ожидание, Замена (Группировка)
         {
             //Группировка Статусов
-            var statusGroup = from table in db.GetTable<Orders_incomplete>()
+            var statusGroup = from table in db.GetTable<Table_1>()
                               group table by table.Статус into g
                               select g.OrderByDescending(t => t.Статус).FirstOrDefault();
             dataGridView2.DataSource = statusGroup;
@@ -246,11 +263,6 @@ namespace ProgramCCS
                 {
                     linkLabel2.Visible = true;
                     linkLabel2.Text = ("В ожидании!");
-                }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[11].Value) == "Отправлено")
-                {
-                    linkLabel5.Visible = true;
-                    linkLabel5.Text = ("Отправлено!");
                 }
                 if (Convert.ToString(dataGridView2.Rows[i].Cells[11].Value) == "Розыск")
                 {
@@ -264,11 +276,11 @@ namespace ProgramCCS
                 }
             }
         }
-        public void LinkLabel2_Click(object sender, EventArgs e)//Отобразить список Ожидание!
+        private void LinkLabel2_Click(object sender, EventArgs e)//Отобразить список Ожидание!
         {
             dataGridView2.Visible = true;
 
-            var command = from table in db.GetTable<Orders_incomplete>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.Статус == "Ожидание"
                           orderby table.Дата_записи descending
                           select table;
@@ -277,11 +289,11 @@ namespace ProgramCCS
             linkLabel2.Visible = false;
             Podschet();
         }
-        public void LinkLabel3_Click(object sender, EventArgs e)//Отобразить список Розыск!
+        private void LinkLabel3_Click(object sender, EventArgs e)//Отобразить список Розыск!
         {
             dataGridView2.Visible = true;
 
-            var command = from table in db.GetTable<Orders_incomplete>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.Статус == "Розыск"
                           orderby table.Дата_записи descending
                           select table;
@@ -290,11 +302,11 @@ namespace ProgramCCS
             linkLabel3.Visible = false;
             Podschet();
         }
-        public void LinkLabel4_Click(object sender, EventArgs e)//Отобразить список Замена!
+        private void LinkLabel4_Click(object sender, EventArgs e)//Отобразить список Замена!
         {
             dataGridView2.Visible = true;
 
-            var command = from table in db.GetTable<Orders_incomplete>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.Статус == "Замена"
                           orderby table.Дата_записи descending
                           select table;
@@ -303,29 +315,11 @@ namespace ProgramCCS
             linkLabel4.Visible = false;
             Podschet();
         }
-        public void LinkLabel5_Click(object sender, EventArgs e)//Отобразить список Отправленно!
-        {
-            dataGridView2.Visible = true;
-            //Группировка по Накладная (находим последнюю запись) сортируем по дате
-            var command = from table in db.GetTable<Orders_incomplete>()
-                          where table.Статус == "Отправлено"
-                          group table by table.Накладная into g
-                          select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
-            dataGridView2.DataSource = command;
 
-            //var command = from table in db.GetTable<Orders_incomplete>()
-            //              where table.Статус == "Отправлено"
-            //              orderby table.Дата_записи descending
-            //              select table;
-            //dataGridView2.DataSource = command;
-
-            //linkLabel5.Visible = false;
-            Podschet();
-        }
-        public void Select_Wait()//Отобразить список Ожидание! 
+        public void Wait()
         {
             //Отобразить список Ожидание! 
-            var command = from table in db.GetTable<Orders_incomplete>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.Статус == "Ожидание"
                           orderby table.Дата_записи descending
                           select table;
@@ -334,118 +328,19 @@ namespace ProgramCCS
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
         }
 
-        public void BarcodesPDF()//Штрих код генерация
-        {
-            // Для отображения русских букв
-            var baseFont = BaseFont.CreateFont(@"C:\Windows\Fonts\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            //var baseFont = BaseFont.CreateFont("C:\\Windows\\Fonts\\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            var font = new iTextSharp.text.Font(baseFont, 12);
-            var barcode = new BarcodeLib.Barcode();
-            var sfd = new SaveFileDialog { FileName = "Barcodes", Filter = "PDF file (*.pdf)|*.pdf" };
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                var Doc = new Document(new iTextSharp.text.Rectangle(165, 1000), 1f, 1f, 1f, 1f);//для чека //58мм на 38мм
-                var Stream = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write, FileShare.None);
-                PdfWriter.GetInstance(Doc, Stream);
-                Doc.Open();
-
-                for (int i = 0; i < Table.DtInvoice.Rows.Count; i++)
-                {
-                    var item = Table.DtInvoice.Rows[i][2].ToString();
-                    var imageBarcode = barcode.Encode(BarcodeLib.TYPE.CODE128B, item, Color.Black, Color.White, 165, 50);//CODE39
-                    var image = Image.GetInstance(imageBarcode, ImageFormat.Jpeg);
-                    Doc.Add(new Paragraph($"Спецсвязь {item}", font));
-                    Doc.Add(image);
-                }
-
-                //var items = Table.DtInvoice.Rows[0][2].ToString();//Номер Заказа
-                //foreach (var item in items)
-                //{
-                //    var imageBarcode = barcode.Encode(BarcodeLib.TYPE.CODE128B, item.Barcode, Color.Black, Color.White, 290, 120);
-                //    var image = Image.GetInstance(imageBarcode, ImageFormat.Jpeg);
-                //    Doc.Add(new Paragraph(item.Description, font));
-                //    Doc.Add(image);
-                //}
-
-                Doc.Close();
-                // Открытие созданного файла
-                System.Diagnostics.Process.Start(sfd.FileName);
-            }
-        }
-        private void button2_Click(object sender, EventArgs e)//Печать штрих кода
-        {
-            if (Table.DtInvoice != null & dataGridView2.Visible != true & dataGridView1.Visible == true)
-            {
-                BarcodesPDF();//Штрих код генерация
-                dataGridView2.Visible = true;
-                dataGridView1.Visible = false;
-            }           
-           else if (Table.DtInvoice == null)
-                {
-                    MessageBox.Show("Выберите накладную!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            if (Table.DtInvoice != null)
-                Table.DtInvoice = null;
-        }
-        public void PostJson()//Отправка JSON методом POST
-        {
-            var key = "1111";
-            var request = WebRequest.Create("URL");
-            request.ContentType = "application/json";
-            request.Headers["Authorization"] = "Basic " + key;
-
-            request.Method = "POST";
-
-            using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-            {
-                string json = "{\"param1\":\"val\",\"param2\":\"val\"}";
-                streamWriter.Write(json);
-            }
-
-
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            using (Stream responseStream = response.GetResponseStream())
-            {
-                StreamReader reader = new StreamReader(responseStream, Encoding.UTF8);
-                Console.WriteLine(reader.ReadToEnd());
-            }
-        }
-        public void UPOnSubmit()//Изминение строк в полученном списке при загрузке через API
-        {
-            Table.Tarifs = new DataTable();//инициализируем DataTable
-            //Отобразить список API и сделать Update 
-            var command = from table in db.GetTable<Orders_incomplete>()
-                          where table.Статус == "API"
-                          orderby table.Дата_записи descending
-                          select table;
-            foreach (Orders_incomplete order in command)
-            {
-                order.Статус = "Ожидание";
-                order.Обработка = "Не обработано";
-                order.Филиал = Person.Name;
-                order.Тарифы = Table.Tarifs.Rows[0][0].ToString();
-            }
-            db.SubmitChanges();
-            dataGridView2.DataSource = command;
-            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
-
-            Select_Wait();//Отобразить список Ожидание и Провести тарификацию!
-            Podschet();//произвести подсчет
-        }
         public void SelectData()//Группировка и Сортировка по дате записи (сначала новые)
         {
-            UPOnSubmit();//Изминение строк в полученном списке при загрузке через API
             Wanted_Pending_Replacement();//Розыск, Ожидание, Замена (Группировка)
             if (Person.Name == "root")
             {
                 //Группировка по Филиалу (находим последнюю запись) сортируем по дате
-                var maxDate = from table in db.GetTable<Orders_incomplete>()
+                var maxDate = from table in db.GetTable<Table_1>()
                               group table by table.Филиал into g
                               select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
                 dataGridView2.DataSource = maxDate;
                 db.Refresh(RefreshMode.OverwriteCurrentValues, maxDate); //datacontext очистка 
                 //последние записи по Дате
-                var lastDays = from table in db.GetTable<Orders_incomplete>()
+                var lastDays = from table in db.GetTable<Table_1>()
                                where table.Дата_записи >= Convert.ToDateTime(dataGridView2.Rows[0].Cells[12].Value)
                                orderby table.Дата_записи descending
                                select table;
@@ -455,7 +350,7 @@ namespace ProgramCCS
             }
             else
             {
-                var sevenDays = from table in db.GetTable<Orders_incomplete>()
+                var sevenDays = from table in db.GetTable<Table_1>()
                                 where table.Дата_записи >= DateTime.Now.AddDays(-7)
                                 where table.Филиал == Person.Name
                                 orderby table.Дата_записи descending
@@ -467,24 +362,21 @@ namespace ProgramCCS
             if (dataGridView2.Rows.Count == 0)
             {
                 //Группировка по Филиалу (находим последнюю запись) сортируем по дате
-                var maxDate = from table in db.GetTable<Orders_incomplete>()
+                var maxDate = from table in db.GetTable<Table_1>()
                               group table by table.Филиал into g
                               select g.OrderByDescending(t => t.Дата_записи).FirstOrDefault();
                 dataGridView2.DataSource = maxDate;
                 db.Refresh(RefreshMode.OverwriteCurrentValues, maxDate); //datacontext очистка 
                 //последние записи по Дате
-                var lastDays = from table in db.GetTable<Orders_incomplete>()
+                var lastDays = from table in db.GetTable<Table_1>()
                                where table.Дата_записи >= Convert.ToDateTime(dataGridView2.Rows[0].Cells[12].Value)
                                where table.Филиал == Person.Name
                                orderby table.Дата_записи descending
                                select table;
                 dataGridView2.DataSource = lastDays;
                 db.Refresh(RefreshMode.OverwriteCurrentValues, lastDays); //datacontext очистка command
-                label1.Text = ("Отображены последние записи");               
+                label1.Text = ("Отображены последние записи");
             }
-            dataGridView2.Columns[0].Visible = false;//Скрыть столбец ID
-            dataGridView2.Columns[16].Visible = false;//Скрыть столбец Филиал
-            dataGridView2.Columns[21].Visible = false;//Скрыть столбец Тарифы
         }
         public void Disp_data()//Отображает базу
         {
@@ -497,8 +389,6 @@ namespace ProgramCCS
             SelectData(); //Группировка и Сортировка по дате записи (сначала новые) //Розыск, Ожидание, Замена (Группировка)            
             button8.Text = "Обновить";
             button8.Enabled = true;
-            Podschet();
-            textBox3.Select();//Поместить курсор в TextBox
         }
         public void Disp_data_all_base()//Отображает всю базу и сортирует по дате записи
         {
@@ -511,14 +401,14 @@ namespace ProgramCCS
 
             if (Person.Name == "root")
             {
-                var command = from table in db.GetTable<Orders_incomplete>()
+                var command = from table in db.GetTable<Table_1>()
                               orderby table.Дата_записи descending
                               select table;
                 dataGridView2.DataSource = command;
             }
             else
             {
-                var command = from table in db.GetTable<Orders_incomplete>()
+                var command = from table in db.GetTable<Table_1>()
                               where table.Филиал == Person.Name
                               orderby table.Дата_записи descending
                               select table;
@@ -530,7 +420,22 @@ namespace ProgramCCS
             button9.Enabled = true;
             Podschet();//произвести подсчет по методу         
         }
+        public void Mydisp_data()
+        {
+            mycon.Open();
+            MySqlCommand mycmd = mycon.CreateCommand();
+            mycmd.CommandType = CommandType.Text;
+            mycmd.CommandText = "SELECT * FROM [Table_1]";
+            mycmd.ExecuteNonQuery();
 
+            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+            SqlDataAdapter da = new SqlDataAdapter();//создаем экземпляр класса SqlDataAdapter
+            dt.Clear();//чистим DataTable, если он был не пуст
+            da.Fill(dt);//заполняем данными созданный DataTable
+            dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            con.Close();//Закрываем соединение
+
+        }
         public void Podschet()//Произвести подсчет dataGridView1 и dataGridView5 и dataGridView2
         {
             if (dataGridView1.Visible == true)
@@ -543,6 +448,7 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[3].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa += incom;
                 }
+                textBox5.Visible = true;
                 textBox5.Text = summa.ToString() + " Сом";
                 Summ.Sum = summa.ToString() + " Сом";
                 //Сумма столбца плата за услугу
@@ -553,6 +459,7 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[7].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa_U += incom;
                 }
+                textBox15.Visible = true;
                 textBox15.Text = summa_U.ToString() + " Сом";
                 Summ.SumService = summa_U.ToString() + " Сом";
                 //Сумма столбца плата за возврат
@@ -563,6 +470,7 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[14].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa_V += incom;
                 }
+                textBox21.Visible = true;
                 textBox21.Text = summa_V.ToString() + " Сом";
                 Summ.SumReturn = summa_V.ToString() + " Сом";
                 //Подсчет количества строк (не учитывая пустые строки и колонки)
@@ -591,6 +499,7 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[5].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa += incom;
                 }
+                textBox5.Visible = true;
                 textBox5.Text = summa.ToString() + " Сом";
                 Summ.Sum = summa.ToString() + " Сом";
                 //Сумма столбца плата за услугу
@@ -601,6 +510,7 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[8].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa_U += incom;
                 }
+                textBox15.Visible = true;
                 textBox15.Text = summa_U.ToString() + " Сом";
                 Summ.SumService = summa_U.ToString() + " Сом";
                 //Подсчет количества строк (не учитывая пустые строки и колонки)
@@ -612,7 +522,7 @@ namespace ProgramCCS
                         if (dataGridView5[i, j].Value != null)
                         {
                             textBox4.Text = Convert.ToString(dataGridView5.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
-                            Summ.Quantity = Convert.ToString(dataGridView5.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
+                            Summ.Quantity = Convert.ToString(dataGridView1.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
                             count++;
                             break;
                         }
@@ -629,6 +539,7 @@ namespace ProgramCCS
                     double.TryParse((row.Cells[4].Value ?? "0").ToString().Replace(".", ","), out incom);
                     summa += incom;
                 }
+                textBox5.Visible = true;
                 textBox5.Text = summa.ToString() + " Сом";
                 Summ.Sum = summa.ToString() + " Сом";
                 //Подсчет количества строк (не учитывая пустые строки и колонки)
@@ -640,7 +551,7 @@ namespace ProgramCCS
                         if (dataGridView2[i, j].Value != null)
                         {
                             textBox4.Text = Convert.ToString(dataGridView2.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
-                            Summ.Quantity = Convert.ToString(dataGridView2.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
+                            Summ.Quantity = Convert.ToString(dataGridView1.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
                             count++;
                             break;
                         }
@@ -678,7 +589,7 @@ namespace ProgramCCS
                         if (dataGridView6[i, j].Value != null)
                         {
                             textBox24.Text = Convert.ToString(dataGridView6.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
-                            Summ.Quantity = Convert.ToString(dataGridView6.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
+                            Summ.Quantity = Convert.ToString(dataGridView1.Rows.Count/*-1*/) + " Штук";// -1 это нижняя пустая строка
                             count++;
                             break;
                         }
@@ -696,7 +607,7 @@ namespace ProgramCCS
                 string[] tarifs = { "Общий" };//Тарифы
                 for (int y = 0; y < tarifs.Length; y++)
                 {
-                    if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == tarifs[y])//Т а р и ф для большинства организаций
+                    if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == tarifs[y])//Т а р и ф для большинства организаций
                     {
                         double ob_cennost = (stoimost * 1.0 / 100);
                         double plata_za_nalog = (stoimost * 2.0 / 100);
@@ -710,7 +621,7 @@ namespace ProgramCCS
                         con.Close();//закрыть соединение
                     }
                 }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == "по 1 проценту")//Т а р и ф для ИП 'JUMPER'
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == "по 1 проценту")//Т а р и ф для ИП 'JUMPER'
                 {
                     double ob_cennost = (stoimost * 1.0 / 100);
                     double plata_za_nalog = (stoimost * 1.0 / 100);
@@ -723,7 +634,7 @@ namespace ProgramCCS
                     cmd.ExecuteNonQuery();
                     con.Close();//закрыть соединение
                 }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == "по 2 процента")//Т а р и ф для "ОсОО 'Экспресс-Тайм'"
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == "по 2 процента")//Т а р и ф для "ОсОО 'Экспресс-Тайм'"
                 {
                     double ob_cennost = (stoimost * 2.0 / 100);
                     double plata_za_nalog = (stoimost * 2.0 / 100);
@@ -736,7 +647,7 @@ namespace ProgramCCS
                     cmd.ExecuteNonQuery();
                     con.Close();//закрыть соединение  
                 }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == "по 0 процентов")//Т а р и ф для "ОсОО 'Альфа Вита'"
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == "по 0 процентов")//Т а р и ф для "ОсОО 'Альфа Вита'"
                 {
                     double ob_cennost = 0;
                     double plata_za_nalog = 0;
@@ -749,7 +660,7 @@ namespace ProgramCCS
                     cmd.ExecuteNonQuery();
                     con.Close();//закрыть соединение
                 }
-                if (Convert.ToString(dataGridView2.Rows[i].Cells[21].Value) == "1,5 процента")//Т а р и ф для ОсОО Kyrgyz Express Post
+                if (Convert.ToString(dataGridView2.Rows[i].Cells[24].Value) == "1,5 процента")//Т а р и ф для ОсОО Kyrgyz Express Post
                 {
                     double plata_za_nalog = (stoimost * 1.5 / 100);
                     con.Open();//открыть соединение
@@ -764,7 +675,7 @@ namespace ProgramCCS
 
             for (int i = 0; i < dataGridView2.Rows.Count; i++)//Т а р и ф для Sapardelivery и ОсОО Тенгри
             {
-                if (dataGridView2.Rows[i].Cells[21].Value.ToString() == "Сложный")
+                if (dataGridView2.Rows[i].Cells[24].Value.ToString() == "Сложный")
                 {
                     int doplata = Convert.ToInt32(dataGridView2.Rows[i].Cells[7].Value);
                     int stoimost = Convert.ToInt32(dataGridView2.Rows[i].Cells[4].Value);
@@ -854,31 +765,8 @@ namespace ProgramCCS
                 con.Close();//закрыть соединение
             }
             dataGridView2.CurrentCell = dataGridView2[0, currRowIndex];//  Выбираем нашу строку (именно выбираем, не выделяем).
-        }
+        }      
 
-        public static DataTable ToDataTable<T>(IEnumerable<T> values)//Функция (передать результат LINQ таблице DataTable)
-        {
-            DataTable table = new DataTable();
-            foreach (T value in values)
-            {
-                if (table.Columns.Count == 0)
-                {
-                    foreach (var p in value.GetType().GetProperties())
-                    {
-                        table.Columns.Add(p.Name);
-                    }
-                }
-
-                DataRow dr = table.NewRow();
-                foreach (var p in value.GetType().GetProperties())
-                {
-                    dr[p.Name] = p.GetValue(value, null) + "";
-
-                }
-                table.Rows.Add(dr);
-            }
-            return table;
-        }
         public void Select_status_Nr()//(Для выдачи реестров)Выборка по статусу и сортировка по номеру реестра от больших значений к меньшим.
         {
             //con.Open();//Открываем соединение
@@ -932,19 +820,17 @@ namespace ProgramCCS
             }
             else MessageBox.Show("Select_status_Nr", "Ошибка!");
 
-            var command = from table in db.GetTable<Orders>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.Статус == status
                           group table by table.Nr into g
                           select g.OrderByDescending(t => t.Nr).FirstOrDefault();
-            //dataGridView2.DataSource = command;
-            DataTable tableNr = ToDataTable(command); //передать результат LINQ таблице DataTable
+            dataGridView2.DataSource = command;
 
-            Number.Nr = Convert.ToInt32(tableNr.Rows[0][23].ToString()) + 1;
-            //Number.Nr = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+            Number.Nr = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Nr;
 
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
-        }     
+        }
         public void Select_status_Nn()//(Для выдачи накладных)Выборка по статусу и сортировка по номеру накладеой от больших значений к меньшим.
         {
             //con.Open();//Открываем соединение
@@ -982,15 +868,13 @@ namespace ProgramCCS
             }
             else MessageBox.Show("Select_status_Nn", "Ошибка!");
 
-            var command = from table in db.GetTable<Orders>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.Статус == status
                           group table by table.Nn into g
                           select g.OrderByDescending(t => t.Nn).FirstOrDefault();
-            //dataGridView2.DataSource = command;
-            DataTable tableNn = ToDataTable(command); //передать результат LINQ таблице DataTable
+            dataGridView2.DataSource = command;
 
-            Number.Nn = Convert.ToInt32(tableNn.Rows[0][22].ToString()) + 1;
-            //Number.Nn = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
+            Number.Nn = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Nn;
 
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
@@ -1012,27 +896,23 @@ namespace ProgramCCS
             //dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
             //con.Close();//Закрываем соединение
 
-            var command = from table in db.GetTable<Orders>()
+            var command = from table in db.GetTable<Table_1>()
                           group table by table.Ns into g
                           select g.OrderByDescending(t => t.Ns).FirstOrDefault();
-            //dataGridView2.DataSource = command;
-            DataTable tableNs = ToDataTable(command); //передать результат LINQ таблице DataTable
+            dataGridView2.DataSource = command;
 
-            Number.Ns = Convert.ToInt32(tableNs.Rows[0][21].ToString()) + 1;
-            //Number.Ns = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
+            Number.Ns = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
             Number.Prefix_number = comboBox10.Text + Number.Ns;
 
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
         }
         public void Select_client()//Для сортировки принятых списков по клиенту
         {
-            var command = from table in db.GetTable<Orders>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.Контрагент == Partner.Name
                           group table by table.Ns into g
                           select g.OrderByDescending(t => t.Ns).FirstOrDefault();
-            //dataGridView2.DataSource = command;
-            DataTable tableNs = ToDataTable(command); //передать результат LINQ таблице DataTable
-            Number.Prefix_number = tableNs.Rows[0][18].ToString();
+            dataGridView2.DataSource = command;
 
             db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка 
 
@@ -1086,20 +966,19 @@ namespace ProgramCCS
         }
         public void ComboBox5_TextChanged(object sender, EventArgs e)//поиск тарифа по контрагенту
         {
-            Table.Tarifs = new DataTable();//инициализируем DataTable
             con.Open();//открыть соединение
             SqlCommand cmd = new SqlCommand("SELECT tarif FROM [Table_Partner]" +
                 "WHERE name = @name", con);
             cmd.Parameters.AddWithValue("@name", comboBox5.Text.ToString());
             cmd.ExecuteNonQuery();
             SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            Table.Tarifs.Clear();//чистим DataTable, если он был не пуст
-            da.Fill(Table.Tarifs);//заполняем данными созданный DataTable
+            dtTarif.Clear();//чистим DataTable, если он был не пуст
+            da.Fill(dtTarif);//заполняем данными созданный DataTable
             con.Close();//закрыть соединение
             if (comboBox5.Text == "")//если поле очищено, отобразить базу
             {
-                Table.Tarifs.Clear();//чистим DataTable, если он был не пуст
-                foreach (DataRow column in Table.Tarifs.Rows)
+                dtTarif.Clear();//чистим DataTable, если он был не пуст
+                foreach (DataRow column in dtTarif.Rows)
                 {
                     comboBox5.Items.Add(column[0].ToString());
                 }
@@ -1228,7 +1107,7 @@ namespace ProgramCCS
                                 cmd.Parameters.AddWithValue("@Nr", 0);
                                 cmd.Parameters.AddWithValue("@Ns", Number.Ns);
                                 cmd.Parameters.AddWithValue("@Nn", 0);
-                                cmd.Parameters.AddWithValue("@tarifs", Table.Tarifs.Rows[0][0].ToString());//tarif
+                                cmd.Parameters.AddWithValue("@tarifs", dtTarif.Rows[0][0].ToString());//tarif
                                 cmd.Parameters.AddWithValue("@filial", Person.Name);
 
                                 if ((dataGridView3.Rows[i].Cells[11].Value) != DBNull.Value)//если в EXCEL столбец доплата не пустой
@@ -1245,7 +1124,7 @@ namespace ProgramCCS
                             dataGridView5.Visible = false;
 
                             //Отобразить список Ожидание! 
-                            var command = from table in db.GetTable<Orders_incomplete>()
+                            var command = from table in db.GetTable<Table_1>()
                                           where table.Статус == "Ожидание"
                                           orderby table.Дата_записи descending
                                           select table;
@@ -1265,7 +1144,7 @@ namespace ProgramCCS
                             con.Open();//открыть соединение
                             SqlCommand cmd = new SqlCommand("SELECT oblast, punkt, familia, N_zakaza, data_zapisi, summ, tarif, doplata, plata_za_uslugu, ob_cennost, plata_za_nalog, id, nomer_spiska" +
                                 " FROM [Table_1] WHERE (nomer_spiska = @nomer_spiska AND client = @client)", con);
-                            cmd.Parameters.AddWithValue("nomer_spiska", Number.Prefix_number);
+                            cmd.Parameters.AddWithValue("nomer_spiska", dataGridView2.Rows[0].Cells[18].Value.ToString());
                             cmd.Parameters.AddWithValue("@client", Partner.Name);
                             cmd.ExecuteNonQuery();
                             DataTable dt = new DataTable();//создаем экземпляр класса DataTable
@@ -1279,7 +1158,7 @@ namespace ProgramCCS
                                        //Выдача в WORD
                             SaveFileDialog sfd = new SaveFileDialog();
                             sfd.Filter = "Word Documents (*.docx)|*.docx";
-                            sfd.FileName = $"Список принятых № {Number.Prefix_number}.docx";
+                            sfd.FileName = $"Список принятых № {dataGridView2.Rows[0].Cells[18].Value.ToString()}.docx";
                             if (sfd.ShowDialog() == DialogResult.OK)
                             {
                                 Export_Spisok_Prinyatyh_To_Word(dataGridView5, sfd.FileName);
@@ -1337,39 +1216,30 @@ namespace ProgramCCS
         }
         private void button28_Click(object sender, EventArgs e)//Поиск по ФИО
         {
-            //con.Open();//открыть соединение
-            //SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
-            //"summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
-            //    "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
-            //    "filial AS 'Филиал', client AS 'Контрагент'," +
-            //    "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', tarifs AS 'Тарифы'" +
-            //        "FROM [Table_1] WHERE familia LIKE N'%" + textBox3.Text.ToString() + "%'", con);
-            ////cmd.Parameters.AddWithValue("@punkt", textBox2.Text);
-            ////cmd.Parameters.AddWithValue("@familia", textBox2.Text);
-            //cmd.ExecuteNonQuery();
-            //DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-            //SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-            //dt.Clear();//чистим DataTable, если он был не пуст
-            //da.Fill(dt);//заполняем данными созданный DataTable
-            //dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-            //con.Close();//закрыть соединение
 
-            if (textBox3.Text != "")
-            {
-                var command = from table in db.GetTable<Orders_incomplete>()
-                              where table.Ф_И_О.Contains(textBox3.Text.ToString())//Contains вместо LIKE
-                              orderby table.Дата_записи descending
-                              select table;
-                dataGridView2.DataSource = command;
+            con.Open();//открыть соединение
+            SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
+            "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
+                "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
+                "filial AS 'Филиал', client AS 'Контрагент'," +
+                "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
+                    "FROM [Table_1] WHERE familia LIKE N'%" + textBox3.Text.ToString() + "%'", con);
+            //cmd.Parameters.AddWithValue("@punkt", textBox2.Text);
+            //cmd.Parameters.AddWithValue("@familia", textBox2.Text);
+            cmd.ExecuteNonQuery();
+            DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+            SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+            dt.Clear();//чистим DataTable, если он был не пуст
+            da.Fill(dt);//заполняем данными созданный DataTable
+            dataGridView2.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+            con.Close();//закрыть соединение
 
-                Podschet();//произвести подсчет по методу
-                           //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду   
-            }
-            else MessageBox.Show("Введите ФИО в строке поиска!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            Podschet();//произвести подсчет по методу
+                       //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду                      
         }
         private void textBox3_TextChanged(object sender, EventArgs e)//Поиск по №Заказа
         {
-            var command = from table in db.GetTable<Orders_incomplete>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.N_Заказа == textBox3.Text.ToString()
                           orderby table.Дата_записи descending
                           select table;
@@ -1398,7 +1268,7 @@ namespace ProgramCCS
             ProgressBar();
             if (Person.Name == "root")
             {
-                var command = from table in db.GetTable<Orders_incomplete>()
+                var command = from table in db.GetTable<Table_1>()
                               where table.Статус == "Возврат"
                               orderby table.Дата_записи descending
                               select table;
@@ -1406,7 +1276,7 @@ namespace ProgramCCS
             }
             else
             {
-                var command = from table in db.GetTable<Orders_incomplete>()
+                var command = from table in db.GetTable<Table_1>()
                               where table.Филиал == Person.Name & table.Статус == "Возврат"
                               orderby table.Дата_записи descending
                               select table;
@@ -1419,7 +1289,7 @@ namespace ProgramCCS
             ProgressBar();
             if (Person.Name == "root")
             {
-                var command = from table in db.GetTable<Orders_incomplete>()
+                var command = from table in db.GetTable<Table_1>()
                               where table.Статус == "Выдано"
                               orderby table.Дата_записи descending
                               select table;
@@ -1427,7 +1297,7 @@ namespace ProgramCCS
             }
             else
             {
-                var command = from table in db.GetTable<Orders_incomplete>()
+                var command = from table in db.GetTable<Table_1>()
                               where table.Филиал == Person.Name & table.Статус == "Выдано"
                               orderby table.Дата_записи descending
                               select table;
@@ -1482,21 +1352,21 @@ namespace ProgramCCS
                 //Выдача рееста в WORD
                 ExportReestr_ToPDF();
                 string status = Convert.ToString(dataGridView1.Rows[0].Cells[5].Value);//Статус
-                //string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент                
+                string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент                
                 SaveFileDialog sfd = new SaveFileDialog();
-                sfd.Filter = "Word Documents (*.docx)|*.docx";
-                sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
-                    {
-                        Export_Reestr_To_Word(dataGridView1, sfd.FileName);
-                    }
-                    else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
-                    {
-                        Export_Reestr_To_Word_vozvrat(dataGridView1, sfd.FileName);
-                    }
-                }
+                //sfd.Filter = "Word Documents (*.docx)|*.docx";
+                //sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
+                //if (sfd.ShowDialog() == DialogResult.OK)
+                //{
+                //    if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
+                //    {
+                //        Export_Reestr_To_Word(dataGridView1, sfd.FileName);
+                //    }
+                //    else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
+                //    {
+                //        Export_Reestr_To_Word_vozvrat(dataGridView1, sfd.FileName);
+                //    }
+                //}
                 //Выдача рееста в EXCEL
                 if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
                 {
@@ -1523,28 +1393,28 @@ namespace ProgramCCS
                 {
                     ExportReestr_ToPDF();
                     //Выдача рееста в WORD
-                    //string nomer = dataGridView1.Rows[0].Cells[12].Value.ToString();//№
+                    string nomer = dataGridView1.Rows[0].Cells[12].Value.ToString();//№
                     string status = Convert.ToString(dataGridView1.Rows[0].Cells[5].Value);//Статус
-                    //string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент
+                    string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Контрагент
                     SaveFileDialog sfd = new SaveFileDialog();
-                    sfd.Filter = "Word Documents (*.docx)|*.docx";
-                    sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.docx";
-                    if (sfd.ShowDialog() == DialogResult.OK)
-                    {
-                        if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
-                        {
-                            Export_Reestr_To_Word(dataGridView1, sfd.FileName);
-                        }
-                        else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
-                        {
-                            Export_Reestr_To_Word_vozvrat(dataGridView1, sfd.FileName);
-                        }
-                    }
+                    //sfd.Filter = "Word Documents (*.docx)|*.docx";
+                    //sfd.FileName = $"Реестр № {nomer} на {status}.docx";
+                    //if (sfd.ShowDialog() == DialogResult.OK)
+                    //{
+                    //    if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
+                    //    {
+                    //        Export_Reestr_To_Word(dataGridView1, sfd.FileName);                                
+                    //    }
+                    //    else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
+                    //    {
+                    //        Export_Reestr_To_Word_vozvrat(dataGridView1, sfd.FileName);
+                    //    }
+                    //}
                     //Выдача рееста в EXCEL
                     if (status != "Возврат" /*| kontragent != "TOO Sapar delivery" & kontragent != "ОсОО Тенгри" & kontragent != "ИП 'JUMPER'"*/)
                     {
                         sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                        sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.xlsx";
+                        sfd.FileName = $"Реестр № {nomer} на {status}.xlsx";
                         if (sfd.ShowDialog() == DialogResult.OK)
                         {
                             Export_Reestr_To_Excel(dataGridView1, sfd.FileName);
@@ -1553,7 +1423,7 @@ namespace ProgramCCS
                     else if (status == "Возврат" /*| kontragent == "TOO Sapar delivery" & kontragent == "ОсОО Тенгри" & kontragent == "ИП 'JUMPER'"*/)
                     {
                         sfd.Filter = "Книга Execl (*.xlsx)|*.xlsx";
-                        sfd.FileName = $"Реестр № {Number.Prefix_number} на {status}.xlsx";
+                        sfd.FileName = $"Реестр № {nomer} на {status}.xlsx";
                         if (sfd.ShowDialog() == DialogResult.OK)
                         {
                             Export_Reestr_To_Excel_vozvrat(dataGridView1, sfd.FileName);
@@ -1589,7 +1459,7 @@ namespace ProgramCCS
             }
 
             if (Table.DtRegistry != null)
-                Table.DtRegistry = null;
+                Table.DtRegistry.Clear();//чистим DataTable
         }
         public void Print_Invoice()//Печать Накладной и за период
         {
@@ -1616,12 +1486,10 @@ namespace ProgramCCS
                     }
                     con.Close();//закрыть соединение
 
-                    //Выдача накладной
-                    ExportInvoice_ToPDF();
-                    string region = Convert.ToString(dataGridView1.Rows[0].Cells[9].Value);//Область
+                    string oblast = Convert.ToString(dataGridView1.Rows[0].Cells[9].Value);//Область
                     SaveFileDialog sfd = new SaveFileDialog();
                     sfd.Filter = "Word Documents (*.docx)|*.docx";
-                    sfd.FileName = $"Накладная № {Number.Prefix_number} - {region}.docx";
+                    sfd.FileName = $"Накладная № {Number.Prefix_number} - {oblast}.docx";
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         Export_Nakladnaya_To_Word(dataGridView1, sfd.FileName);
@@ -1658,224 +1526,7 @@ namespace ProgramCCS
             }
 
             if (Table.DtInvoice != null)
-                Table.DtInvoice = null;
-        }
-
-        private void ExportReestr_ToPDF()//Метод экспорта Реестра в PDF 
-        {
-            string status = Table.DtRegistry.Rows[0][5].ToString();//Статус
-            //string kontragent = Table.DtRegistry.Rows[0][8].ToString();//Контрагент
-            DateTime Now = DateTime.Now;
-            //int number = Number.Nr;
-            //string prefix_number = comboBox10.Text + number;
-            string processing = Table.DtRegistry.Rows[0][10].ToString();
-            string Reestr = "";
-            string Heading = "";
-            //Определение шрифта необходимо для сохранения кириллического текста
-            //Иначе мы не увидим кириллический текст
-            //Если мы работаем только с англоязычными текстами, то шрифт можно не указывать
-            BaseFont baseFont = BaseFont.CreateFont("C:\\Windows\\Fonts\\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            iTextSharp.text.Font font = new iTextSharp.text.Font(baseFont, 9, iTextSharp.text.Font.NORMAL);
-            iTextSharp.text.Font fontBold = new iTextSharp.text.Font(baseFont, 14, iTextSharp.text.Font.BOLD);
-
-            PdfPTable table = null;
-            //Обход по всем таблицам датасета
-            for (int i = 0; i < Table.DtRegistry.Rows.Count; i++)
-            {
-                //Создаем объект таблицы и передаем в нее число столбцов таблицы из нашего датасета
-                table = new PdfPTable(Table.DtRegistry.Columns.Count);
-                table.DefaultCell.Padding = 1;
-                table.WidthPercentage = 100;
-                if (status == "Выдано")
-                {
-                    float[] widths = new float[] { 150f, 80f, 65f, 60f, 0f, 60f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
-                    table.SetWidths(widths);
-                }
-                else if (status == "Возврат")
-                {
-                    float[] widths = new float[] { 150f, 80f, 65f, 60f, 0f, 60f, 60f, 0f, 0f, 0f, 0f, 0f, 60f, 0f, 60f };
-                    table.SetWidths(widths);
-                }
-                table.HorizontalAlignment = Element.ALIGN_LEFT;
-                table.DefaultCell.BorderWidth = 1;
-
-                //Добавим в таблицу общий заголовок                
-                if (processing != "Обработано")
-                {
-                    Reestr = Number.Prefix_number;
-                }
-                else if (processing == "Обработано")
-                {
-                    Reestr = Table.DtRegistry.Rows[0][12].ToString();
-                }
-                Heading = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. " +
-                Environment.NewLine + $"отправлений с наложенным платежом от {Partner.Name}" +
-                Environment.NewLine + Environment.NewLine;
-
-                PdfPCell cell = new PdfPCell(new Phrase(Heading, fontBold));
-                cell.Colspan = Table.DtRegistry.Columns.Count;
-                cell.HorizontalAlignment = 1;
-                //Убираем границу первой ячейки, чтобы была как заголовок
-                cell.Border = 0;
-                table.AddCell(cell);
-                //Сначала добавляем заголовки таблицы
-                for (int k = 0; k < Table.DtRegistry.Columns.Count; k++)
-                {
-                    cell = new PdfPCell(new Phrase(Table.DtRegistry.Columns[k].ColumnName, font));
-                    //Фоновый цвет (необязательно, просто сделаем по красивее)
-                    cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                    //cell.Border = 0;
-                    table.AddCell(cell);
-                }
-                //Добавляем все остальные ячейки
-                for (int x = 0; x < Table.DtRegistry.Rows.Count; x++)
-                {
-                    for (int j = 0; j < Table.DtRegistry.Columns.Count; j++)
-                    {
-                        table.AddCell(new Phrase(Table.DtRegistry.Rows[x][j].ToString(), font));
-                    }
-                }
-            }
-            //----------------------------------------------------------------------------------------------------------//
-            //Exporting to PDF
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Pdf File |*.pdf";
-            sfd.FileName = $"Реестр № {Reestr} на {status}.pdf";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                using (FileStream Stream = new FileStream(sfd.FileName, FileMode.Create))
-                {
-                    Document Doc = new Document(PageSize.A4, 40f, 40f, 20f, 20f);//Для А4
-                                                                                 //Document Doc = new Document(new iTextSharp.text.Rectangle(Width, Height), 0, 0, 0, 0);
-                                                                                 //Document Doc = new Document(new iTextSharp.text.Rectangle(120, 1000), 0f, 0f, 0f, 0f);//для чека
-                    PdfWriter.GetInstance(Doc, Stream);
-                    Doc.Open();
-                    DateTime date = DateTime.Now;
-
-                    Doc.Add(table);
-                    Doc.Add(new Paragraph(Environment.NewLine));
-                    if (status == "Выдано")
-                    {
-                        Doc.Add(new Paragraph($"Итого:    {Summ.Quantity}                    {Summ.Sum}" +
-                //Environment.NewLine + " Сумма за услугу " + Summ.SumService +                       
-                Environment.NewLine +
-                Environment.NewLine + "Проверил(а)____________________________" + Environment.NewLine, font));
-                    }
-                    if (status == "Возврат")
-                    {
-                        Doc.Add(new Paragraph($"Итого:    {Summ.Quantity}                    {Summ.Sum}" +
-                Environment.NewLine + $"Сумма за возврат   {Summ.SumReturn}" +
-                Environment.NewLine +
-                Environment.NewLine + "Проверил(а)____________________________" + Environment.NewLine, font));
-
-                    }
-                    Doc.Close();
-                    Stream.Close();
-                }
-            }
-
-            // Печать на устройство, установленное используемым по умолчанию
-            Process printJob = new Process();
-            printJob.StartInfo.FileName = sfd.FileName;//Открыть документ
-            printJob.StartInfo.UseShellExecute = true;
-            //printJob.StartInfo.Verb = "print";
-            printJob.Start();
-
-            //printJob.WaitForInputIdle();
-            //printJob.Kill();
-        }
-        private void ExportInvoice_ToPDF()//Метод экспорта Накладной в PDF 
-        {
-            string status = Table.DtInvoice.Rows[0][5].ToString();//Статус
-            //string kontragent = Table.DtInvoice.Rows[0][8].ToString();//Контрагент
-            string region = Table.DtInvoice.Rows[0][9].ToString();//Область
-            DateTime Now = DateTime.Now;
-            //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-            //string prefix_number = comboBox10.Text + number;
-            string Heading = "";
-            //Определение шрифта необходимо для сохранения кириллического текста
-            //Иначе мы не увидим кириллический текст
-            //Если мы работаем только с англоязычными текстами, то шрифт можно не указывать
-            BaseFont baseFont = BaseFont.CreateFont("C:\\Windows\\Fonts\\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            iTextSharp.text.Font font = new iTextSharp.text.Font(baseFont, 9, iTextSharp.text.Font.NORMAL);
-            iTextSharp.text.Font fontBold = new iTextSharp.text.Font(baseFont, 14, iTextSharp.text.Font.BOLD);
-
-            PdfPTable table = null;
-            //Обход по всем таблицам датасета
-            for (int i = 0; i < Table.DtInvoice.Rows.Count; i++)
-            {
-                //Создаем объект таблицы и передаем в нее число столбцов таблицы из нашего датасета
-                table = new PdfPTable(Table.DtInvoice.Columns.Count);
-                table.DefaultCell.Padding = 1;
-                table.WidthPercentage = 100;
-                float[] widths = new float[] { 150f, 80f, 65f, 60f, 0f, 60f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
-                table.SetWidths(widths);
-                table.HorizontalAlignment = Element.ALIGN_LEFT;
-                table.DefaultCell.BorderWidth = 1;
-                //Добавим в таблицу общий заголовок                
-                Heading = Partner.Name + Environment.NewLine + "Накладная № " + Number.Prefix_number + " от " + Convert.ToString(Now.ToString("dd.MM.yyyy")) + " куда " + region +
-                Environment.NewLine;
-
-                PdfPCell cell = new PdfPCell(new Phrase(Heading, fontBold));
-                cell.Colspan = Table.DtInvoice.Columns.Count;
-                cell.HorizontalAlignment = 1;
-                //Убираем границу первой ячейки, чтобы была как заголовок
-                cell.Border = 0;
-                table.AddCell(cell);
-                //Сначала добавляем заголовки таблицы
-                for (int k = 0; k < Table.DtInvoice.Columns.Count; k++)
-                {
-                    cell = new PdfPCell(new Phrase(Table.DtInvoice.Columns[k].ColumnName, font));
-                    //Фоновый цвет (необязательно, просто сделаем по красивее)
-                    cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                    //cell.Border = 0;
-                    table.AddCell(cell);
-                }
-                //Добавляем все остальные ячейки
-                for (int x = 0; x < Table.DtInvoice.Rows.Count; x++)
-                {
-                    for (int j = 0; j < Table.DtInvoice.Columns.Count; j++)
-                    {
-                        table.AddCell(new Phrase(Table.DtInvoice.Rows[x][j].ToString(), font));
-                    }
-                }
-            }
-            //----------------------------------------------------------------------------------------------------------//
-            //Exporting to PDF
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Pdf File |*.pdf";
-            sfd.FileName = $"Накладная № {Number.Prefix_number} - {region}.pdf";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                using (FileStream stream = new FileStream(sfd.FileName, FileMode.Create))
-                {
-                    Document Doc = new Document(PageSize.A4, 40f, 40f, 20f, 20f);//Для А4
-                                                                                 //Document Doc = new Document(new iTextSharp.text.Rectangle(Width, Height), 0, 0, 0, 0);
-                                                                                 //Document Doc = new Document(new iTextSharp.text.Rectangle(120, 1000), 0f, 0f, 0f, 0f);//для чека
-                    PdfWriter.GetInstance(Doc, stream);
-                    Doc.Open();
-                    DateTime date = DateTime.Now;
-
-                    Doc.Add(table);
-                    Doc.Add(new Paragraph(Environment.NewLine));
-                    Doc.Add(new Paragraph($" Итого:    {Summ.Quantity}                    {Summ.Sum}" +
-                    Environment.NewLine +
-                    Environment.NewLine + $"Принял__________________              Сдал_____________________" + Environment.NewLine));
-
-                    Doc.Close();
-                    stream.Close();
-                }
-            }
-
-            // Печать на устройство, установленное используемым по умолчанию
-            Process printJob = new Process();
-            printJob.StartInfo.FileName = sfd.FileName;//Открыть документ
-            printJob.StartInfo.UseShellExecute = true;
-            //printJob.StartInfo.Verb = "print";
-            printJob.Start();
-
-            //printJob.WaitForInputIdle();
-            //printJob.Kill();
+                Table.DtInvoice.Clear();//чистим DataTable
         }
 
         private void dataGridView2_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)//Окраска статусов dataGridView2
@@ -1974,6 +1625,7 @@ namespace ProgramCCS
                 } //конец петли колонки
                   //Добавление текста в документ
                 string status = Convert.ToString(dataGridView1.Rows[0].Cells[4].Value);//Статус
+                string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
                 oDoc.Content.SetRange(0, 0);// для текстовых строк
                 oDoc.Content.Text = $"Итого:    {Summ.Quantity}                    {Summ.Sum}" +
                 //Environment.NewLine + " Сумма за услугу " + Summ.SumService +
@@ -2057,8 +1709,8 @@ namespace ProgramCCS
                 oDoc.Application.Selection.Tables[1].Columns[4].Width = 60;
                 oDoc.Application.Selection.Tables[1].Columns[5].Width = 55;
                 //текст заголовка
-                //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-                //string prefix_number = comboBox10.Text + number;
+                int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+                string prefix_number = comboBox10.Text + number;
                 foreach (Word.Section section in oDoc.Application.ActiveDocument.Sections)
                 {//Верхний колонтитул
                     DateTime Now = DateTime.Now;
@@ -2067,15 +1719,16 @@ namespace ProgramCCS
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
                     if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
                     {
-                        headerRange.Text = $"Реестр №  {Number.Prefix_number}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
-                        Environment.NewLine + $"от  {Partner.Name}" +
+                        string Reestr = prefix_number;
+                        headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
+                        Environment.NewLine + $"от  {kontragent}" +
                         Environment.NewLine;
                     }
                     else if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) == "Обработано")
                     {
                         string Reestr = dataGridView1.Rows[0].Cells[11].Value.ToString();
                         headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
-                        Environment.NewLine + $"от  {Partner.Name}" +
+                        Environment.NewLine + $"от  {kontragent}" +
                         Environment.NewLine;
                     }
                     headerRange.Font.Size = 12;
@@ -2117,8 +1770,10 @@ namespace ProgramCCS
             {
                 //удаление столбца
                 this.dataGridView1.Columns.RemoveAt(4);//дата записи
+
                 string status = Convert.ToString(dataGridView1.Rows[0].Cells[4].Value);//Статус
-                //string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
+                string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
+
                 int RowCount = dataGridView1.Rows.Count;
                 int ColumnCount = dataGridView1.Columns.Count - 0;// столбцы в гриде (-3 последних)id и обработанные и клиент не нужны              
                 Object[,] DataArray = new object[RowCount + 1, ColumnCount + 1];
@@ -2202,8 +1857,8 @@ namespace ProgramCCS
                 oDoc.Application.Selection.Tables[1].Columns[7].Width = 40;
                 oDoc.Application.Selection.Tables[1].Columns[8].Width = 40;
                 //текст заголовка
-                //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-                //string prefix_number = comboBox10.Text + number;
+                int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+                string prefix_number = comboBox10.Text + number;
                 foreach (Word.Section section in oDoc.Application.ActiveDocument.Sections)
                 {//Верхний колонтитул
                     DateTime Now = DateTime.Now;
@@ -2212,15 +1867,16 @@ namespace ProgramCCS
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
                     if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
                     {
-                        headerRange.Text = $"Реестр №  {Number.Prefix_number}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
-                        Environment.NewLine + $"от  {Partner.Name}" +
+                        string Reestr = prefix_number;
+                        headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
+                        Environment.NewLine + $"от  {kontragent}" +
                         Environment.NewLine;
                     }
                     else if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) == "Обработано")
                     {
                         string Reestr = dataGridView1.Rows[0].Cells[11].Value.ToString();
                         headerRange.Text = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. отправлений с наложенным платежом" +
-                        Environment.NewLine + $"от  {Partner.Name}" +
+                        Environment.NewLine + $"от  {kontragent}" +
                         Environment.NewLine;
                     }
                     headerRange.Font.Size = 12;
@@ -2239,8 +1895,8 @@ namespace ProgramCCS
         }
         public void Export_Reestr_To_Excel(DataGridView dataGridView1, string filename)//Метод экспорта в Excel Реестр
         {
-            //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-            //string prefix_number = comboBox10.Text + number;
+            int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+            string prefix_number = comboBox10.Text + number;
             Excell._Application app = new Excell.Application();// Создание Excel Application
             Excell._Workbook workbook = app.Workbooks.Add(Type.Missing);// создание новой книги внутри приложения Excel
             Excell._Worksheet worksheet = null;// создание нового листа Excel в книге
@@ -2267,7 +1923,7 @@ namespace ProgramCCS
             worksheet.Cells[3, "I"] = "Кол-во " + Summ.Quantity;
             if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
             {
-                string Reestr = Number.Prefix_number;
+                string Reestr = prefix_number;
                 worksheet.Cells[4, "I"] = "Реестр№ " + Reestr + " от " + Now;
                 worksheet.Name = "Реестр№ " + Reestr + " TLC -Express";// Изменение названия активного листа
             }
@@ -2289,8 +1945,8 @@ namespace ProgramCCS
         }
         public void Export_Reestr_To_Excel_vozvrat(DataGridView dataGridView1, string filename)//Метод экспорта в Excel Реестр на возврат для TOO Sapar delivery
         {
-            //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
-            //string prefix_number = comboBox10.Text + number;
+            int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+            string prefix_number = comboBox10.Text + number;
             Excell._Application app = new Excell.Application();// Создание Excel Application
             Excell._Workbook workbook = app.Workbooks.Add(Type.Missing);// создание новой книги внутри приложения Excel
             Excell._Worksheet worksheet = null;// создание нового листа Excel в книге
@@ -2317,7 +1973,7 @@ namespace ProgramCCS
             worksheet.Cells[3, "I"] = "Кол-во " + Summ.Quantity;
             if (Convert.ToString(dataGridView1.Rows[0].Cells[9].Value) != "Обработано")
             {
-                string Reestr = Number.Prefix_number;
+                string Reestr = prefix_number;
                 worksheet.Cells[4, "I"] = "Реестр№ " + Reestr + " от " + Now;
                 worksheet.Name = "Реестр№ " + Reestr + " TLC -Express";// Изменение названия активного листа
             }
@@ -2377,8 +2033,8 @@ namespace ProgramCCS
                 } //конец петли колонки
                   //Добавление текста в документ
 
-                string region = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Область
-                //string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
+                string oblast = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Область
+                string kontragent = Convert.ToString(dataGridView1.Rows[0].Cells[7].Value);//Контрагент
                 oDoc.Content.SetRange(0, 0);
                 oDoc.Content.Text = $"                             Итого:    {Summ.Quantity}                    {Summ.Sum}" +
                 Environment.NewLine +
@@ -2431,15 +2087,15 @@ namespace ProgramCCS
                 oDoc.Application.Selection.Tables[1].RightPadding = 1;//отступ с права полей ячеек
                 oDoc.Application.Selection.Tables[1].Rows.LeftIndent = -35;//Установка отступа слева
                 //текст заголовка
-                //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
-                //string prefix_number = comboBox10.Text + number;
+                int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[22].Value) + 1;
+                string prefix_number = comboBox10.Text + number;
                 foreach (Word.Section section in oDoc.Application.ActiveDocument.Sections)
                 {//Верхний колонтитул
                     DateTime Now = DateTime.Now;
                     Word.Range headerRange = section.Headers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range;
                     headerRange.Fields.Add(headerRange, Word.WdFieldType.wdFieldPage);
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
-                    headerRange.Text = Partner.Name + Environment.NewLine + "Накладная № " + Number.Prefix_number + " от " + Convert.ToString(Now.ToString("dd.MM.yyyy")) + " куда " + region +
+                    headerRange.Text = kontragent + Environment.NewLine + "Накладная № " + prefix_number + " от " + Convert.ToString(Now.ToString("dd.MM.yyyy")) + " куда " + oblast +
                     Environment.NewLine;
                     headerRange.Font.Size = 16;
                     headerRange.Font.Name = "Times New Roman";
@@ -2492,7 +2148,8 @@ namespace ProgramCCS
                     } //Конец цикла строки
                 } //конец петли колонки
                   //Добавление текста в документ
-                //string client = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Клиент
+                string oblast = Convert.ToString(dataGridView1.Rows[0].Cells[9].Value);//Область
+                string client = Convert.ToString(dataGridView1.Rows[0].Cells[8].Value);//Клиент
                 //DateTime DatePriem = Convert.ToDateTime(dataGridView2.Rows[0].Cells[8].Value);
                 oDoc.Content.SetRange(0, 0);
                 oDoc.Content.Text = $"                             Итого:     {Summ.Quantity}                    {Summ.Sum}" +
@@ -2564,7 +2221,7 @@ namespace ProgramCCS
                     headerRange.Text = "Список за период " +
                     Environment.NewLine + $"c  {Convert.ToString(Dates.StartDate.ToString("dd.MM.yyyy "))}  по  {Convert.ToString(Dates.EndDate.ToString(" dd.MM.yyyy"))}" +
                     Environment.NewLine +
-                    Environment.NewLine + $"Отправитель  {Partner.Name}" +
+                    Environment.NewLine + $"Отправитель  {client}" +
                     Environment.NewLine;
 
                     headerRange.Font.Size = 16;
@@ -2620,6 +2277,7 @@ namespace ProgramCCS
                     } //Конец цикла строки
                 } //конец петли колонки
                   //Добавление текста в документ
+                string client = comboBox5.Text;//Клиент
                 oDoc.Content.SetRange(0, 0);// для текстовых строк
                 oDoc.Content.Text = $"Итого: {Summ.Quantity}" +
                 Environment.NewLine + $"Сумма объявленной ценности  {Summ.Sum}" +
@@ -2691,14 +2349,14 @@ namespace ProgramCCS
                     Word.Range headerRange = section.Headers[Word.WdHeaderFooterIndex.wdHeaderFooterFirstPage].Range;
                     headerRange.Fields.Add(headerRange, Word.WdFieldType.wdFieldPage);
                     section.PageSetup.DifferentFirstPageHeaderFooter = -1;//Включить особый колонтитул
-                    //int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
-                    //string prefix_number = comboBox10.Text + number;
+                    int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[21].Value) + 1;
+                    string prefix_number = comboBox10.Text + number;
                     if (dataGridView5.Rows[0].Cells[11].Value.ToString() == "0")
                     {
-                        headerRange.Text = $"СПИСОК № {Number.Prefix_number}" +
+                        headerRange.Text = $"СПИСОК № {prefix_number}" +
                         Environment.NewLine + $"от {Convert.ToString(DatePriem.ToString("dd.MM.yyyy"))} принятых в ТЛЦ ГП 'Спецсвязь' " +
                         Environment.NewLine +
-                        Environment.NewLine + $"Отправитель {Partner.Name}" +
+                        Environment.NewLine + $"Отправитель {client}" +
                         Environment.NewLine;
                     }
                     else if (dataGridView5.Rows[0].Cells[11].Value.ToString() != "0")
@@ -2707,7 +2365,7 @@ namespace ProgramCCS
                         headerRange.Text = $"СПИСОК № {nomer}" +
                         Environment.NewLine + $"от {Convert.ToString(DatePriem.ToString("dd.MM.yyyy"))} принятых в ТЛЦ ГП 'Спецсвязь' " +
                         Environment.NewLine +
-                        Environment.NewLine + $"Отправитель {Partner.Name}" +
+                        Environment.NewLine + $"Отправитель {client}" +
                         Environment.NewLine;
                     }
                     headerRange.Font.Size = 12;
@@ -2761,7 +2419,222 @@ namespace ProgramCCS
             GC.GetTotalMemory(true);// Вызываем сборщик мусора для немедленной очистки памяти
         }
 
-        
+        private void ExportReestr_ToPDF()//Метод экспорта Реестра в PDF 
+        {
+            string status = Table.DtRegistry.Rows[0][5].ToString();//Статус
+            string kontragent = Table.DtRegistry.Rows[0][8].ToString();//Контрагент
+            DateTime Now = DateTime.Now;
+            int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+            string prefix_number = comboBox10.Text + number;
+            string processing = Table.DtRegistry.Rows[0][10].ToString();
+            string Reestr = "";
+            string Heading = "";
+            //Определение шрифта необходимо для сохранения кириллического текста
+            //Иначе мы не увидим кириллический текст
+            //Если мы работаем только с англоязычными текстами, то шрифт можно не указывать
+            BaseFont baseFont = BaseFont.CreateFont("C:\\Windows\\Fonts\\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            iTextSharp.text.Font font = new iTextSharp.text.Font(baseFont, 9, iTextSharp.text.Font.NORMAL);
+            iTextSharp.text.Font fontBold = new iTextSharp.text.Font(baseFont, 14, iTextSharp.text.Font.BOLD);
+
+            PdfPTable table = null;
+            //Обход по всем таблицам датасета
+            for (int i = 0; i < Table.DtRegistry.Rows.Count; i++)
+            {
+                //Создаем объект таблицы и передаем в нее число столбцов таблицы из нашего датасета
+                table = new PdfPTable(Table.DtRegistry.Columns.Count);
+                table.DefaultCell.Padding = 1;
+                table.WidthPercentage = 100;
+                if (status == "Выдано")
+                {
+                    float[] widths = new float[] { 150f, 80f, 65f, 60f, 0f, 60f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
+                    table.SetWidths(widths);
+                }
+                else if (status == "Возврат")
+                {
+                    float[] widths = new float[] { 150f, 80f, 65f, 60f, 0f, 60f, 60f, 0f, 0f, 0f, 0f, 0f, 60f, 0f, 60f };
+                    table.SetWidths(widths);
+                }
+                table.HorizontalAlignment = Element.ALIGN_LEFT;
+                table.DefaultCell.BorderWidth = 1;
+
+                //Добавим в таблицу общий заголовок                
+                if (processing != "Обработано")
+                {
+                    Reestr = prefix_number;                   
+                }
+                else if (processing == "Обработано")
+                {
+                    Reestr = Table.DtRegistry.Rows[0][12].ToString();
+                }
+                    Heading = $"Реестр №  {Reestr}  на  {status}  от  {Convert.ToString(Now.ToString("dd.MM.yyyy"))} г. " +
+                    Environment.NewLine + $"отправлений с наложенным платежом от {kontragent}" +
+                    Environment.NewLine + Environment.NewLine;
+
+                PdfPCell cell = new PdfPCell(new Phrase(Heading, fontBold));
+                cell.Colspan = Table.DtRegistry.Columns.Count;
+                cell.HorizontalAlignment = 1;
+                //Убираем границу первой ячейки, чтобы была как заголовок
+                cell.Border = 0;
+                table.AddCell(cell);
+                //Сначала добавляем заголовки таблицы
+                for (int k = 0; k < Table.DtRegistry.Columns.Count; k++)
+                {
+                    cell = new PdfPCell(new Phrase(Table.DtRegistry.Columns[k].ColumnName, font));
+                    //Фоновый цвет (необязательно, просто сделаем по красивее)
+                    cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                    //cell.Border = 0;
+                    table.AddCell(cell);
+                }
+                //Добавляем все остальные ячейки
+                for (int x = 0; x < Table.DtRegistry.Rows.Count; x++)
+                {
+                    for (int j = 0; j < Table.DtRegistry.Columns.Count; j++)
+                    {
+                        table.AddCell(new Phrase(Table.DtRegistry.Rows[x][j].ToString(), font));
+                    }
+                }
+            }
+            //----------------------------------------------------------------------------------------------------------//
+            //Exporting to PDF
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Pdf File |*.pdf";
+            sfd.FileName = $"Реестр № {Reestr} на {status}.pdf";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                using (FileStream stream = new FileStream(sfd.FileName, FileMode.Create))
+                {
+                    Document Doc = new Document(PageSize.A4, 40f, 40f, 20f, 20f);//Для А4
+                                                                                 //Document Doc = new Document(new iTextSharp.text.Rectangle(Width, Height), 0, 0, 0, 0);
+                                                                                 //Document Doc = new Document(new iTextSharp.text.Rectangle(120, 1000), 0f, 0f, 0f, 0f);//для чека
+                    PdfWriter.GetInstance(Doc, stream);
+                    Doc.Open();
+                    DateTime date = DateTime.Now;
+
+                    Doc.Add(table);
+                    Doc.Add(new Paragraph(Environment.NewLine));
+                    if (status == "Выдано")
+                    {
+                        Doc.Add(new Paragraph($"Итого:    {Summ.Quantity}                    {Summ.Sum}" +
+                //Environment.NewLine + " Сумма за услугу " + Summ.SumService +                       
+                Environment.NewLine +
+                Environment.NewLine + "Проверил(а)____________________________" + Environment.NewLine, font));
+                    }
+                    if (status == "Возврат")
+                    {
+                        Doc.Add(new Paragraph($"Итого:    {Summ.Quantity}                    {Summ.Sum}" +
+                Environment.NewLine + $"Сумма за возврат   {Summ.SumReturn}" +
+                Environment.NewLine +
+                Environment.NewLine + "Проверил(а)____________________________" + Environment.NewLine, font));
+
+                    }
+                    Doc.Close();
+                    stream.Close();
+                }
+            }
+
+            // Печать на устройство, установленное используемым по умолчанию
+            Process printJob = new Process();
+            printJob.StartInfo.FileName = sfd.FileName;//Открыть документ
+            printJob.StartInfo.UseShellExecute = true;
+            //printJob.StartInfo.Verb = "print";
+            printJob.Start();
+
+            //printJob.WaitForInputIdle();
+            //printJob.Kill();
+        }
+        private void ExportInvoice_ToPDF()//Метод экспорта Накладной в PDF 
+        {
+            string status = Table.DtInvoice.Rows[0][5].ToString();//Статус
+            string kontragent = Table.DtInvoice.Rows[0][8].ToString();//Контрагент
+            string region = Table.DtInvoice.Rows[0][9].ToString();//Область
+            DateTime Now = DateTime.Now;
+            int number = Convert.ToInt32(dataGridView2.Rows[0].Cells[23].Value) + 1;
+            string prefix_number = comboBox10.Text + number;
+            string Heading = "";
+            //Определение шрифта необходимо для сохранения кириллического текста
+            //Иначе мы не увидим кириллический текст
+            //Если мы работаем только с англоязычными текстами, то шрифт можно не указывать
+            BaseFont baseFont = BaseFont.CreateFont("C:\\Windows\\Fonts\\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            iTextSharp.text.Font font = new iTextSharp.text.Font(baseFont, 9, iTextSharp.text.Font.NORMAL);
+            iTextSharp.text.Font fontBold = new iTextSharp.text.Font(baseFont, 14, iTextSharp.text.Font.BOLD);
+
+            PdfPTable table = null;
+            //Обход по всем таблицам датасета
+            for (int i = 0; i < Table.DtInvoice.Rows.Count; i++)
+            {
+                //Создаем объект таблицы и передаем в нее число столбцов таблицы из нашего датасета
+                table = new PdfPTable(Table.DtInvoice.Columns.Count);
+                table.DefaultCell.Padding = 1;
+                table.WidthPercentage = 100;
+                float[] widths = new float[] { 150f, 80f, 65f, 60f, 0f, 60f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f };
+                table.SetWidths(widths);
+                table.HorizontalAlignment = Element.ALIGN_LEFT;
+                table.DefaultCell.BorderWidth = 1;
+                //Добавим в таблицу общий заголовок                
+                Heading = kontragent + Environment.NewLine + "Накладная № " + prefix_number + " от " + Convert.ToString(Now.ToString("dd.MM.yyyy")) + " куда " + region +
+                Environment.NewLine;
+
+                PdfPCell cell = new PdfPCell(new Phrase(Heading, fontBold));
+                cell.Colspan = Table.DtInvoice.Columns.Count;
+                cell.HorizontalAlignment = 1;
+                //Убираем границу первой ячейки, чтобы была как заголовок
+                cell.Border = 0;
+                table.AddCell(cell);
+                //Сначала добавляем заголовки таблицы
+                for (int k = 0; k < Table.DtInvoice.Columns.Count; k++)
+                {
+                    cell = new PdfPCell(new Phrase(Table.DtInvoice.Columns[k].ColumnName, font));
+                    //Фоновый цвет (необязательно, просто сделаем по красивее)
+                    cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                    //cell.Border = 0;
+                    table.AddCell(cell);
+                }
+                //Добавляем все остальные ячейки
+                for (int x = 0; x < Table.DtInvoice.Rows.Count; x++)
+                {
+                    for (int j = 0; j < Table.DtInvoice.Columns.Count; j++)
+                    {
+                        table.AddCell(new Phrase(Table.DtInvoice.Rows[x][j].ToString(), font));
+                    }
+                }
+            }
+            //----------------------------------------------------------------------------------------------------------//
+            //Exporting to PDF
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Pdf File |*.pdf";
+            sfd.FileName = $"Накладная № {Number.Prefix_number} - {region}.pdf";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                using (FileStream stream = new FileStream(sfd.FileName, FileMode.Create))
+                {
+                    Document Doc = new Document(PageSize.A4, 40f, 40f, 20f, 20f);//Для А4
+                                                                                 //Document Doc = new Document(new iTextSharp.text.Rectangle(Width, Height), 0, 0, 0, 0);
+                                                                                 //Document Doc = new Document(new iTextSharp.text.Rectangle(120, 1000), 0f, 0f, 0f, 0f);//для чека
+                    PdfWriter.GetInstance(Doc, stream);
+                    Doc.Open();
+                    DateTime date = DateTime.Now;
+
+                    Doc.Add(table);
+                    Doc.Add(new Paragraph(Environment.NewLine));
+                    Doc.Add(new Paragraph($" Итого:    {Summ.Quantity}                    {Summ.Sum}" +
+                    Environment.NewLine +
+                    Environment.NewLine + $"Принял__________________              Сдал_____________________" + Environment.NewLine));
+
+                    Doc.Close();
+                    stream.Close();
+                }
+            }
+
+            // Печать на устройство, установленное используемым по умолчанию
+            Process printJob = new Process();
+            printJob.StartInfo.FileName = sfd.FileName;//Открыть документ
+            printJob.StartInfo.UseShellExecute = true;
+            //printJob.StartInfo.Verb = "print";
+            printJob.Start();
+
+            //printJob.WaitForInputIdle();
+            //printJob.Kill();
+        }
 
         private void button17_Click(object sender, EventArgs e)//Выход
         {
@@ -3077,7 +2950,6 @@ namespace ProgramCCS
                     contextMenuStrip.Items.Add("Статус - F5").Click += new EventHandler(Status_Click);
                     contextMenuStrip.Items.Add("Редактирование - F4").Click += new EventHandler(Edit_Click);
                     contextMenuStrip.Items.Add("Удалить строку - Delete").Click += new EventHandler(Delete_Click);
-                    contextMenuStrip.Items.Add("Показать накладную - Ctrl").Click += new EventHandler(Invoice_Click);
                     contextMenuStrip.Show(dataGridView2, relativeMousePosition);
                 }
             }
@@ -3094,33 +2966,6 @@ namespace ProgramCCS
             Status_Change Status_Change = new Status_Change(this.dataGridView2);// передаем ссылку на грид в форму Status_Change
             Status_Change.Owner = this;//Передаём ссылку на первую форму через свойство Owner //Вызов метода формы из другой формы
             Status_Change.Show();
-        }
-        private void Invoice_Click(object sender, EventArgs e)//Показать накладную
-        {
-            //int currRowIndex = dataGridView2.CurrentCell.RowIndex;//  Запоминаем строку, которую выбрал пользователь.
-
-            var command = from table in db.GetTable<Orders_invoice>()
-                          where table.Дата_записи == Convert.ToDateTime(dataGridView2.CurrentRow.Cells[12].Value)
-                          where table.Область == Convert.ToString(dataGridView2.CurrentRow.Cells[1].Value)
-                          where table.Контрагент == Convert.ToString(dataGridView2.CurrentRow.Cells[17].Value)
-                          orderby table.N_Заказа descending
-                          select table;
-            dataGridView1.DataSource = command;
-
-            Table.DtInvoice = new DataTable();//инициализируем DataTable
-            Table.DtInvoice.Clear();//чистим DataTable, если он был не пуст
-            Table.DtInvoice = ToDataTable(command);//передать результат LINQ таблице DataTable
-
-            //dataGridView1.Columns[1].Visible = false;//Скрыть столбец 
-            dataGridView1.Visible = true;
-            dataGridView2.Visible = false;
-            db.Refresh(RefreshMode.OverwriteCurrentValues, command); //datacontext очистка command
-            for (int i = 0; i < dataGridView1.Rows.Count; i++)
-            {
-                dataGridView1.Rows[i].Cells[14].Value = Convert.ToInt32(dataGridView1.Rows[i].Cells[7].Value) - Convert.ToInt32(dataGridView1.Rows[i].Cells[13].Value);
-            }
-            Podschet();
-            //dataGridView2.CurrentCell = dataGridView2[0, currRowIndex];//  Выбираем нашу строку (именно выбираем, не выделяем).
         }
         private void Delete_Click(object sender, EventArgs e)//удаление строк из dataGridView1 и dataGridView3 и dataGridView2
         {
@@ -3153,6 +2998,8 @@ namespace ProgramCCS
                 Podschet();//произвести подсчет по методу       
             }
         }
+
+
     }
 }
 

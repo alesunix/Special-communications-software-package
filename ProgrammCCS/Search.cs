@@ -63,38 +63,32 @@ namespace ProgramCCS
 
         private void button28_Click(object sender, EventArgs e)//Поиск по Ф.И.О
         {
+            if (textBox2.Text != "")
+            {
                 dgv2_TLC.Visible = true;
                 dgv1_TLC.Visible = false;
-                //con.Open();//открыть соединение
-                //SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
-                //"summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
-                //    "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
-                //    "filial AS 'Филиал', client AS 'Контрагент'," +
-                //    "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', tarifs AS 'Тарифы'" +
-                //        "FROM [Table_1] WHERE familia LIKE N'%" + textBox2.Text.ToString() + "%'", con);
-                ////cmd.Parameters.AddWithValue("@punkt", textBox2.Text);
-                ////cmd.Parameters.AddWithValue("@familia", textBox2.Text);
-                //cmd.ExecuteNonQuery();
-                //DataTable dt = new DataTable();//создаем экземпляр класса DataTable
-                //SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
-                //dt.Clear();//чистим DataTable, если он был не пуст
-                //da.Fill(dt);//заполняем данными созданный DataTable
-                //dgv2_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
-                //con.Close();//закрыть соединение
-                if(textBox2.Text != "")
-                {
-                    var command = from table in db.GetTable<Orders_incomplete>()
-                                  where table.Ф_И_О.Contains(textBox2.Text.ToString())//Contains вместо LIKE
-                                  orderby table.Дата_записи descending
-                                  select table;
-                    dgv2_TLC.DataSource = command;
+                con.Open();//открыть соединение
+                SqlCommand cmd = new SqlCommand("SELECT id AS ID, oblast AS 'Область', punkt AS 'Населенный пункт', familia AS 'Ф.И.О'," +
+                "summ AS 'Стоимость',plata_za_uslugu AS 'Услуга', tarif AS 'Тариф', doplata AS 'Доплата', ob_cennost AS 'Обьяв.ценность', plata_za_nalog AS 'Наложеный платеж'," +
+                    "N_zakaza AS '№Заказа', status AS 'Статус', data_zapisi AS 'Дата записи', prichina AS 'Причина', obrabotka AS 'Обработка', data_obrabotki AS 'Дата обработки'," +
+                    "filial AS 'Филиал', client AS 'Контрагент'," +
+                    "nomer_spiska AS 'Список', nomer_nakladnoy AS 'Накладная', nomer_reestra AS 'Реестр', Ns AS 'NS', Nn AS 'NN', Nr AS 'NR', tarifs AS 'Тарифы'" +
+                        "FROM [Table_1] WHERE familia LIKE N'%" + textBox2.Text.ToString() + "%'", con);
+                //cmd.Parameters.AddWithValue("@punkt", textBox2.Text);
+                //cmd.Parameters.AddWithValue("@familia", textBox2.Text);
+                cmd.ExecuteNonQuery();
+                DataTable dt = new DataTable();//создаем экземпляр класса DataTable
+                SqlDataAdapter da = new SqlDataAdapter(cmd);//создаем экземпляр класса SqlDataAdapter
+                dt.Clear();//чистим DataTable, если он был не пуст
+                da.Fill(dt);//заполняем данными созданный DataTable
+                dgv2_TLC.DataSource = dt;//в качестве источника данных у dataGridView используем DataTable заполненный данными
+                con.Close();//закрыть соединение
 
 
-                    TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
-                    F1.Podschet();//произвести подсчет по методу
-                                  //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду
-                }
-                else MessageBox.Show("Введите ФИО в строке поиска!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                TLC F1 = this.Owner as TLC;//Получаем ссылку на первую форму //Вызов метода формы из другой формы
+                F1.Podschet();//произвести подсчет по методу
+                //table1BindingSource.Filter = "[punkt] LIKE '%" + Convert.ToString(textBox2.Text) + "%' OR [familia] LIKE '%" + Convert.ToString(textBox2.Text) + "%'"; //Фильтр по гриду
+            }
         }
 
         private void textBox3_TextChanged(object sender, EventArgs e)//Поиск по №Заказа
@@ -103,7 +97,7 @@ namespace ProgramCCS
             dgv2_TLC.Visible = true;
             dgv1_TLC.Visible = false;
 
-            var command = from table in db.GetTable<Orders_incomplete>()
+            var command = from table in db.GetTable<Table_1>()
                           where table.N_Заказа == textBox3.Text.ToString()
                           orderby table.Дата_записи descending
                           select table;

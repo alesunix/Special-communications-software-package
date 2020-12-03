@@ -6,7 +6,7 @@ using System.Data.Linq.Mapping;
 namespace ProgramCCS
 {
     [Table(Name = "Table_1")]
-    public class Table_1_incomplete
+    public class Orders_incomplete
     {
         [Column(Name = "id", IsPrimaryKey = true, IsDbGenerated = true)]
         public int ID { get; set; }

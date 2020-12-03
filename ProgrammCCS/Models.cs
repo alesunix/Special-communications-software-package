@@ -81,4 +81,5 @@ namespace ProgramCCS
         public static string SumReturn { get; set; }
         public static string SumService { get; set; }
     }
+
 }
