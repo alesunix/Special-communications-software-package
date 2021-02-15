@@ -175,9 +175,9 @@
     <Compile Include="AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Orders_status.cs" />
-    <Compile Include="Orders_Partner.cs" />
     <Compile Include="Orders_invoice.cs" />
+    <Compile Include="Orders_Partner.cs" />
+    <Compile Include="Orders_status.cs" />
     <Compile Include="TLC\Editor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -343,6 +343,7 @@
     </None>
     <None Include="Web References\Tlc_webService\Service.wsdl" />
     <None Include="Комплекс программ Спецсвязи_TemporaryKey.pfx" />
+    <None Include="Список на курьерские отправления_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
