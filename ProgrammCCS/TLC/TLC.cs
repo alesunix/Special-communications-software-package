@@ -3077,7 +3077,7 @@ namespace ProgramCCS
                     contextMenuStrip.Items.Add("Статус - F5").Click += new EventHandler(Status_Click);
                     contextMenuStrip.Items.Add("Редактирование - F4").Click += new EventHandler(Edit_Click);
                     contextMenuStrip.Items.Add("Удалить строку - Delete").Click += new EventHandler(Delete_Click);
-                    contextMenuStrip.Items.Add("Показать накладную - Ctrl").Click += new EventHandler(Invoice_Click);
+                    contextMenuStrip.Items.Add("Показать накладную - Пробел").Click += new EventHandler(Invoice_Click);
                     contextMenuStrip.Show(dataGridView2, relativeMousePosition);
                 }
             }
